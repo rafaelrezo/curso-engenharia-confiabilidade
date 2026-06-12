@@ -52,6 +52,18 @@ Essas práticas dependem de sinais confiáveis: taxa de erro, latência, satura�
 
 Toda automação que muda produção precisa deixar rastros: quem pediu, qual versão, qual configuração, quais validações passaram, qual impacto foi observado e como reverter. Logs, métricas, traces, eventos de deploy e anotações em dashboards ajudam a conectar causa e efeito.
 
+### **Automação como produto interno**
+
+Automação operacional madura deve ser tratada como **produto interno**: tem usuários, contrato, documentação, suporte, métricas de adoção e caminho de evolução. Um script que só uma pessoa entende reduz um tipo de trabalho manual, mas cria dependência humana em outro ponto.
+
+Plataformas internas, controladores Kubernetes, GitOps e infraestrutura como código seguem esse princípio quando tornam o estado desejado revisável, versionado e auditável.
+
+### **Segurança da cadeia de entrega**
+
+**Cadeia de entrega** inclui código, dependências, build, artefato, configuração, permissões, ambiente e processo de promoção. Se qualquer elo é opaco, a equipe perde rastreabilidade e aumenta o risco de implantar algo diferente do que foi testado.
+
+Práticas como artefatos imutáveis, assinaturas, SBOMs, segregação de permissões e revisão de configuração não pertencem apenas à segurança; elas também sustentam confiabilidade.
+
 ## Aplicação prática
 
 Escolha um pipeline ou rotina operacional e revise:
@@ -62,6 +74,8 @@ Escolha um pipeline ou rotina operacional e revise:
 - O rollout tem fases e critérios objetivos?
 - O rollback foi testado recentemente?
 - A automação registra o que fez e expõe falhas?
+- Há evidência de que a versão implantada é a mesma que foi testada?
+- Uma pessoa nova conseguiria operar o fluxo usando documentação e sinais existentes?
 
 ## Diagrama de apoio
 
@@ -84,12 +98,15 @@ flowchart LR
 - Depender de uma pessoa para construir, promover ou reverter releases.
 - Misturar build, configuração e deploy em um processo sem rastreabilidade.
 - Fazer canário sem métrica que indique sucesso ou falha.
+- Criar rollback que volta código, mas não considera configuração, schema, dados ou feature flags.
+- Tratar pipeline verde como prova de confiabilidade quando não há validação pós-deploy.
 
 ## Perguntas para revisão
 
 1. Qual parte do caminho para produção ainda depende de ação manual frágil?
 2. O rollback atual reverte código, configuração e dados na ordem correta?
 3. Que sinal provaria que um rollout deve parar antes de atingir todos os usuários?
+4. O pipeline registra mudança, aprovação, artefato, configuração e impacto observado?
 
 ## Exercícios
 
@@ -107,13 +124,16 @@ Escolha um incidente causado por mudança e identifique qual etapa da cadeia dev
 
 ## Relação com práticas atuais
 
-Em ambientes modernos, essa cadeia aparece em CI/CD, GitOps, Kubernetes, infraestrutura como código, feature flags, canários, progressive delivery, SBOMs e assinatura de artefatos. A tecnologia muda, mas o princípio permanece: mudanças confiáveis precisam ser pequenas, rastreáveis, observáveis e reversíveis.
+Em ambientes modernos, essa cadeia aparece em CI/CD, GitOps, Kubernetes, infraestrutura como código, feature flags, canários, progressive delivery, SBOMs e assinatura de artefatos. A tecnologia muda, mas o princípio permanece: mudanças confiáveis precisam ser pequenas, rastreáveis, observáveis e reversíveis. DORA descreve **continuous delivery** como a capacidade de liberar mudanças sob demanda de forma rápida, segura e sustentável; os capítulos de SRE sobre automação e release engineering dão a base operacional para isso.
 
 ## Recursos complementares
 
 - **Google SRE Book - The Evolution of Automation at Google:** <https://sre.google/sre-book/automation-at-google/>
 - **Google SRE Book - Release Engineering:** <https://sre.google/sre-book/release-engineering/>
 - **Site Reliability Workbook - Canarying Releases:** <https://sre.google/workbook/canarying-releases/>
+- **DORA - Continuous Delivery:** <https://dora.dev/capabilities/continuous-delivery/>
+- **AWS Well-Architected Reliability - Change Management:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/change-management.html>
+- **Google Cloud Deploy - Canary deployment strategy:** <https://docs.cloud.google.com/deploy/docs/deployment-strategies/canary>
 
 ## Fechamento
 
@@ -128,4 +148,7 @@ Próximo: [Capítulo 06 - Simplicidade](capitulo-06.md).
 - Google SRE. **The Evolution of Automation at Google**. <https://sre.google/sre-book/automation-at-google/>
 - Google SRE. **Release Engineering**. <https://sre.google/sre-book/release-engineering/>
 - Google SRE. **Canarying Releases**. <https://sre.google/workbook/canarying-releases/>
+- DORA. **Continuous Delivery**. <https://dora.dev/capabilities/continuous-delivery/>
+- AWS. **Reliability Pillar - Change Management**. <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/change-management.html>
+- Google Cloud. **Use a canary deployment strategy**. <https://docs.cloud.google.com/deploy/docs/deployment-strategies/canary>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

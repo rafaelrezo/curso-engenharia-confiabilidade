@@ -2,117 +2,129 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Explicar por que **simplicidade** é uma prática de confiabilidade, não apenas preferência estética.
+- Identificar complexidade acidental em código, arquitetura, APIs, configuração e operação.
+- Planejar remoções seguras de funcionalidade, dependências e caminhos operacionais.
 
 ## Síntese
 
-Simplicidade como requisito de confiabilidade. Cada linha de código, feature, API ou dependência acrescenta custo operacional e superfície de falha. A simplicidade não significa imobilismo; significa preservar interfaces pequenas, modularidade, releases compreensíveis e disposição para remover código que não paga seu custo.
+Sistemas simples são mais fáceis de entender, operar, alterar e recuperar. Cada feature, dependência, flag, exceção, integração, modo de operação e linha de código adiciona superfície de falha. **Simplicidade** não significa ausência de capacidade; significa construir apenas a complexidade que paga seu custo e remover o restante de forma deliberada.
 
-Em uma frase: **Sistemas mais simples são mais fáceis de operar, entender, alterar e recuperar.**
+Em uma frase: **simplicidade reduz o número de estados que podem surpreender a equipe em produção**.
 
 ## Por que isso importa
 
-Sem **estabilidade versus agilidade**, a equipe tende a discutir confiabilidade por opinião: um grupo pede mais velocidade, outro pede mais estabilidade, e ninguém consegue explicar qual risco está sendo aceito. A decisão melhora quando o risco vira critério técnico, mensurável e negociável.
+Falhas graves muitas vezes atravessam caminhos pouco usados: configuração antiga, feature quase abandonada, fallback não testado, integração legada, flag esquecida, API permissiva demais ou dependência que ninguém mais domina. Durante incidentes, complexidade vira atraso cognitivo. Durante releases, vira incerteza. Durante onboarding, vira conhecimento tribal.
+
+O SRE Book defende simplicidade como requisito de confiabilidade porque sistemas complexos exigem mais operação, mais testes, mais coordenação e mais memória institucional.
 
 ## Conceitos essenciais
 
-### **estabilidade versus agilidade**
+### **Complexidade essencial e acidental**
 
-**estabilidade versus agilidade**: É o equilíbrio entre mudar rápido e manter comportamento confiável. SRE transforma esse conflito em decisão baseada em SLO, risco e custo de falha.
+**Complexidade essencial** vem do problema real: regras de negócio, requisitos de consistência, escala, segurança, latência ou disponibilidade. **Complexidade acidental** vem de decisões acumuladas que já não pagam seu custo: abstrações prematuras, duplicidade, compatibilidade infinita, opções raras, dependências esquecidas.
 
-Uma forma simples de aplicar isso é: Listar features pouco usadas que aumentam complexidade.
+SRE deve atacar primeiro a complexidade acidental, porque ela aumenta risco sem entregar valor proporcional.
 
-### **linhas de código negativas**
+### **Linhas de código negativas**
 
-**linhas de código negativas**: É a ideia de que remover código pode aumentar valor. Menos código reduz caminhos de falha, manutenção, testes necessários e complexidade cognitiva.
+**Linhas de código negativas** representam valor criado pela remoção. Menos código pode significar menos testes, menos estados, menos caminhos de rollback, menos alertas e menos combinações de configuração.
 
-No dia a dia, isso aparece quando a equipe precisa propor uma remoção segura de código ou configuração.
+Remover com segurança exige telemetria, inventário de uso, plano de rollback e comunicação. Simplicidade madura não é apagar no escuro.
 
 ### **APIs mínimas**
 
-**APIs mínimas**: São interfaces pequenas e focadas. APIs menores reduzem combinações possíveis, estados inválidos e acoplamento entre equipes.
+**APIs mínimas** reduzem estados inválidos e acoplamento. Uma API muito flexível pode parecer poderosa, mas cada opção cria combinações que precisam ser documentadas, testadas, monitoradas e suportadas.
 
-Esse conceito fica concreto quando a equipe consegue revisar uma API buscando reduzir estados e exceções.
+Uma boa interface torna o caminho correto fácil e os caminhos perigosos difíceis.
 
-### **modularidade**
+### **Configuração como risco**
 
-**modularidade**: É separar responsabilidades com limites claros. Um módulo bom pode falhar, evoluir ou ser substituído com menor impacto no resto do sistema.
+Configuração dinâmica dá velocidade, mas também cria estados difíceis de reproduzir. Flags, parâmetros, overrides regionais e regras de roteamento devem ter dono, validade, documentação, padrão seguro e estratégia de remoção.
 
-Uma forma simples de aplicar isso é: Listar features pouco usadas que aumentam complexidade.
+Configuração sem ciclo de vida vira código invisível.
 
-### **simplicidade em releases**
+### **Dependências e modos de falha**
 
-**simplicidade em releases**: É reduzir variáveis em cada lançamento. Mudanças menores e mais compreensíveis tornam detecção, rollback e aprendizado mais rápidos.
+Cada dependência adiciona latência, disponibilidade, contrato, credenciais, limites, modo de falha e processo de suporte. A pergunta não é apenas "a dependência funciona?", mas "o serviço continua compreensível quando ela falha?".
 
-No dia a dia, isso aparece quando a equipe precisa propor uma remoção segura de código ou configuração.
+Reduzir dependências críticas pode ser mais valioso que adicionar mecanismos de compensação em cima de uma arquitetura confusa.
 
+### **Simplicidade em releases**
+
+Mudanças pequenas e compreensíveis reduzem tempo de diagnóstico e rollback. Releases que misturam refatoração, feature, migração, alteração de configuração e mudança de dependência aumentam ambiguidade.
+
+Simplicidade de release aparece quando a equipe consegue responder rapidamente: o que mudou, qual hipótese, como pausar, como reverter e que métrica prova segurança.
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Faça uma revisão de simplicidade em um serviço:
 
-- Listar features pouco usadas que aumentam complexidade.
-- Propor uma remoção segura de código ou configuração.
-- Revisar uma API buscando reduzir estados e exceções.
-
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+- Liste features, flags, endpoints, jobs e dependências pouco usadas.
+- Identifique configurações sem dono ou sem data de revisão.
+- Procure APIs com opções raras, estados inválidos ou comportamento implícito.
+- Escolha uma remoção pequena e reversível.
+- Defina métrica para provar baixo uso e segurança da remoção.
+- Planeje comunicação, rollback e janela de observação.
 
 ## Diagrama de apoio
 
 ```mermaid
 flowchart LR
-    Tema["Simplicidade"] --> C1["estabilidade versus agilidade"]
-    C1 --> C2["linhas de código negativas"]
-    C2 --> C3["APIs mínimas"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+    Inventory["Inventário"] --> Usage["Uso real"]
+    Usage --> Decision{"Paga seu custo?"}
+    Decision -->|Sim| Keep["Manter e documentar"]
+    Decision -->|Não| Remove["Remover com plano"]
+    Remove --> Observe["Observar impacto"]
+    Observe --> Simpler["Sistema mais simples"]
 ```
 
 ## Erros comuns
 
-- Adicionar abstrações antes de remover complexidade acidental.
-- Manter features ou APIs pouco usadas por medo de limpeza.
-- Confundir simplicidade com falta de capacidade de evolução.
+- Confundir simplicidade com falta de ambição técnica.
+- Adicionar plataforma ou abstração antes de remover complexidade existente.
+- Manter compatibilidade sem prazo para caminhos quase não usados.
+- Criar flags e nunca removê-las.
+- Ignorar configuração como fonte de comportamento complexo.
+- Fazer grandes limpezas sem telemetria, rollback e comunicação.
 
 ## Perguntas para revisão
 
-1. Qual risco operacional **estabilidade versus agilidade** ajuda a reduzir?
-2. Que evidência mostraria que a prática foi aplicada com sucesso?
-3. Como esse conceito mudaria uma decisão de release, plantão, arquitetura ou priorização?
+1. Que parte do serviço poucos entendem e muitos têm medo de alterar?
+2. Que feature, flag ou integração tem baixo uso e alto custo operacional?
+3. Qual remoção pequena reduziria risco sem afetar usuários relevantes?
+4. Como provar que a remoção foi segura?
 
 ## Exercícios
 
 ### Compreensão
 
-Explique a ideia central em até cinco linhas, usando um serviço real como exemplo.
+Explique a diferença entre complexidade essencial e complexidade acidental usando um serviço real.
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Escolha uma feature pouco usada e escreva um plano de remoção com métrica de uso, comunicação e rollback.
 
 ### Análise
 
-Liste duas formas de aplicar esse conceito de maneira superficial e explique o
-risco de cada uma.
+Analise um incidente passado e identifique como complexidade de configuração, dependência ou release aumentou tempo de recuperação.
 
 ## Relação com práticas atuais
 
-Em sistemas atuais, simplicidade compete com microsserviços, múltiplas clouds, configuração dinâmica e pilhas de observabilidade. A recomendação prática é reduzir estados, dependências e exceções antes de adicionar mais plataforma.
+Microsserviços, Kubernetes, service mesh, múltiplas clouds, feature flags e observabilidade rica podem melhorar operação, mas também podem multiplicar estados e pontos de falha. A recomendação prática é reduzir complexidade antes de adicionar mais plataforma. DORA associa desempenho de entrega a capacidades como arquitetura fracamente acoplada e entrega contínua; essas capacidades dependem de sistemas compreensíveis, testáveis e reversíveis.
 
 ## Recursos complementares
 
-- **Livro oficial online do Google SRE:** <https://sre.google/sre-book/>
-- **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - Simplicity:** <https://sre.google/sre-book/simplicity/>
 - **Site Reliability Workbook - Simplicity:** <https://sre.google/workbook/simplicity/>
+- **DORA - Loosely Coupled Architecture:** <https://dora.dev/capabilities/loosely-coupled-architecture/>
+- **DORA - Continuous Delivery:** <https://dora.dev/capabilities/continuous-delivery/>
+- **Google Cloud Architecture Framework - Operational excellence:** <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- **AWS Well-Architected Operational Excellence Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
 
 ## Fechamento
 
-Guarde a ideia principal: **Sistemas mais simples são mais fáceis de operar, entender, alterar e recuperar.**
+Guarde a ideia principal: **simplicidade é uma defesa operacional contra surpresa, ambiguidade e recuperação lenta**.
 
 Próximo: [Capítulo 07 - Alertas acionáveis e plantão saudável](capitulo-07.md).
 
@@ -120,8 +132,10 @@ Próximo: [Capítulo 07 - Alertas acionáveis e plantão saudável](capitulo-07.
 
 - Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
-- **Google SRE Book - Simplicity:** <https://sre.google/sre-book/simplicity/>
-- **Site Reliability Workbook - Simplicity:** <https://sre.google/workbook/simplicity/>
-- **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
-- **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
+- Google SRE. **Simplicity**. <https://sre.google/sre-book/simplicity/>
+- Google SRE. **Simplicity - Workbook**. <https://sre.google/workbook/simplicity/>
+- DORA. **Loosely Coupled Architecture**. <https://dora.dev/capabilities/loosely-coupled-architecture/>
+- DORA. **Continuous Delivery**. <https://dora.dev/capabilities/continuous-delivery/>
+- Google Cloud. **Architecture Framework - Operational excellence**. <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- AWS. **Operational Excellence Pillar**. <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

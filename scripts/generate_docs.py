@@ -1748,6 +1748,456 @@ Próximo: [Capítulo 02 - O ambiente de produção do Google do ponto de vista d
 """
 
 
+def toil_page() -> str:
+    next_link = next_chapter(chapters[4])
+    return f"""# Capítulo {display_number(5):02d} - Eliminando tarefas penosas
+
+## Objetivos de aprendizagem
+
+- Definir **toil** com critérios operacionais claros.
+- Separar trabalho operacional saudável de carga repetitiva que deve ser removida por engenharia.
+- Medir, priorizar e reduzir toil sem apenas transferir trabalho para outra equipe.
+
+## Síntese
+
+**Toil** é trabalho manual, repetitivo, reativo, sem valor durável e que cresce junto com o serviço. O problema não é toda atividade operacional; investigar um incidente, participar de um lançamento crítico ou executar uma migração rara pode gerar aprendizado e melhorar o sistema. O problema aparece quando a equipe gasta energia recorrente em ações que deveriam ser eliminadas por automação, mudança de design, melhor ownership ou simplificação.
+
+Em uma frase: **toil consome capacidade de engenharia hoje e aumenta o custo de operar amanhã**.
+
+## Por que isso importa
+
+SRE só funciona se a equipe mantém tempo real para engenharia. Quando alertas repetitivos, tickets manuais, aprovações operacionais, deploys frágeis e correções temporárias ocupam a agenda, a equipe deixa de melhorar o serviço e passa a apenas mantê-lo respirando. Isso cria um ciclo ruim: pouco tempo para engenharia gera mais toil, e mais toil reduz ainda mais o tempo para engenharia.
+
+O livro de SRE do Google trata toil como algo que precisa ser **identificado, medido e limitado**. O Workbook reforça a mesma disciplina ao conectar redução de toil com automação, ownership e melhoria contínua.
+
+## Conceitos essenciais
+
+### **Critérios de toil**
+
+Um trabalho tende a ser **toil** quando combina várias destas características:
+
+- é manual;
+- é repetitivo;
+- é reativo;
+- não produz valor durável;
+- cresce linearmente com uso, tráfego ou quantidade de serviços;
+- poderia ser automatizado ou eliminado por mudança de design.
+
+Um ticket chato não é automaticamente toil. Um procedimento raro, de alto risco e cheio de aprendizado pode ser operação legítima. A classificação deve observar o padrão ao longo do tempo.
+
+### **Trabalho operacional saudável**
+
+**Trabalho operacional saudável** mantém contato da equipe com a realidade de produção. Plantão bem calibrado, revisão de incidentes, suporte a lançamentos importantes e análise de comportamento real do serviço ajudam SREs a construir sistemas melhores.
+
+O limite é a repetição sem aprendizado. Se a equipe executa a mesma intervenção toda semana, o sistema está pedindo engenharia.
+
+### **Limite de carga operacional**
+
+Um **limite de carga operacional** protege a capacidade de engenharia. A regra prática popularizada em SRE é reservar parte significativa do tempo para trabalho de engenharia, evitando que a equipe vire apenas uma fila de suporte.
+
+Esse limite precisa ter consequência. Quando a carga reativa ultrapassa o combinado, a equipe deve renegociar prioridade, devolver responsabilidade, automatizar, remover escopo ou atacar causa raiz.
+
+### **Medição de toil**
+
+Toil invisível não entra em prioridade. A equipe precisa medir volume, tempo gasto, frequência, origem, serviço afetado e possibilidade de remoção. Tickets, alertas, tarefas manuais, solicitações recorrentes e operações de release devem ser classificados com critérios consistentes.
+
+Uma métrica útil não é apenas "horas de toil". Também importa saber quais fontes geram mais repetição e qual redução teria maior retorno.
+
+### **Automação versus eliminação**
+
+Nem todo toil deve ser automatizado. Às vezes a resposta correta é remover uma feature, simplificar um fluxo, mudar ownership, corrigir um bug, alterar arquitetura ou deixar de oferecer uma operação manual.
+
+Automatizar uma rotina ruim pode cristalizar um processo errado. A primeira pergunta deve ser: "esse trabalho ainda precisa existir?".
+
+### **Plataforma interna e self-service**
+
+Plataformas internas podem reduzir toil quando oferecem caminhos seguros de self-service: criação de ambiente, deploy, rollback, dashboards, segredos, configuração, escalabilidade e diagnóstico. O ganho aparece quando equipes conseguem resolver tarefas comuns sem abrir tickets para SRE.
+
+Self-service sem guardrails pode apenas distribuir risco. Um bom caminho automatizado precisa de validação, limites, auditoria e documentação.
+
+## Aplicação prática
+
+Faça uma auditoria de toil em uma equipe ou serviço:
+
+- Colete tickets, páginas de plantão, solicitações manuais e tarefas recorrentes dos últimos 30 dias.
+- Classifique cada item como operação saudável, toil, incidente, melhoria ou suporte pontual.
+- Estime tempo gasto, frequência e equipe solicitante.
+- Escolha as três maiores fontes por custo mensal.
+- Para cada fonte, decida entre eliminar, automatizar, transferir ownership, simplificar ou aceitar conscientemente.
+- Defina uma métrica de acompanhamento para provar redução.
+
+## Diagrama de apoio
+
+```mermaid
+flowchart LR
+    Work["Trabalho operacional"] --> Criteria["Critérios de toil"]
+    Criteria --> Decision{{"É repetitivo e removível?"}}
+    Decision -->|Não| Healthy["Operação saudável"]
+    Decision -->|Sim| Measure["Medir custo e origem"]
+    Measure --> Option["Eliminar / automatizar / simplificar"]
+    Option --> Evidence["Evidência de redução"]
+```
+
+## Erros comuns
+
+- Chamar todo trabalho desagradável de toil.
+- Medir toil apenas por sensação, sem dados de tickets, alertas e tempo gasto.
+- Automatizar uma rotina ruim sem questionar se ela deveria existir.
+- Transferir toil para outra equipe e chamar isso de melhoria.
+- Criar self-service sem limites, auditoria ou documentação.
+- Aceitar que plantão e tickets consumam todo o tempo de engenharia.
+
+## Perguntas para revisão
+
+1. Quais tarefas crescem linearmente com usuários, tráfego ou número de serviços?
+2. Qual fonte de toil consome mais horas por mês?
+3. O trabalho deve ser eliminado, automatizado, simplificado ou assumido por outra equipe?
+4. Que métrica mostrará que a redução de toil realmente aconteceu?
+
+## Exercícios
+
+### Compreensão
+
+Explique por que toil não é sinônimo de "trabalho chato".
+
+### Aplicação
+
+Crie uma tabela com cinco tarefas operacionais recorrentes, classificando frequência, tempo gasto, dono atual, causa raiz e ação proposta.
+
+### Análise
+
+Escolha uma automação existente e avalie se ela removeu toil ou apenas acelerou um processo que deveria ser redesenhado.
+
+## Relação com práticas atuais
+
+Em ambientes cloud native, toil aparece em aprovações manuais, ajustes repetitivos de infraestrutura, solicitações de acesso, deploys assistidos, runbooks executados à mão, alertas ruidosos e tarefas de suporte que poderiam ser self-service. **Platform engineering**, GitOps, infraestrutura como código e catálogos internos ajudam quando reduzem dependência humana e preservam guardrails. DORA também reforça que capacidades técnicas e organizacionais só melhoram desempenho quando reduzem atrito real no fluxo de entrega.
+
+## Recursos complementares
+
+- **Google SRE Book - Eliminating Toil:** <https://sre.google/sre-book/eliminating-toil/>
+- **Site Reliability Workbook - Eliminating Toil:** <https://sre.google/workbook/eliminating-toil/>
+- **Google Cloud Architecture Framework - Operational excellence:** <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- **AWS Well-Architected Operational Excellence Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
+- **DORA - Capabilities:** <https://dora.dev/capabilities/>
+
+## Fechamento
+
+Guarde a ideia principal: **toil precisa ser tratado como dívida operacional mensurável, não como preço inevitável de operar produção**.
+
+{next_link}
+
+## Referências
+
+- Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
+- Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
+- Google SRE. **Eliminating Toil**. <https://sre.google/sre-book/eliminating-toil/>
+- Google SRE. **Eliminating Toil - Workbook**. <https://sre.google/workbook/eliminating-toil/>
+- Google Cloud. **Architecture Framework - Operational excellence**. <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- AWS. **Operational Excellence Pillar**. <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
+- DORA. **Capabilities**. <https://dora.dev/capabilities/>
+- PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.
+"""
+
+
+def monitoring_page() -> str:
+    next_link = next_chapter(chapters[5])
+    return f"""# Capítulo {display_number(6):02d} - Monitorando sistemas distribuídos
+
+## Objetivos de aprendizagem
+
+- Projetar monitoração a partir de **sintomas de usuário**, não apenas de causas internas.
+- Usar **latência**, **tráfego**, **erros** e **saturação** como sinais mínimos de saúde.
+- Separar página urgente, diagnóstico, dashboard, ticket e análise histórica.
+
+## Síntese
+
+Monitoração confiável não é coletar todas as métricas possíveis. Ela transforma comportamento de produção em decisões: acordar alguém, abrir um ticket, iniciar automação, investigar uma tendência ou ajustar um SLO. Em sistemas distribuídos, a dificuldade está em separar o que o usuário percebe do que a infraestrutura revela internamente.
+
+Em uma frase: **monitoração boa alerta sobre impacto real e fornece contexto suficiente para investigar sem criar ruído**.
+
+## Por que isso importa
+
+Um sistema pode ter milhares de métricas e ainda não responder à pergunta básica: o usuário está conseguindo usar o serviço? Alertas baseados apenas em CPU, memória, filas ou exceções internas podem acordar pessoas sem impacto real. Por outro lado, sinais de usuário sem contexto interno deixam a equipe cega durante o diagnóstico.
+
+O SRE Book propõe a separação entre sintomas e causas, caixa-preta e caixa-branca, além dos quatro sinais de ouro. O Workbook aprofunda práticas de alertas ligados a SLOs e redução de fadiga.
+
+## Conceitos essenciais
+
+### **Sintomas versus causas**
+
+**Sintomas** descrevem o comportamento percebido pelo usuário: erro no checkout, resposta lenta, dado atrasado, indisponibilidade parcial. **Causas** explicam por que isso aconteceu: CPU saturada, fila acumulada, deploy ruim, dependência lenta, erro de configuração.
+
+Páginas de plantão devem priorizar sintomas ou risco claro de violação de SLO. Causas internas são valiosas para diagnóstico, mas nem toda causa interna deve acordar alguém.
+
+### **Caixa-preta e caixa-branca**
+
+**Monitoração caixa-preta** observa o serviço de fora, como um usuário ou cliente faria. Ela detecta indisponibilidade, latência e falhas de jornada. **Monitoração caixa-branca** usa sinais internos exportados pelo sistema: filas, caches, saturação, erros, dependências, estado de workers e eventos de deploy.
+
+A combinação é mais forte que qualquer uma isolada. Caixa-preta responde "o serviço funciona?"; caixa-branca ajuda a responder "por que não?".
+
+### **Quatro sinais de ouro**
+
+Os **quatro sinais de ouro** são:
+
+- **latência:** quanto tempo uma operação demora, incluindo caudas como p95 e p99;
+- **tráfego:** quanto trabalho o serviço recebe;
+- **erros:** proporção e tipo de falhas;
+- **saturação:** quão perto o sistema está de um limite crítico.
+
+Esses sinais não cobrem tudo, mas formam uma base forte para serviços online. Para pipelines e dados, a equipe também deve medir frescor, completude, atraso e corretude.
+
+### **SLI como contrato de medição**
+
+Um **SLI** traduz uma experiência em uma métrica calculável. Disponibilidade pode ser taxa de requisições bem-sucedidas; latência pode ser percentil por janela; frescor pode ser idade máxima de dados; durabilidade pode ser perda aceitável de eventos.
+
+Sem SLI claro, dashboards viram coleção de gráficos. Com SLI claro, a equipe sabe qual sinal sustenta decisões de alerta, release e priorização.
+
+### **Alertas acionáveis**
+
+**Alertas acionáveis** exigem ação humana imediata. Uma página deve indicar impacto, serviço, severidade, janela, primeiro diagnóstico e runbook. Se o sinal não exige decisão agora, ele deve virar ticket, dashboard, relatório ou automação.
+
+Esse critério reduz fadiga de alerta e melhora confiança no sistema de monitoração.
+
+### **Observabilidade**
+
+**Observabilidade** amplia a investigação usando métricas, logs, traces e eventos. OpenTelemetry consolidou uma linguagem comum para instrumentar sistemas sem depender de uma ferramenta única.
+
+Métricas são fortes para alertas e tendências; logs ajudam a explicar eventos discretos; traces mostram caminho distribuído; eventos de deploy e configuração conectam mudança com comportamento.
+
+## Aplicação prática
+
+Revise a monitoração de uma jornada crítica:
+
+- Defina o que o usuário espera concluir.
+- Escolha 1 ou 2 SLIs que representem essa experiência.
+- Separe sinais de página, sinais de ticket e sinais apenas diagnósticos.
+- Verifique se latência usa percentis, não apenas média.
+- Adicione eventos de deploy/configuração aos dashboards principais.
+- Remova ou rebaixe alertas que não exigem ação imediata.
+- Garanta que cada página tenha dono, severidade e runbook.
+
+## Diagrama de apoio
+
+```mermaid
+flowchart LR
+    User["Experiência do usuário"] --> SLI["SLI"]
+    SLI --> Alert["Alerta acionável"]
+    Alert --> Human["Julgamento humano"]
+    Internal["Sinais internos"] --> Diagnosis["Diagnóstico"]
+    Deploy["Eventos de mudança"] --> Diagnosis
+    Human --> Mitigation["Mitigação"]
+    Diagnosis --> Mitigation
+```
+
+## Erros comuns
+
+- Alertar sobre CPU, memória ou fila sem impacto de usuário ou risco de SLO.
+- Usar média de latência e esconder p95, p99 ou outliers relevantes.
+- Criar dashboards grandes sem pergunta operacional clara.
+- Tratar logs como substituto de métricas para alertas de disponibilidade.
+- Não registrar eventos de deploy, rollback e configuração nos painéis.
+- Manter alertas que ninguém sabe como responder.
+
+## Perguntas para revisão
+
+1. Que sintoma de usuário justifica acordar alguém?
+2. Qual SLI representa melhor a jornada crítica do serviço?
+3. Quais sinais ajudam diagnóstico, mas não deveriam paginar a equipe?
+4. Os dashboards mostram eventos de mudança junto com métricas de saúde?
+
+## Exercícios
+
+### Compreensão
+
+Explique a diferença entre sintoma, causa, SLI e métrica interna.
+
+### Aplicação
+
+Desenhe um painel mínimo para uma API com latência p95/p99, tráfego, erros, saturação e eventos de deploy.
+
+### Análise
+
+Escolha três alertas existentes e decida se cada um deve ser página, ticket, dashboard ou removido.
+
+## Relação com práticas atuais
+
+Plataformas modernas combinam monitoração baseada em SLO, OpenTelemetry, traces distribuídos, logs estruturados, eventos de deploy, sintéticos externos e análise de burn rate. O risco atual não é falta de ferramenta; é excesso de sinais sem uma pergunta operacional. A prática madura começa pelo usuário, define SLIs e usa telemetria para sustentar decisões.
+
+## Recursos complementares
+
+- **Google SRE Book - Monitoring Distributed Systems:** <https://sre.google/sre-book/monitoring-distributed-systems/>
+- **Site Reliability Workbook - Monitoring:** <https://sre.google/workbook/monitoring/>
+- **Site Reliability Workbook - Alerting on SLOs:** <https://sre.google/workbook/alerting-on-slos/>
+- **OpenTelemetry - Signals:** <https://opentelemetry.io/docs/concepts/signals/>
+- **Google Cloud Architecture Framework - Operational excellence:** <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- **AWS Well-Architected Reliability - Monitoring:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/monitor-workload-resources.html>
+
+## Fechamento
+
+Guarde a ideia principal: **monitoração existe para melhorar decisão operacional, não para provar que a equipe coleta muitas métricas**.
+
+{next_link}
+
+## Referências
+
+- Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
+- Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
+- Google SRE. **Monitoring Distributed Systems**. <https://sre.google/sre-book/monitoring-distributed-systems/>
+- Google SRE. **Monitoring - Workbook**. <https://sre.google/workbook/monitoring/>
+- Google SRE. **Alerting on SLOs**. <https://sre.google/workbook/alerting-on-slos/>
+- OpenTelemetry. **Signals**. <https://opentelemetry.io/docs/concepts/signals/>
+- Google Cloud. **Architecture Framework - Operational excellence**. <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- AWS. **Monitor workload resources**. <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/monitor-workload-resources.html>
+- PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.
+"""
+
+
+def simplicity_page() -> str:
+    next_link = next_chapter(chapters[8])
+    return f"""# Capítulo {display_number(9):02d} - Simplicidade
+
+## Objetivos de aprendizagem
+
+- Explicar por que **simplicidade** é uma prática de confiabilidade, não apenas preferência estética.
+- Identificar complexidade acidental em código, arquitetura, APIs, configuração e operação.
+- Planejar remoções seguras de funcionalidade, dependências e caminhos operacionais.
+
+## Síntese
+
+Sistemas simples são mais fáceis de entender, operar, alterar e recuperar. Cada feature, dependência, flag, exceção, integração, modo de operação e linha de código adiciona superfície de falha. **Simplicidade** não significa ausência de capacidade; significa construir apenas a complexidade que paga seu custo e remover o restante de forma deliberada.
+
+Em uma frase: **simplicidade reduz o número de estados que podem surpreender a equipe em produção**.
+
+## Por que isso importa
+
+Falhas graves muitas vezes atravessam caminhos pouco usados: configuração antiga, feature quase abandonada, fallback não testado, integração legada, flag esquecida, API permissiva demais ou dependência que ninguém mais domina. Durante incidentes, complexidade vira atraso cognitivo. Durante releases, vira incerteza. Durante onboarding, vira conhecimento tribal.
+
+O SRE Book defende simplicidade como requisito de confiabilidade porque sistemas complexos exigem mais operação, mais testes, mais coordenação e mais memória institucional.
+
+## Conceitos essenciais
+
+### **Complexidade essencial e acidental**
+
+**Complexidade essencial** vem do problema real: regras de negócio, requisitos de consistência, escala, segurança, latência ou disponibilidade. **Complexidade acidental** vem de decisões acumuladas que já não pagam seu custo: abstrações prematuras, duplicidade, compatibilidade infinita, opções raras, dependências esquecidas.
+
+SRE deve atacar primeiro a complexidade acidental, porque ela aumenta risco sem entregar valor proporcional.
+
+### **Linhas de código negativas**
+
+**Linhas de código negativas** representam valor criado pela remoção. Menos código pode significar menos testes, menos estados, menos caminhos de rollback, menos alertas e menos combinações de configuração.
+
+Remover com segurança exige telemetria, inventário de uso, plano de rollback e comunicação. Simplicidade madura não é apagar no escuro.
+
+### **APIs mínimas**
+
+**APIs mínimas** reduzem estados inválidos e acoplamento. Uma API muito flexível pode parecer poderosa, mas cada opção cria combinações que precisam ser documentadas, testadas, monitoradas e suportadas.
+
+Uma boa interface torna o caminho correto fácil e os caminhos perigosos difíceis.
+
+### **Configuração como risco**
+
+Configuração dinâmica dá velocidade, mas também cria estados difíceis de reproduzir. Flags, parâmetros, overrides regionais e regras de roteamento devem ter dono, validade, documentação, padrão seguro e estratégia de remoção.
+
+Configuração sem ciclo de vida vira código invisível.
+
+### **Dependências e modos de falha**
+
+Cada dependência adiciona latência, disponibilidade, contrato, credenciais, limites, modo de falha e processo de suporte. A pergunta não é apenas "a dependência funciona?", mas "o serviço continua compreensível quando ela falha?".
+
+Reduzir dependências críticas pode ser mais valioso que adicionar mecanismos de compensação em cima de uma arquitetura confusa.
+
+### **Simplicidade em releases**
+
+Mudanças pequenas e compreensíveis reduzem tempo de diagnóstico e rollback. Releases que misturam refatoração, feature, migração, alteração de configuração e mudança de dependência aumentam ambiguidade.
+
+Simplicidade de release aparece quando a equipe consegue responder rapidamente: o que mudou, qual hipótese, como pausar, como reverter e que métrica prova segurança.
+
+## Aplicação prática
+
+Faça uma revisão de simplicidade em um serviço:
+
+- Liste features, flags, endpoints, jobs e dependências pouco usadas.
+- Identifique configurações sem dono ou sem data de revisão.
+- Procure APIs com opções raras, estados inválidos ou comportamento implícito.
+- Escolha uma remoção pequena e reversível.
+- Defina métrica para provar baixo uso e segurança da remoção.
+- Planeje comunicação, rollback e janela de observação.
+
+## Diagrama de apoio
+
+```mermaid
+flowchart LR
+    Inventory["Inventário"] --> Usage["Uso real"]
+    Usage --> Decision{{"Paga seu custo?"}}
+    Decision -->|Sim| Keep["Manter e documentar"]
+    Decision -->|Não| Remove["Remover com plano"]
+    Remove --> Observe["Observar impacto"]
+    Observe --> Simpler["Sistema mais simples"]
+```
+
+## Erros comuns
+
+- Confundir simplicidade com falta de ambição técnica.
+- Adicionar plataforma ou abstração antes de remover complexidade existente.
+- Manter compatibilidade sem prazo para caminhos quase não usados.
+- Criar flags e nunca removê-las.
+- Ignorar configuração como fonte de comportamento complexo.
+- Fazer grandes limpezas sem telemetria, rollback e comunicação.
+
+## Perguntas para revisão
+
+1. Que parte do serviço poucos entendem e muitos têm medo de alterar?
+2. Que feature, flag ou integração tem baixo uso e alto custo operacional?
+3. Qual remoção pequena reduziria risco sem afetar usuários relevantes?
+4. Como provar que a remoção foi segura?
+
+## Exercícios
+
+### Compreensão
+
+Explique a diferença entre complexidade essencial e complexidade acidental usando um serviço real.
+
+### Aplicação
+
+Escolha uma feature pouco usada e escreva um plano de remoção com métrica de uso, comunicação e rollback.
+
+### Análise
+
+Analise um incidente passado e identifique como complexidade de configuração, dependência ou release aumentou tempo de recuperação.
+
+## Relação com práticas atuais
+
+Microsserviços, Kubernetes, service mesh, múltiplas clouds, feature flags e observabilidade rica podem melhorar operação, mas também podem multiplicar estados e pontos de falha. A recomendação prática é reduzir complexidade antes de adicionar mais plataforma. DORA associa desempenho de entrega a capacidades como arquitetura fracamente acoplada e entrega contínua; essas capacidades dependem de sistemas compreensíveis, testáveis e reversíveis.
+
+## Recursos complementares
+
+- **Google SRE Book - Simplicity:** <https://sre.google/sre-book/simplicity/>
+- **Site Reliability Workbook - Simplicity:** <https://sre.google/workbook/simplicity/>
+- **DORA - Loosely Coupled Architecture:** <https://dora.dev/capabilities/loosely-coupled-architecture/>
+- **DORA - Continuous Delivery:** <https://dora.dev/capabilities/continuous-delivery/>
+- **Google Cloud Architecture Framework - Operational excellence:** <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- **AWS Well-Architected Operational Excellence Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
+
+## Fechamento
+
+Guarde a ideia principal: **simplicidade é uma defesa operacional contra surpresa, ambiguidade e recuperação lenta**.
+
+{next_link}
+
+## Referências
+
+- Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
+- Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
+- Google SRE. **Simplicity**. <https://sre.google/sre-book/simplicity/>
+- Google SRE. **Simplicity - Workbook**. <https://sre.google/workbook/simplicity/>
+- DORA. **Loosely Coupled Architecture**. <https://dora.dev/capabilities/loosely-coupled-architecture/>
+- DORA. **Continuous Delivery**. <https://dora.dev/capabilities/continuous-delivery/>
+- Google Cloud. **Architecture Framework - Operational excellence**. <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- AWS. **Operational Excellence Pillar**. <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
+- PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.
+"""
+
+
 def consolidated_risk_slo_page() -> str:
     next_link = next_chapter(chapters[2])
     return f"""# Capítulo 02 - Risco, objetivos de serviço e error budget
@@ -1942,6 +2392,18 @@ Essas práticas dependem de sinais confiáveis: taxa de erro, latência, satura�
 
 Toda automação que muda produção precisa deixar rastros: quem pediu, qual versão, qual configuração, quais validações passaram, qual impacto foi observado e como reverter. Logs, métricas, traces, eventos de deploy e anotações em dashboards ajudam a conectar causa e efeito.
 
+### **Automação como produto interno**
+
+Automação operacional madura deve ser tratada como **produto interno**: tem usuários, contrato, documentação, suporte, métricas de adoção e caminho de evolução. Um script que só uma pessoa entende reduz um tipo de trabalho manual, mas cria dependência humana em outro ponto.
+
+Plataformas internas, controladores Kubernetes, GitOps e infraestrutura como código seguem esse princípio quando tornam o estado desejado revisável, versionado e auditável.
+
+### **Segurança da cadeia de entrega**
+
+**Cadeia de entrega** inclui código, dependências, build, artefato, configuração, permissões, ambiente e processo de promoção. Se qualquer elo é opaco, a equipe perde rastreabilidade e aumenta o risco de implantar algo diferente do que foi testado.
+
+Práticas como artefatos imutáveis, assinaturas, SBOMs, segregação de permissões e revisão de configuração não pertencem apenas à segurança; elas também sustentam confiabilidade.
+
 ## Aplicação prática
 
 Escolha um pipeline ou rotina operacional e revise:
@@ -1952,6 +2414,8 @@ Escolha um pipeline ou rotina operacional e revise:
 - O rollout tem fases e critérios objetivos?
 - O rollback foi testado recentemente?
 - A automação registra o que fez e expõe falhas?
+- Há evidência de que a versão implantada é a mesma que foi testada?
+- Uma pessoa nova conseguiria operar o fluxo usando documentação e sinais existentes?
 
 ## Diagrama de apoio
 
@@ -1974,12 +2438,15 @@ flowchart LR
 - Depender de uma pessoa para construir, promover ou reverter releases.
 - Misturar build, configuração e deploy em um processo sem rastreabilidade.
 - Fazer canário sem métrica que indique sucesso ou falha.
+- Criar rollback que volta código, mas não considera configuração, schema, dados ou feature flags.
+- Tratar pipeline verde como prova de confiabilidade quando não há validação pós-deploy.
 
 ## Perguntas para revisão
 
 1. Qual parte do caminho para produção ainda depende de ação manual frágil?
 2. O rollback atual reverte código, configuração e dados na ordem correta?
 3. Que sinal provaria que um rollout deve parar antes de atingir todos os usuários?
+4. O pipeline registra mudança, aprovação, artefato, configuração e impacto observado?
 
 ## Exercícios
 
@@ -1997,13 +2464,16 @@ Escolha um incidente causado por mudança e identifique qual etapa da cadeia dev
 
 ## Relação com práticas atuais
 
-Em ambientes modernos, essa cadeia aparece em CI/CD, GitOps, Kubernetes, infraestrutura como código, feature flags, canários, progressive delivery, SBOMs e assinatura de artefatos. A tecnologia muda, mas o princípio permanece: mudanças confiáveis precisam ser pequenas, rastreáveis, observáveis e reversíveis.
+Em ambientes modernos, essa cadeia aparece em CI/CD, GitOps, Kubernetes, infraestrutura como código, feature flags, canários, progressive delivery, SBOMs e assinatura de artefatos. A tecnologia muda, mas o princípio permanece: mudanças confiáveis precisam ser pequenas, rastreáveis, observáveis e reversíveis. DORA descreve **continuous delivery** como a capacidade de liberar mudanças sob demanda de forma rápida, segura e sustentável; os capítulos de SRE sobre automação e release engineering dão a base operacional para isso.
 
 ## Recursos complementares
 
 - **Google SRE Book - The Evolution of Automation at Google:** <https://sre.google/sre-book/automation-at-google/>
 - **Google SRE Book - Release Engineering:** <https://sre.google/sre-book/release-engineering/>
 - **Site Reliability Workbook - Canarying Releases:** <https://sre.google/workbook/canarying-releases/>
+- **DORA - Continuous Delivery:** <https://dora.dev/capabilities/continuous-delivery/>
+- **AWS Well-Architected Reliability - Change Management:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/change-management.html>
+- **Google Cloud Deploy - Canary deployment strategy:** <https://docs.cloud.google.com/deploy/docs/deployment-strategies/canary>
 
 ## Fechamento
 
@@ -2018,6 +2488,9 @@ Guarde a ideia principal: **boa automação expressa intenção e engenharia de 
 - Google SRE. **The Evolution of Automation at Google**. <https://sre.google/sre-book/automation-at-google/>
 - Google SRE. **Release Engineering**. <https://sre.google/sre-book/release-engineering/>
 - Google SRE. **Canarying Releases**. <https://sre.google/workbook/canarying-releases/>
+- DORA. **Continuous Delivery**. <https://dora.dev/capabilities/continuous-delivery/>
+- AWS. **Reliability Pillar - Change Management**. <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/change-management.html>
+- Google Cloud. **Use a canary deployment strategy**. <https://docs.cloud.google.com/deploy/docs/deployment-strategies/canary>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.
 """
 
@@ -3267,7 +3740,10 @@ def build_extra_css() -> str:
 
 def main() -> None:
     write(CHAPTERS_DIR / display_slug(3), consolidated_risk_slo_page())
+    write(CHAPTERS_DIR / display_slug(5), toil_page())
+    write(CHAPTERS_DIR / display_slug(6), monitoring_page())
     write(CHAPTERS_DIR / display_slug(7), consolidated_automation_release_page())
+    write(CHAPTERS_DIR / display_slug(9), simplicity_page())
     write(CHAPTERS_DIR / display_slug(10), consolidated_alerting_oncall_page())
     write(CHAPTERS_DIR / display_slug(13), consolidated_incident_response_page())
     write(CHAPTERS_DIR / display_slug(19), consolidated_load_balancing_page())
@@ -3277,7 +3753,7 @@ def main() -> None:
     for chapter in chapters:
         # Chapter 01 is maintained manually as a consolidated introduction.
         # Consolidated pages are generated from their representative chapter numbers.
-        if chapter["number"] in DISPLAY_SEQUENCE and chapter["number"] not in {1, 3, 7, 10, 13, 19, 21, 24}:
+        if chapter["number"] in DISPLAY_SEQUENCE and chapter["number"] not in {1, 3, 5, 6, 7, 9, 10, 13, 19, 21, 24}:
             write(CHAPTERS_DIR / display_slug(chapter["number"]), chapter_page(chapter))
 
     write(DOCS / "index.md", build_index())

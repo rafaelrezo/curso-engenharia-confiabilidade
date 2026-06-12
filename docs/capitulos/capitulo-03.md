@@ -2,117 +2,135 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Definir **toil** com critérios operacionais claros.
+- Separar trabalho operacional saudável de carga repetitiva que deve ser removida por engenharia.
+- Medir, priorizar e reduzir toil sem apenas transferir trabalho para outra equipe.
 
 ## Síntese
 
-Tarefas penosas como atividades operacionais que não geram valor durável, exigem intervenção humana e crescem com o tamanho do sistema. Nem todo trabalho operacional é ruim, mas toil excessivo rouba tempo de engenharia e impede evolução. A prática de SRE exige medir, limitar e substituir esse trabalho por automação, ferramentas ou mudanças de design.
+**Toil** é trabalho manual, repetitivo, reativo, sem valor durável e que cresce junto com o serviço. O problema não é toda atividade operacional; investigar um incidente, participar de um lançamento crítico ou executar uma migração rara pode gerar aprendizado e melhorar o sistema. O problema aparece quando a equipe gasta energia recorrente em ações que deveriam ser eliminadas por automação, mudança de design, melhor ownership ou simplificação.
 
-Em uma frase: **Toil é trabalho manual, repetitivo, reativo e escalável linearmente com o serviço; deve ser reduzido por engenharia.**
+Em uma frase: **toil consome capacidade de engenharia hoje e aumenta o custo de operar amanhã**.
 
 ## Por que isso importa
 
-Sem **toil**, a equipe tende a discutir confiabilidade por opinião: um grupo pede mais velocidade, outro pede mais estabilidade, e ninguém consegue explicar qual risco está sendo aceito. A decisão melhora quando o risco vira critério técnico, mensurável e negociável.
+SRE só funciona se a equipe mantém tempo real para engenharia. Quando alertas repetitivos, tickets manuais, aprovações operacionais, deploys frágeis e correções temporárias ocupam a agenda, a equipe deixa de melhorar o serviço e passa a apenas mantê-lo respirando. Isso cria um ciclo ruim: pouco tempo para engenharia gera mais toil, e mais toil reduz ainda mais o tempo para engenharia.
+
+O livro de SRE do Google trata toil como algo que precisa ser **identificado, medido e limitado**. O Workbook reforça a mesma disciplina ao conectar redução de toil com automação, ownership e melhoria contínua.
 
 ## Conceitos essenciais
 
-### **toil**
+### **Critérios de toil**
 
-**toil**: É trabalho manual, repetitivo, reativo e sem aprendizado durável. O problema não é fazer operação; o problema é repetir a mesma operação até ela consumir a capacidade de engenharia.
+Um trabalho tende a ser **toil** quando combina várias destas características:
 
-Uma forma simples de aplicar isso é: Classificar tickets recentes como toil ou engenharia.
+- é manual;
+- é repetitivo;
+- é reativo;
+- não produz valor durável;
+- cresce linearmente com uso, tráfego ou quantidade de serviços;
+- poderia ser automatizado ou eliminado por mudança de design.
 
-### **trabalho operacional versus engenharia**
+Um ticket chato não é automaticamente toil. Um procedimento raro, de alto risco e cheio de aprendizado pode ser operação legítima. A classificação deve observar o padrão ao longo do tempo.
 
-**trabalho operacional versus engenharia**: Trabalho operacional mantém o serviço funcionando agora. Engenharia muda o sistema para reduzir trabalho futuro, eliminar repetição ou tornar falhas menos prováveis.
+### **Trabalho operacional saudável**
 
-No dia a dia, isso aparece quando a equipe precisa calcular horas mensais gastas em tarefas repetitivas.
+**Trabalho operacional saudável** mantém contato da equipe com a realidade de produção. Plantão bem calibrado, revisão de incidentes, suporte a lançamentos importantes e análise de comportamento real do serviço ajudam SREs a construir sistemas melhores.
 
-### **crescimento linear de carga manual**
+O limite é a repetição sem aprendizado. Se a equipe executa a mesma intervenção toda semana, o sistema está pedindo engenharia.
 
-**crescimento linear de carga manual**: É trabalho humano que cresce junto com tráfego, número de usuários ou quantidade de serviços. Se nada mudar, a equipe precisa crescer linearmente para manter o mesmo nível de operação.
+### **Limite de carga operacional**
 
-Esse conceito fica concreto quando a equipe consegue escolher uma tarefa de alto volume para automatizar primeiro.
+Um **limite de carga operacional** protege a capacidade de engenharia. A regra prática popularizada em SRE é reservar parte significativa do tempo para trabalho de engenharia, evitando que a equipe vire apenas uma fila de suporte.
 
-### **limite de carga operacional**
+Esse limite precisa ter consequência. Quando a carga reativa ultrapassa o combinado, a equipe deve renegociar prioridade, devolver responsabilidade, automatizar, remover escopo ou atacar causa raiz.
 
-**limite de carga operacional**: É uma barreira explícita para impedir que a equipe vire apenas suporte reativo. Quando o limite é ultrapassado, o sistema precisa devolver trabalho ao produto, automatizar ou reduzir escopo.
+### **Medição de toil**
 
-Uma forma simples de aplicar isso é: Classificar tickets recentes como toil ou engenharia.
+Toil invisível não entra em prioridade. A equipe precisa medir volume, tempo gasto, frequência, origem, serviço afetado e possibilidade de remoção. Tickets, alertas, tarefas manuais, solicitações recorrentes e operações de release devem ser classificados com critérios consistentes.
 
-### **automação como investimento**
+Uma métrica útil não é apenas "horas de toil". Também importa saber quais fontes geram mais repetição e qual redução teria maior retorno.
 
-**automação como investimento**: É investimento para remover repetição, reduzir variação humana e tornar a operação mais rápida. Boa automação é idempotente, observável e segura para repetir.
+### **Automação versus eliminação**
 
-No dia a dia, isso aparece quando a equipe precisa calcular horas mensais gastas em tarefas repetitivas.
+Nem todo toil deve ser automatizado. Às vezes a resposta correta é remover uma feature, simplificar um fluxo, mudar ownership, corrigir um bug, alterar arquitetura ou deixar de oferecer uma operação manual.
 
+Automatizar uma rotina ruim pode cristalizar um processo errado. A primeira pergunta deve ser: "esse trabalho ainda precisa existir?".
+
+### **Plataforma interna e self-service**
+
+Plataformas internas podem reduzir toil quando oferecem caminhos seguros de self-service: criação de ambiente, deploy, rollback, dashboards, segredos, configuração, escalabilidade e diagnóstico. O ganho aparece quando equipes conseguem resolver tarefas comuns sem abrir tickets para SRE.
+
+Self-service sem guardrails pode apenas distribuir risco. Um bom caminho automatizado precisa de validação, limites, auditoria e documentação.
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Faça uma auditoria de toil em uma equipe ou serviço:
 
-- Classificar tickets recentes como toil ou engenharia.
-- Calcular horas mensais gastas em tarefas repetitivas.
-- Escolher uma tarefa de alto volume para automatizar primeiro.
-
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+- Colete tickets, páginas de plantão, solicitações manuais e tarefas recorrentes dos últimos 30 dias.
+- Classifique cada item como operação saudável, toil, incidente, melhoria ou suporte pontual.
+- Estime tempo gasto, frequência e equipe solicitante.
+- Escolha as três maiores fontes por custo mensal.
+- Para cada fonte, decida entre eliminar, automatizar, transferir ownership, simplificar ou aceitar conscientemente.
+- Defina uma métrica de acompanhamento para provar redução.
 
 ## Diagrama de apoio
 
 ```mermaid
 flowchart LR
-    Tema["Eliminando tarefas penosas"] --> C1["toil"]
-    C1 --> C2["trabalho operacional versus engenharia"]
-    C2 --> C3["crescimento linear de carga manual"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+    Work["Trabalho operacional"] --> Criteria["Critérios de toil"]
+    Criteria --> Decision{"É repetitivo e removível?"}
+    Decision -->|Não| Healthy["Operação saudável"]
+    Decision -->|Sim| Measure["Medir custo e origem"]
+    Measure --> Option["Eliminar / automatizar / simplificar"]
+    Option --> Evidence["Evidência de redução"]
 ```
 
 ## Erros comuns
 
-- Chamar todo trabalho chato de toil.
-- Automatizar uma rotina ruim sem remover a causa do trabalho repetitivo.
+- Chamar todo trabalho desagradável de toil.
+- Medir toil apenas por sensação, sem dados de tickets, alertas e tempo gasto.
+- Automatizar uma rotina ruim sem questionar se ela deveria existir.
+- Transferir toil para outra equipe e chamar isso de melhoria.
+- Criar self-service sem limites, auditoria ou documentação.
 - Aceitar que plantão e tickets consumam todo o tempo de engenharia.
 
 ## Perguntas para revisão
 
-1. Qual risco operacional **toil** ajuda a reduzir?
-2. Que evidência mostraria que a prática foi aplicada com sucesso?
-3. Como esse conceito mudaria uma decisão de release, plantão, arquitetura ou priorização?
+1. Quais tarefas crescem linearmente com usuários, tráfego ou número de serviços?
+2. Qual fonte de toil consome mais horas por mês?
+3. O trabalho deve ser eliminado, automatizado, simplificado ou assumido por outra equipe?
+4. Que métrica mostrará que a redução de toil realmente aconteceu?
 
 ## Exercícios
 
 ### Compreensão
 
-Explique a ideia central em até cinco linhas, usando um serviço real como exemplo.
+Explique por que toil não é sinônimo de "trabalho chato".
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Crie uma tabela com cinco tarefas operacionais recorrentes, classificando frequência, tempo gasto, dono atual, causa raiz e ação proposta.
 
 ### Análise
 
-Liste duas formas de aplicar esse conceito de maneira superficial e explique o
-risco de cada uma.
+Escolha uma automação existente e avalie se ela removeu toil ou apenas acelerou um processo que deveria ser redesenhado.
 
 ## Relação com práticas atuais
 
-Em plataformas cloud native, **toil** costuma aparecer em tickets repetitivos, ajustes manuais de infraestrutura, aprovações operacionais e alertas que não geram decisão. Engenharia de plataforma, GitOps e automações idempotentes são úteis quando removem a causa do trabalho manual, não apenas aceleram uma rotina ruim.
+Em ambientes cloud native, toil aparece em aprovações manuais, ajustes repetitivos de infraestrutura, solicitações de acesso, deploys assistidos, runbooks executados à mão, alertas ruidosos e tarefas de suporte que poderiam ser self-service. **Platform engineering**, GitOps, infraestrutura como código e catálogos internos ajudam quando reduzem dependência humana e preservam guardrails. DORA também reforça que capacidades técnicas e organizacionais só melhoram desempenho quando reduzem atrito real no fluxo de entrega.
 
 ## Recursos complementares
 
-- **Livro oficial online do Google SRE:** <https://sre.google/sre-book/>
-- **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - Eliminating Toil:** <https://sre.google/sre-book/eliminating-toil/>
 - **Site Reliability Workbook - Eliminating Toil:** <https://sre.google/workbook/eliminating-toil/>
+- **Google Cloud Architecture Framework - Operational excellence:** <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- **AWS Well-Architected Operational Excellence Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
+- **DORA - Capabilities:** <https://dora.dev/capabilities/>
 
 ## Fechamento
 
-Guarde a ideia principal: **Toil é trabalho manual, repetitivo, reativo e escalável linearmente com o serviço; deve ser reduzido por engenharia.**
+Guarde a ideia principal: **toil precisa ser tratado como dívida operacional mensurável, não como preço inevitável de operar produção**.
 
 Próximo: [Capítulo 04 - Monitorando sistemas distribuídos](capitulo-04.md).
 
@@ -120,8 +138,9 @@ Próximo: [Capítulo 04 - Monitorando sistemas distribuídos](capitulo-04.md).
 
 - Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
-- **Google SRE Book - Eliminating Toil:** <https://sre.google/sre-book/eliminating-toil/>
-- **Site Reliability Workbook - Eliminating Toil:** <https://sre.google/workbook/eliminating-toil/>
-- **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
-- **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
+- Google SRE. **Eliminating Toil**. <https://sre.google/sre-book/eliminating-toil/>
+- Google SRE. **Eliminating Toil - Workbook**. <https://sre.google/workbook/eliminating-toil/>
+- Google Cloud. **Architecture Framework - Operational excellence**. <https://docs.cloud.google.com/architecture/framework/operational-excellence>
+- AWS. **Operational Excellence Pillar**. <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
+- DORA. **Capabilities**. <https://dora.dev/capabilities/>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.
