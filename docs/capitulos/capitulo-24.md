@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **aprendizado intersetorial** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,39 @@ No dia a dia, isso aparece quando a equipe precisa introduzir checklist em uma o
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Comparar um processo interno com práticas de setores regulados.
 - Introduzir checklist em uma operação crítica.
 - Incentivar reporte de quase-incidentes.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Setores como aviação, saúde e energia mostram que sistemas críticos dependem de treinamento, checklists, reporte de quase-incidentes e investigação sem culpa. A adaptação para software precisa respeitar a velocidade de mudança: checklists devem ser leves, versionados e usados no fluxo real.
+
+Procedimento recomendado:
+
+1. Escolha uma operação crítica: lançamento, migração, failover, restauração ou resposta a incidente.
+2. Crie checklist curto com itens que evitam esquecimento perigoso.
+3. Teste o checklist em simulado ou mudança real pequena.
+4. Incentive reporte de quase-incidentes sem punição.
+5. Revise o processo depois de cada uso.
+
+Exemplo de checklist de failover:
+
+| Item | Confirmação |
+| --- | --- |
+| Critério de failover atingido | Sim / não |
+| Capacidade do destino validada | Sim / não |
+| Stakeholders informados | Sim / não |
+| Plano de retorno definido | Sim / não |
+| Métricas pós-failover monitoradas | Sim / não |
+
+O aprendizado intersetorial mais útil é disciplina operacional, não burocracia. O processo deve reduzir erro humano sem impedir resposta rápida.
 
 ## Diagrama de apoio
 

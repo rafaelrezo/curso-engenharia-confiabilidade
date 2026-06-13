@@ -64,6 +64,33 @@ Revise uma dependência crítica do serviço:
 - Identifique filas sem limite ou sem métrica de idade.
 - Escolha um modo de degradação que preserve a jornada principal do usuário.
 
+## Aprofundamento prático
+
+Sobrecarga e cascata são problemas de contrato entre cliente e servidor. Se o servidor fica lento e o cliente faz retries agressivos, a falha local vira amplificação. A configuração correta define timeout, deadline total, tentativas, backoff, jitter, limite por cliente e resposta explícita de overload.
+
+Procedimento recomendado:
+
+1. Defina deadline total da operação a partir do SLO.
+2. Configure timeout menor que o deadline, deixando tempo para fallback ou resposta.
+3. Limite tentativas e use backoff exponencial com jitter.
+4. Rejeite carga com código claro, como 429 ou 503, quando o serviço estiver saturado.
+5. Separe tráfego crítico de tarefas em lote ou recomputações.
+
+Exemplo de política de cliente:
+
+```yaml
+chamada: obter_autorizacao
+deadline_total: 1200ms
+timeout_por_tentativa: 350ms
+max_tentativas: 2
+backoff: exponencial
+jitter: true
+retry_em: ["timeout", "503"]
+do_not_retry_on: ["400", "401", "409"]
+```
+
+Uma boa regra: se todos os clientes repetirem ao mesmo tempo, a dependência deve continuar protegida. Se isso não for verdade, a política ainda está perigosa.
+
 ## Diagrama de apoio
 
 ```mermaid

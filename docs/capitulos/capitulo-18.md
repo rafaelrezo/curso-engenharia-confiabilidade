@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **Launch Coordination Engineering** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,43 @@ No dia a dia, isso aparece quando a equipe precisa planejar fases e critérios d
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Criar checklist de lançamento para um serviço.
 - Planejar fases e critérios de rollback.
 - Incluir modos de falha e abusos de clientes no plano.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Lançamento confiável é coordenação de risco antes da exposição ampla. O checklist do livro cobre arquitetura, dependências, capacidade, modos de falha, automação e rollout. Em prática moderna, isso vira revisão de prontidão com critérios objetivos de entrada e saída.
+
+Procedimento recomendado:
+
+1. Identifique usuários afetados, dependências e novas cargas esperadas.
+2. Defina SLIs de lançamento e dashboards antes do rollout.
+3. Liste modos de falha, abusos de cliente e comportamento sob dependência lenta.
+4. Planeje fases: dogfood, beta, 1%, 10%, 50%, 100%.
+5. Defina rollback, kill switch e responsáveis por decisão.
+
+Exemplo de critérios:
+
+```yaml
+launch: new_checkout
+fases: ["interno", "1%", "10%", "50%", "100%"]
+promote_if:
+  error_rate: "< 1%"
+  p95: "< 800ms"
+  support_tickets: "sem aumento relevante"
+rollback_if:
+  error_rate: ">= 2% por 10m"
+  payment_dependency: "timeouts acima do limite"
+```
+
+O checklist não é burocracia quando reduz surpresa. Ele força a equipe a descobrir lacunas enquanto ainda há tempo para corrigir.
 
 ## Diagrama de apoio
 

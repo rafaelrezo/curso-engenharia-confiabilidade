@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **integridade de dados** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,39 @@ No dia a dia, isso aparece quando a equipe precisa definir RPO e RTO para dados 
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Testar restauracao de um backup real.
 - Definir RPO e RTO para dados críticos.
 - Adicionar deteccao de exclusao ou corrupcao silenciosa.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Integridade de dados exige restauração testada. Backup sem exercício de recuperação é uma promessa não verificada. O livro diferencia backup, arquivamento, replicação e recuperação; a prática madura combina prevenção, detecção precoce e teste periódico.
+
+Procedimento recomendado:
+
+1. Classifique dados por criticidade, RPO e RTO.
+2. Separe backup de arquivamento e de replicação online.
+3. Ative proteção contra exclusão acidental, como soft delete ou retenção.
+4. Execute restauração em ambiente isolado e valide consistência.
+5. Meça tempo real de recuperação e perda real de dados.
+
+Modelo de exercício:
+
+| Etapa | Evidência |
+| --- | --- |
+| Escolher snapshot | Identificador e horário registrados |
+| Restaurar em ambiente isolado | Banco sobe sem tocar produção |
+| Validar dados | Contagens, checksums e consultas críticas |
+| Medir RTO/RPO | Tempo e perda comparados com meta |
+| Atualizar runbook | Lacunas corrigidas |
+
+A técnica essencial é "confiar, mas verificar": a equipe deve provar que consegue recuperar o dado certo no prazo necessário.
 
 ## Diagrama de apoio
 

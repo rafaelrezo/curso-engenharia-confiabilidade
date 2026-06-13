@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **triagem** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,36 @@ No dia a dia, isso aparece quando a equipe precisa separar mitigacao imediata de
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Registrar hipóteses antes de executar correções.
 - Separar mitigacao imediata de correção definitiva.
 - Manter linha do tempo durante uma investigação.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+**Troubleshooting** eficiente evita tentativa aleatória em produção. O método do livro pode ser aplicado como um ciclo: entender o relato, triar impacto, formular hipóteses, testar com mudança pequena e registrar resultado. Resultado negativo não é perda de tempo; ele elimina caminhos falsos.
+
+Procedimento recomendado:
+
+1. Escreva o sintoma em termos observáveis: quem é afetado, desde quando, em qual operação.
+2. Monte uma linha do tempo com deploys, mudanças de configuração e eventos externos.
+3. Liste hipóteses concorrentes antes de agir.
+4. Teste a hipótese que reduz mais incerteza com menor risco.
+5. Separe mitigação imediata de correção definitiva.
+
+Exemplo de registro durante investigação:
+
+| Hora | Observação | Hipótese | Teste | Resultado |
+| --- | --- | --- | --- | --- |
+| 10:05 | p99 subiu só em checkout | dependência lenta | trace por operação | confirmado em gateway |
+| 10:12 | erros aumentam após retry | amplificação | reduzir tentativas no cliente | erro estabilizou |
+
+A disciplina protege contra a pressão de "mexer em alguma coisa". Em incidente, mudança sem hipótese pode piorar o estado e apagar evidências.
 
 ## Diagrama de apoio
 

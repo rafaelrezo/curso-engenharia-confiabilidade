@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **sobrecarga operacional** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,38 @@ No dia a dia, isso aparece quando a equipe precisa escrever diagnóstico compart
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Mapear principais causas de estresse operacional.
 - Escrever diagnóstico compartilhado para a equipe.
 - Priorizar correções simples que reduzem alertas ou tickets.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Recuperar uma equipe em sobrecarga operacional exige diagnóstico antes de solução. Um SRE que chega em um serviço saturado deve criar contexto compartilhado: alertas frequentes, bugs recorrentes, deploys frágeis, runbooks ausentes, dependências instáveis e pedidos manuais.
+
+Procedimento recomendado:
+
+1. Passe uma semana observando plantão, tickets e releases.
+2. Liste fontes de estresse e impacto: frequência, duração e risco.
+3. Escolha vitórias básicas: alerta ruim, runbook faltante, rollback quebrado, bug repetido.
+4. Comunique diagnóstico em linguagem comum para produto, engenharia e gestão.
+5. Priorize correções que devolvem capacidade de engenharia.
+
+Plano de 30 dias:
+
+| Semana | Foco |
+| --- | --- |
+| 1 | Entender serviço, donos, SLOs e incidentes recentes |
+| 2 | Reduzir ruído de alertas e escrever runbooks críticos |
+| 3 | Corrigir principal fonte de toil ou bug recorrente |
+| 4 | Revisar deploy, rollback e próximos riscos |
+
+O risco é tentar resolver tudo. Em sobrecarga, primeiro crie espaço para respirar; depois ataque arquitetura e processos maiores.
 
 ## Diagrama de apoio
 

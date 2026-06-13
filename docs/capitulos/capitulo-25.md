@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **SRE como disciplina** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,37 @@ No dia a dia, isso aparece quando a equipe precisa escolher três lacunas priori
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Revisar quais práticas do curso já existem na organização.
 - Escolher três lacunas prioritárias de confiabilidade.
 - Montar um plano de melhoria incremental.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+A conclusão prática do curso é transformar princípios em um plano de melhoria. Escolha um serviço real e avalie maturidade em seis frentes: objetivos de serviço, observabilidade, mudança, incidentes, dados/estado e colaboração. Depois selecione poucas ações de alto retorno.
+
+Procedimento recomendado:
+
+1. Dê nota de 1 a 5 para cada frente de confiabilidade.
+2. Use evidências, não sensação: dashboards, incidentes, runbooks, pipelines e postmortems.
+3. Escolha três lacunas prioritárias.
+4. Defina ação, dono, prazo e métrica de sucesso.
+5. Revise mensalmente se o risco diminuiu.
+
+Modelo de plano:
+
+| Frente | Lacuna | Ação | Evidência de sucesso |
+| --- | --- | --- | --- |
+| SLO | Sem meta de usuário | Definir SLI e SLO de checkout | Dashboard usado em release |
+| Incidentes | Sem documento vivo | Adotar template e simulado | Incidente com linha do tempo clara |
+| Toil | Tickets repetidos | Criar self-service seguro | Redução de 50% em 60 dias |
+
+SRE amadurece quando deixa de ser um conjunto de ideias e vira rotina mensurável: menos surpresa, melhor recuperação, mudanças mais seguras e aprendizado acumulado.
 
 ## Diagrama de apoio
 

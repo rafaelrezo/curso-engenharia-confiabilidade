@@ -117,22 +117,46 @@ Escolha um serviço real e execute uma análise inicial em cinco passos:
 
 Depois da análise, procure uma evidência simples de melhoria: alerta mais acionável, rollback mais claro, menos intervenção manual, dependência documentada, capacidade melhor estimada, redução de latência, teste de recuperação executado ou decisão de release mais fácil de defender.
 
+## Aprofundamento prático
+
+Um bom primeiro exercício de **SRE** é escolher um serviço conhecido e produzir um mapa operacional de uma página. Esse mapa deve mostrar usuário, ponto de entrada, autenticação, aplicação, banco de dados, filas, caches, dependências externas, mecanismo de deploy, telemetria e plantão. O livro usa a infraestrutura do Google para mostrar que produção é um ecossistema; em uma empresa menor, o mesmo raciocínio vale para uma API atrás de um load balancer, executando em Kubernetes, usando banco gerenciado e fila de mensagens.
+
+Procedimento recomendado:
+
+1. Desenhe o caminho de uma requisição crítica do usuário até a resposta.
+2. Marque onde a requisição pode falhar, ficar lenta ou retornar dado incorreto.
+3. Para cada ponto, registre o sinal disponível: métrica, log, trace, evento de deploy ou alarme.
+4. Escolha um **SLI** inicial ligado à experiência do usuário, não ao estado interno da máquina.
+5. Liste três tarefas manuais recorrentes e classifique se são **toil**.
+
+Artefato mínimo:
+
+| Campo | Exemplo |
+| --- | --- |
+| Jornada crítica | Autorizar pagamento |
+| SLI inicial | Porcentagem de autorizações bem-sucedidas |
+| Dependência crítica | Gateway externo de pagamento |
+| Modo de falha | Timeout, erro 5xx, resposta lenta |
+| Ação operacional | Rollback, degradação, troca de rota ou abertura de incidente |
+
+A evidência de aprendizado é simples: uma pessoa nova deve conseguir explicar como o serviço atende o usuário, onde ele falha e qual sinal justificaria acordar o plantão.
+
 ## Diagrama de apoio
 
 ```mermaid
 flowchart LR
-    Usuario["Experiência do usuário"] --> SLI["**SLI**"]
+    Usuário["Experiência do usuário"] --> SLI["**SLI**"]
     SLI --> SLO["**SLO**"]
     SLO --> Budget["**Error budget**"]
     Budget --> Decisao["Decisões de release e confiabilidade"]
-    Usuario --> Requisicao["Caminho da requisição"]
+    Usuário --> Requisicao["Caminho da requisição"]
     Requisicao --> App["Aplicação"]
     App --> Plataforma["Plataforma e orquestração"]
     Plataforma --> Dados["Dados, rede e dependências"]
     Dados --> Telemetria["Observabilidade"]
     Telemetria --> Incidente["Resposta e aprendizado"]
-    Incidente --> Automacao["Automação e redução de toil"]
-    Automacao --> Usuario
+    Incidente --> Automação["Automação e redução de toil"]
+    Automação --> Usuário
 ```
 
 ## Erros comuns

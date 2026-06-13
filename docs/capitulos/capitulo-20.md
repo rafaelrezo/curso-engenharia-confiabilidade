@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **carga operacional** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,38 @@ No dia a dia, isso aparece quando a equipe precisa separar canais urgentes de ca
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Medir fontes de interrupcao da equipe.
 - Separar canais urgentes de canais informativos.
 - Criar instruções claras para alertas críticos.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Interrupções cognitivas são trabalho invisível. Mensagens soltas, alertas informativos, reuniões sem decisão e pedidos urgentes quebram fluxo e aumentam erro. O capítulo sobre interrupções ajuda a tratar atenção humana como recurso limitado.
+
+Procedimento recomendado:
+
+1. Meça fontes de interrupção por uma semana: alertas, chats, tickets, reuniões e pedidos diretos.
+2. Classifique urgência real: agora, hoje, esta semana ou informativo.
+3. Crie canais separados para página, suporte, dúvidas e anúncios.
+4. Defina horário de triagem para trabalho não urgente.
+5. Revise instruções de alertas para que a primeira ação seja clara.
+
+Exemplo de política:
+
+| Tipo | Canal | Resposta esperada |
+| --- | --- | --- |
+| Impacto em produção | Pager | Imediata |
+| Degradação sem urgência | Ticket | Mesmo dia útil |
+| Dúvida de uso | Canal de suporte | Próxima triagem |
+| Anúncio | Canal informativo | Sem interrupção |
+
+A boa gestão de interrupções não isola SRE do resto da empresa. Ela protege foco para que respostas urgentes sejam melhores.
 
 ## Diagrama de apoio
 

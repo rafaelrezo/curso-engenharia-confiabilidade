@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **modelo de engajamento** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,38 @@ No dia a dia, isso aparece quando a equipe precisa criar checklist de prontidao 
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Definir critérios para SRE aceitar um serviço.
 - Criar checklist de prontidao operacional.
 - Estabelecer revisoes periodicas de engajamento.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+O modelo de engajamento de SRE protege foco. Sem critérios de entrada, a equipe vira suporte genérico; sem critérios de saída, serviços permanecem dependentes de SRE indefinidamente. O acordo precisa deixar claro o que produto, desenvolvimento e SRE assumem.
+
+Procedimento recomendado:
+
+1. Defina requisitos mínimos: SLO, observabilidade, runbooks, rollback, ownership e suporte.
+2. Escreva responsabilidades de cada equipe.
+3. Combine limites de toil e critérios de escalonamento.
+4. Faça revisão periódica de maturidade operacional.
+5. Planeje saída ou mudança de modelo quando o serviço amadurecer.
+
+Exemplo de contrato:
+
+| Área | Responsabilidade |
+| --- | --- |
+| Produto | Definir expectativa de usuário e prioridade de risco |
+| Desenvolvimento | Corrigir bugs, manter código e participar de incidentes |
+| SRE | Orientar SLOs, automação, plantão e práticas de produção |
+| Plataforma | Fornecer caminhos seguros e suporte a infraestrutura |
+
+Engajamento saudável não é posse do serviço por SRE. É responsabilidade compartilhada com critérios explícitos.
 
 ## Diagrama de apoio
 

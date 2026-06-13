@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **consenso distribuído** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,38 @@ No dia a dia, isso aparece quando a equipe precisa documentar quorum e localiza�
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Identificar estados que não podem divergir.
 - Documentar quorum e localização de réplicas.
 - Monitorar latência e saúde de sistemas de consenso.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Consenso distribuído deve ser reservado para estado realmente crítico. Locks, eleição de líder, configuração global e filas confiáveis podem precisar de quorum; métricas, caches e dados recomputáveis geralmente não. Usar consenso sem necessidade aumenta latência e complexidade.
+
+Procedimento recomendado:
+
+1. Liste estados que não podem divergir sem causar dano.
+2. Defina propriedade de segurança: o que nunca pode acontecer?
+3. Documente quorum, localização de réplicas, latência esperada e comportamento em partição.
+4. Monitore eleição de líder, perda de quorum, atraso de replicação e saturação.
+5. Teste recuperação de nó e perda de zona.
+
+Checklist de desenho:
+
+| Pergunta | Por que importa |
+| --- | --- |
+| O sistema tolera split-brain? | Se não tolera, precisa de coordenação forte |
+| Qual é o quorum mínimo? | Define disponibilidade sob falha |
+| Onde ficam as réplicas? | Afeta latência e resiliência regional |
+| Como clientes descobrem líder? | Evita escrita no destino errado |
+
+A técnica mais importante é simplicidade: mantenha o estado crítico pequeno, bem documentado e com poucos caminhos de escrita.
 
 ## Diagrama de apoio
 

@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **planejamento baseado em intenção** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -22,7 +22,7 @@ Em uma frase: **SRE também constrói sistemas de software para resolver problem
 
 **planejamento baseado em intenção**: É transformar intenção, demanda e restrições em capacidade e ações. Em SRE, planejamento ruim vira incidente futuro.
 
-Uma forma simples de aplicar isso é: Escolher um problema operacional que mereca produto interno.
+Uma forma simples de aplicar isso é: Escolher um problema operacional que mereça produto interno.
 
 ### **ferramentas internas**
 
@@ -40,7 +40,7 @@ Esse conceito fica concreto quando a equipe consegue medir adoção e redução 
 
 **tempo para desenvolvimento**: É uma prática que transforma uma preocupação operacional em decisão concreta. Ela aparece quando a equipe precisa escolher entre aceitar risco, automatizar, simplificar, melhorar observabilidade, mudar o processo de release ou corrigir a causa raiz de um problema recorrente.
 
-Uma forma simples de aplicar isso é: Escolher um problema operacional que mereca produto interno.
+Uma forma simples de aplicar isso é: Escolher um problema operacional que mereça produto interno.
 
 ### **cultura de engenharia**
 
@@ -51,15 +51,44 @@ No dia a dia, isso aparece quando a equipe precisa definir usuários e requisito
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
-- Escolher um problema operacional que mereca produto interno.
+- Escolher um problema operacional que mereça produto interno.
 - Definir usuários e requisitos de uma ferramenta de SRE.
 - Medir adoção e redução de carga após entrega.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+SRE também constrói software. O estudo de caso de planejamento de capacidade baseado em intenção mostra uma lição transportável: ferramentas internas devem nascer de um problema operacional recorrente, não da vontade de criar plataforma. Uma ferramenta só reduz risco quando altera o fluxo real das equipes.
+
+Procedimento recomendado:
+
+1. Defina o usuário da ferramenta: SRE, desenvolvedor, gestor de capacidade ou plantão.
+2. Escreva a decisão que a ferramenta precisa melhorar.
+3. Modele entradas, validações, saídas e integrações.
+4. Entregue um fluxo mínimo e acompanhe adoção.
+5. Meça redução de toil, incidentes evitados ou tempo de planejamento.
+
+Exemplo de contrato de intenção:
+
+```yaml
+service: recommendation
+intent:
+  expected_traffic_qps: 12000
+  growth_30d: "25%"
+  regions: ["sa-east1", "us-east1"]
+  criticality: high
+expected_output:
+  recommended_capacity: true
+  risks: true
+  approvals: ["sre", "produto"]
+```
+
+A técnica de desenvolvimento importante é tratar a ferramenta como produto: documentação, testes, telemetria, suporte e backlog. Caso contrário, ela vira mais um sistema interno abandonado.
 
 ## Diagrama de apoio
 

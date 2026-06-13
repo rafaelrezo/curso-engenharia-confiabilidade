@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **reunioes de produção** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,42 @@ No dia a dia, isso aparece quando a equipe precisa registrar decisões e pendenc
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Definir pauta fixa para reuniao de produção.
 - Registrar decisões e pendencias operacionais.
 - Criar canal claro para negociacao de SLO e prioridades.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Comunicação operacional precisa de fóruns previsíveis. Reunião de produção não deve ser uma conversa genérica; deve revisar risco, mudanças recentes, SLOs, incidentes, capacidade, dependências e ações pendentes.
+
+Procedimento recomendado:
+
+1. Mantenha pauta fixa e curta.
+2. Traga dados: SLO, error budget, incidentes, top alertas e mudanças relevantes.
+3. Registre decisões, donos e prazos.
+4. Separe discussão técnica profunda para follow-up.
+5. Revise pendências antigas e remova o que perdeu sentido.
+
+Modelo de pauta:
+
+```markdown
+# Reunião de produção
+SLOs em risco:
+Mudanças relevantes:
+Incidentes e quase-incidentes:
+Top fontes de toil:
+Dependências críticas:
+Decisões tomadas:
+Ações com dono e prazo:
+```
+
+A técnica é transformar conversa em memória operacional. Decisão que fica apenas no chat desaparece; decisão registrada pode ser cobrada, revisada e aprendida.
 
 ## Diagrama de apoio
 

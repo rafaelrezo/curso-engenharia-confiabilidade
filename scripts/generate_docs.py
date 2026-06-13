@@ -341,6 +341,19 @@ PT_BR_REPLACEMENTS = [
     (r"\bcritica\b", "crítica"),
     (r"\binvestigacao\b", "investigação"),
     (r"\bredundancia\b", "redundância"),
+    (r"\bmereca\b", "mereça"),
+    (r"\bservico:\b", "serviço:"),
+    (r"\blatencia_ms\b", "latência_ms"),
+    (r"\borcamento_saudavel\b", "orçamento_saudável"),
+    (r"\bconcluido\b", "concluído"),
+    (r"\bnao_retry_em\b", "não_retry_em"),
+    (r"\blancamento:\b", "lançamento:"),
+    (r"\brecomendacao\b", "recomendação"),
+    (r"\bintencao:\b", "intenção:"),
+    (r"\btrafego_esperado_qps\b", "tráfego_esperado_qps"),
+    (r"\bregioes:\b", "regiões:"),
+    (r"\bsaida_esperada\b", "saída_esperada"),
+    (r"\baprovacoes:\b", "aprovações:"),
 ]
 
 
@@ -1228,6 +1241,686 @@ MODERN_LINKS = [
 ]
 
 
+PRACTICAL_DEPTH_BY_DISPLAY = {
+    1: """
+    ## Aprofundamento prático
+
+    Um bom primeiro exercício de **SRE** é escolher um serviço conhecido e produzir um mapa operacional de uma página. Esse mapa deve mostrar usuário, ponto de entrada, autenticação, aplicação, banco de dados, filas, caches, dependências externas, mecanismo de deploy, telemetria e plantão. O livro usa a infraestrutura do Google para mostrar que produção é um ecossistema; em uma empresa menor, o mesmo raciocínio vale para uma API atrás de um load balancer, executando em Kubernetes, usando banco gerenciado e fila de mensagens.
+
+    Procedimento recomendado:
+
+    1. Desenhe o caminho de uma requisição crítica do usuário até a resposta.
+    2. Marque onde a requisição pode falhar, ficar lenta ou retornar dado incorreto.
+    3. Para cada ponto, registre o sinal disponível: métrica, log, trace, evento de deploy ou alarme.
+    4. Escolha um **SLI** inicial ligado à experiência do usuário, não ao estado interno da máquina.
+    5. Liste três tarefas manuais recorrentes e classifique se são **toil**.
+
+    Artefato mínimo:
+
+    | Campo | Exemplo |
+    | --- | --- |
+    | Jornada crítica | Autorizar pagamento |
+    | SLI inicial | Porcentagem de autorizações bem-sucedidas |
+    | Dependência crítica | Gateway externo de pagamento |
+    | Modo de falha | Timeout, erro 5xx, resposta lenta |
+    | Ação operacional | Rollback, degradação, troca de rota ou abertura de incidente |
+
+    A evidência de aprendizado é simples: uma pessoa nova deve conseguir explicar como o serviço atende o usuário, onde ele falha e qual sinal justificaria acordar o plantão.
+    """,
+    2: """
+    ## Aprofundamento prático
+
+    **SLO** só muda comportamento quando vira regra de decisão. Um exemplo concreto: uma API de checkout mede requisições elegíveis, considera sucesso qualquer resposta 2xx antes de 800 ms e avalia o resultado em janela móvel de 30 dias. Com SLO de 99,9%, a equipe aceita até 0,1% de falhas elegíveis na janela. Se metade desse orçamento for consumida nos primeiros dias, releases de maior risco devem desacelerar e correções de confiabilidade ganham prioridade.
+
+    Procedimento recomendado:
+
+    1. Defina a jornada de usuário, como login, busca, pagamento ou geração de relatório.
+    2. Escreva quais eventos entram e quais ficam fora do cálculo.
+    3. Escolha janela, fonte de dados e forma de agregação.
+    4. Combine uma política de ação para orçamento saudável, em alerta e esgotado.
+    5. Revise o SLO depois de observar dados reais por algumas semanas.
+
+    Exemplo de especificação:
+
+    ```yaml
+    service: checkout-api
+    sli: http_success_rate
+    eligible_events: "POST /checkout com cliente autenticado"
+    good_events: "status < 500 e latency_ms <= 800"
+    window: 30d
+    slo: 99.9
+    policy:
+      healthy_budget: "rollouts normais com canário"
+      high_burn: "pausar mudanças arriscadas e abrir revisão"
+      exhausted: "priorizar correções de confiabilidade"
+    ```
+
+    O erro mais comum é publicar o SLO no dashboard e não mudar nenhuma decisão. A prática só está viva quando release, capacidade, incidentes e roadmap usam o orçamento de erro como entrada.
+    """,
+    3: """
+    ## Aprofundamento prático
+
+    Para reduzir **toil**, trabalhe com amostras reais. Pegue 30 dias de tickets, páginas de plantão e solicitações manuais. Não classifique pela irritação que a tarefa causa; classifique pelos critérios do livro: manual, repetitiva, reativa, sem valor durável e com tendência de crescer junto com o serviço.
+
+    Exemplo: uma equipe recebe dez pedidos por semana para criar tópicos de mensageria. Se cada pedido exige abrir ticket, esperar aprovação, executar comando manual e colar o resultado, há toil. A solução madura pode ser um fluxo self-service com validação de nomes, limites de quota, aprovação automática para casos seguros, trilha de auditoria e rollback.
+
+    Procedimento recomendado:
+
+    1. Agrupe tarefas por origem: alerta, ticket, release, acesso, configuração, dados ou suporte.
+    2. Estime custo mensal em horas e risco operacional.
+    3. Pergunte se a tarefa deve existir. Eliminar vem antes de automatizar.
+    4. Para o que sobrar, defina automação idempotente e observável.
+    5. Meça redução de volume depois da mudança.
+
+    Matriz útil:
+
+    | Tarefa | Frequência | Causa provável | Melhor resposta |
+    | --- | --- | --- | --- |
+    | Reiniciar worker travado | Semanal | Bug ou timeout ruim | Corrigir causa e adicionar recuperação segura |
+    | Criar recurso padrão | Diária | Falta de self-service | Plataforma interna com guardrails |
+    | Aprovar deploy trivial | Diária | Processo excessivo | Política automática baseada em risco |
+
+    Uma redução real aparece como menos interrupções, menos tickets repetidos e mais tempo reservado para engenharia.
+    """,
+    4: """
+    ## Aprofundamento prático
+
+    Monitoração prática começa por uma pergunta: que sintoma do usuário exige ação agora? Para uma API, a resposta costuma envolver taxa de sucesso, latência de cauda, tráfego e saturação. Para um pipeline, envolve atraso, completude e corretude. Métricas internas ajudam diagnóstico, mas não devem virar página urgente sem impacto claro.
+
+    Procedimento recomendado:
+
+    1. Separe sinais de página, ticket, dashboard e auditoria.
+    2. Use percentis de latência, principalmente p95 e p99, em vez de média.
+    3. Anote eventos de deploy e configuração nos painéis principais.
+    4. Crie runbook para cada alerta que acorda alguém.
+    5. Remova alertas que ninguém sabe responder.
+
+    Exemplo de regra Prometheus orientada a SLO:
+
+    ```yaml
+    alert: CheckoutHighErrorRate
+    expr: |
+      sum(rate(http_requests_total{service="checkout",status=~"5.."}[5m]))
+      /
+      sum(rate(http_requests_total{service="checkout"}[5m])) > 0.02
+    for: 10m
+    labels:
+      severity: page
+    annotations:
+      summary: "Checkout com erro alto para usuários"
+      runbook: "https://runbooks.example/checkout-erros"
+    ```
+
+    Essa regra ainda precisa ser adaptada ao SLO real, mas mostra a forma correta: taxa, janela, serviço, severidade e runbook. Alertas baseados só em CPU ou memória devem ser justificados por relação clara com impacto ou risco iminente.
+    """,
+    5: """
+    ## Aprofundamento prático
+
+    **Automação** e **release engineering** precisam formar uma cadeia rastreável. Um incidente comum ocorre quando o pipeline testa uma imagem, mas o deploy usa outra; ou quando rollback volta o código, mas mantém a configuração que causou a falha. A prática correta separa construção, artefato, configuração, rollout e reversão.
+
+    Procedimento recomendado:
+
+    1. Gere artefato imutável a partir de entradas declaradas.
+    2. Associe versão, commit, dependências e configuração a cada promoção.
+    3. Implante primeiro em canário ou fatia pequena de tráfego.
+    4. Compare sinais de saúde antes de ampliar.
+    5. Exercite rollback de código e de configuração.
+
+    Exemplo de checklist de promoção:
+
+    ```yaml
+    release:
+      artefato: checkout-api:2026.06.12-391db5a
+      required_tests:
+        - unit
+        - api_contract
+        - reversible_migration
+      rollout:
+        canary: "5% por 30 minutos"
+        promote_if: "erro < 1% e p95 < 800ms"
+        rollback_if: "erro >= 2% por 10 minutos"
+      rollback:
+        code: "versão anterior assinada"
+        config: "último commit aprovado"
+    ```
+
+    O objetivo não é deixar o pipeline burocrático. É garantir que qualquer mudança tenha dono, evidência, limite de exposição e caminho de recuperação.
+    """,
+    6: """
+    ## Aprofundamento prático
+
+    **Simplicidade** precisa de inventário. Serviços ficam complexos por acúmulo: flags antigas, endpoints quase sem uso, dependências herdadas, exceções regionais, scripts especiais e configurações que ninguém remove. Cada item aumenta o número de estados que a equipe precisa entender durante incidente.
+
+    Procedimento recomendado:
+
+    1. Liste endpoints, jobs, flags, dependências e modos especiais.
+    2. Marque último uso, dono, risco e plano de remoção.
+    3. Escolha uma remoção pequena, reversível e mensurável.
+    4. Comunique consumidores conhecidos antes de desligar.
+    5. Observe sinais de erro e suporte após a remoção.
+
+    Exemplo de inventário:
+
+    | Item | Evidência de uso | Risco | Ação |
+    | --- | --- | --- | --- |
+    | Flag `legacy_checkout` | 0,2% do tráfego | Caminho não testado | Desativar por coorte e remover |
+    | Endpoint `/v1/export` | Dois clientes internos | Alto custo de suporte | Migrar clientes e aposentar |
+    | Job manual de reconciliação | Sem dono claro | Pode duplicar efeitos | Substituir por workflow idempotente |
+
+    Remoção segura também é engenharia. Ela deve ter telemetria, rollback e critério de sucesso, como qualquer release.
+    """,
+    7: """
+    ## Aprofundamento prático
+
+    Plantão saudável começa antes do telefone tocar. Um alerta de página precisa conter impacto, serviço, severidade, janela, hipótese inicial e runbook. Se a pessoa precisa descobrir do zero o que significa o alarme, o alerta ainda não está pronto para paginar.
+
+    Procedimento recomendado:
+
+    1. Revise os dez alertas que mais interromperam a equipe no último mês.
+    2. Para cada um, responda: houve ação imediata? havia runbook? havia impacto?
+    3. Rebaixe para ticket sinais que não exigem resposta urgente.
+    4. Defina critérios de entrada no plantão: treinamento, shadowing e simulado.
+    5. Acompanhe páginas por turno, páginas fora do horário e tempo de recuperação.
+
+    Modelo de runbook curto:
+
+    ```markdown
+    # CheckoutHighErrorRate
+    Impacto: usuários podem falhar ao finalizar compra.
+    Primeiro diagnóstico: verificar deploys recentes, erro por dependência e saturação.
+    Mitigação rápida: pausar rollout, ativar fallback de pagamento ou reverter config.
+    Escalonar para: time de checkout e provedor de pagamento.
+    ```
+
+    A métrica de qualidade do plantão não é "ninguém foi acordado". É receber poucos alertas, bons, acionáveis e ligados a risco real.
+    """,
+    8: """
+    ## Aprofundamento prático
+
+    **Troubleshooting** eficiente evita tentativa aleatória em produção. O método do livro pode ser aplicado como um ciclo: entender o relato, triar impacto, formular hipóteses, testar com mudança pequena e registrar resultado. Resultado negativo não é perda de tempo; ele elimina caminhos falsos.
+
+    Procedimento recomendado:
+
+    1. Escreva o sintoma em termos observáveis: quem é afetado, desde quando, em qual operação.
+    2. Monte uma linha do tempo com deploys, mudanças de configuração e eventos externos.
+    3. Liste hipóteses concorrentes antes de agir.
+    4. Teste a hipótese que reduz mais incerteza com menor risco.
+    5. Separe mitigação imediata de correção definitiva.
+
+    Exemplo de registro durante investigação:
+
+    | Hora | Observação | Hipótese | Teste | Resultado |
+    | --- | --- | --- | --- | --- |
+    | 10:05 | p99 subiu só em checkout | dependência lenta | trace por operação | confirmado em gateway |
+    | 10:12 | erros aumentam após retry | amplificação | reduzir tentativas no cliente | erro estabilizou |
+
+    A disciplina protege contra a pressão de "mexer em alguma coisa". Em incidente, mudança sem hipótese pode piorar o estado e apagar evidências.
+    """,
+    9: """
+    ## Aprofundamento prático
+
+    Resposta a incidentes precisa separar coordenação de execução técnica. Quando todos investigam ao mesmo tempo sem comando, a equipe perde linha do tempo, duplica ações e comunica mal. Um processo simples com papéis explícitos costuma ser suficiente para reduzir caos.
+
+    Procedimento recomendado:
+
+    1. Declare incidente quando houver impacto relevante, incerteza alta ou necessidade de coordenação.
+    2. Nomeie comandante do incidente, líder técnico e responsável por comunicação.
+    3. Mantenha documento vivo com estado, decisões, hipóteses e próximos passos.
+    4. Defina cadência de atualização para stakeholders.
+    5. Faça handoff explícito quando trocar responsáveis.
+
+    Modelo mínimo de documento vivo:
+
+    ```markdown
+    # Incidente: checkout indisponível
+    Status atual: mitigando / monitorando / resolvido
+    Impacto: 35% das tentativas de pagamento falham
+    Comandante: nome
+    Linha do tempo:
+    - 14:02 alerta de erro alto
+    - 14:08 rollout pausado
+    Próxima atualização: 14:30
+    ```
+
+    Depois da mitigação, o postmortem deve explicar condições sistêmicas e gerar ações com dono, prazo e evidência de conclusão.
+    """,
+    10: """
+    ## Aprofundamento prático
+
+    Monitorar interrupções de serviço cria memória quantitativa. Sem um catálogo consistente, a organização lembra do incidente mais recente e esquece padrões recorrentes. O capítulo do livro descreve agregação, rotulagem e análise; em uma prática moderna, isso vira base para revisão mensal de confiabilidade.
+
+    Procedimento recomendado:
+
+    1. Registre todo incidente com início, fim, duração, impacto e serviços afetados.
+    2. Classifique causa inicial, causa contribuinte, detecção, mitigação e recorrência.
+    3. Separe indisponibilidade total, degradação parcial, atraso de dados e erro silencioso.
+    4. Agregue por produto, dependência, tipo de mudança e horário.
+    5. Use tendências para priorizar trabalho, não para culpar equipes.
+
+    Campos mínimos:
+
+    | Campo | Uso |
+    | --- | --- |
+    | Impacto ao usuário | Evita medir só sintomas internos |
+    | Detecção | Mostra se usuário percebe antes da equipe |
+    | Modo de falha | Agrupa problemas repetidos |
+    | Tempo para mitigar | Mede capacidade de resposta |
+    | Ação preventiva | Conecta interrupção a melhoria |
+
+    O resultado esperado é uma lista curta de padrões: por exemplo, incidentes por configuração, por dependência externa, por sobrecarga ou por rollback não exercitado.
+    """,
+    11: """
+    ## Aprofundamento prático
+
+    Testes de confiabilidade validam comportamento sob falha, não apenas lógica feliz. Um serviço pode passar em testes unitários e falhar quando a dependência fica lenta, quando a fila atrasa, quando o banco retorna erro transitório ou quando rollback encontra schema incompatível.
+
+    Procedimento recomendado:
+
+    1. Liste dependências críticas e seus modos de falha: erro, latência, indisponibilidade, dado inválido.
+    2. Crie testes para timeout, retry, fallback, degradação e rollback.
+    3. Execute sondas de produção controladas para jornadas críticas.
+    4. Planeje testes de desastre com escopo pequeno e abort criteria.
+    5. Transforme incidentes reais em testes regressivos.
+
+    Exemplo de matriz:
+
+    | Falha simulada | Comportamento esperado | Sinal de aprovação |
+    | --- | --- | --- |
+    | Gateway lento | timeout e fallback | p95 limitado e erro controlado |
+    | Banco replica indisponível | leitura em rota alternativa | taxa de sucesso preservada |
+    | Deploy ruim | canário bloqueia promoção | rollback automático ou manual exercitado |
+
+    O teste útil precisa ter hipótese. "Vamos quebrar algo" é espetáculo; "vamos provar que checkout degrada sem derrubar catálogo" é engenharia.
+    """,
+    12: """
+    ## Aprofundamento prático
+
+    SRE também constrói software. O estudo de caso de planejamento de capacidade baseado em intenção mostra uma lição transportável: ferramentas internas devem nascer de um problema operacional recorrente, não da vontade de criar plataforma. Uma ferramenta só reduz risco quando altera o fluxo real das equipes.
+
+    Procedimento recomendado:
+
+    1. Defina o usuário da ferramenta: SRE, desenvolvedor, gestor de capacidade ou plantão.
+    2. Escreva a decisão que a ferramenta precisa melhorar.
+    3. Modele entradas, validações, saídas e integrações.
+    4. Entregue um fluxo mínimo e acompanhe adoção.
+    5. Meça redução de toil, incidentes evitados ou tempo de planejamento.
+
+    Exemplo de contrato de intenção:
+
+    ```yaml
+    service: recommendation
+    intent:
+      expected_traffic_qps: 12000
+      growth_30d: "25%"
+      regions: ["sa-east1", "us-east1"]
+      criticality: high
+    expected_output:
+      recommended_capacity: true
+      risks: true
+      approvals: ["sre", "produto"]
+    ```
+
+    A técnica de desenvolvimento importante é tratar a ferramenta como produto: documentação, testes, telemetria, suporte e backlog. Caso contrário, ela vira mais um sistema interno abandonado.
+    """,
+    13: """
+    ## Aprofundamento prático
+
+    Balanceamento de carga precisa decidir para onde enviar tráfego quando tudo está saudável e, principalmente, quando algo degrada. O livro separa borda e datacenter; em ambientes atuais, pense em DNS ou Anycast, load balancer gerenciado, ingress, gateway, service mesh e cliente interno.
+
+    Procedimento recomendado:
+
+    1. Desenhe todas as decisões de roteamento da requisição.
+    2. Registre health checks, pesos, failover e drenagem de conexão.
+    3. Verifique se saúde significa "responde rápido e corretamente", não apenas "processo vivo".
+    4. Teste uma região lenta, uma zona indisponível e um subconjunto de backends degradado.
+    5. Observe se failover causa sobrecarga no destino restante.
+
+    Exemplo de política:
+
+    ```yaml
+    load_balancing:
+      health_check: "/ready"
+      remove_se:
+        erro_5xx: "> 5% por 5m"
+        latencia_p95: "> 1000ms por 10m"
+      drenagem_conexao: 60s
+      failover_regional: "somente se capacidade_destino >= demanda_estimada"
+    ```
+
+    O ponto prático é evitar roteamento cego. Um backend vivo, mas saturado, pode ser pior do que um backend explicitamente removido do pool.
+    """,
+    14: """
+    ## Aprofundamento prático
+
+    Sobrecarga e cascata são problemas de contrato entre cliente e servidor. Se o servidor fica lento e o cliente faz retries agressivos, a falha local vira amplificação. A configuração correta define timeout, deadline total, tentativas, backoff, jitter, limite por cliente e resposta explícita de overload.
+
+    Procedimento recomendado:
+
+    1. Defina deadline total da operação a partir do SLO.
+    2. Configure timeout menor que o deadline, deixando tempo para fallback ou resposta.
+    3. Limite tentativas e use backoff exponencial com jitter.
+    4. Rejeite carga com código claro, como 429 ou 503, quando o serviço estiver saturado.
+    5. Separe tráfego crítico de tarefas em lote ou recomputações.
+
+    Exemplo de política de cliente:
+
+    ```yaml
+    chamada: obter_autorizacao
+    deadline_total: 1200ms
+    timeout_por_tentativa: 350ms
+    max_tentativas: 2
+    backoff: exponencial
+    jitter: true
+    retry_em: ["timeout", "503"]
+    do_not_retry_on: ["400", "401", "409"]
+    ```
+
+    Uma boa regra: se todos os clientes repetirem ao mesmo tempo, a dependência deve continuar protegida. Se isso não for verdade, a política ainda está perigosa.
+    """,
+    15: """
+    ## Aprofundamento prático
+
+    Consenso distribuído deve ser reservado para estado realmente crítico. Locks, eleição de líder, configuração global e filas confiáveis podem precisar de quorum; métricas, caches e dados recomputáveis geralmente não. Usar consenso sem necessidade aumenta latência e complexidade.
+
+    Procedimento recomendado:
+
+    1. Liste estados que não podem divergir sem causar dano.
+    2. Defina propriedade de segurança: o que nunca pode acontecer?
+    3. Documente quorum, localização de réplicas, latência esperada e comportamento em partição.
+    4. Monitore eleição de líder, perda de quorum, atraso de replicação e saturação.
+    5. Teste recuperação de nó e perda de zona.
+
+    Checklist de desenho:
+
+    | Pergunta | Por que importa |
+    | --- | --- |
+    | O sistema tolera split-brain? | Se não tolera, precisa de coordenação forte |
+    | Qual é o quorum mínimo? | Define disponibilidade sob falha |
+    | Onde ficam as réplicas? | Afeta latência e resiliência regional |
+    | Como clientes descobrem líder? | Evita escrita no destino errado |
+
+    A técnica mais importante é simplicidade: mantenha o estado crítico pequeno, bem documentado e com poucos caminhos de escrita.
+    """,
+    16: """
+    ## Aprofundamento prático
+
+    Jobs periódicos e pipelines precisam de estado explícito. "O cron rodou" não prova que o resultado foi entregue. A operação precisa saber se o job estava pendente, em execução, concluído, atrasado, falhou, repetiu ou produziu dado incompleto.
+
+    Procedimento recomendado:
+
+    1. Modele cada job como workflow com identificador único de execução.
+    2. Torne etapas idempotentes ou implemente deduplicação.
+    3. Evite horários sincronizados; use jitter e limite de concorrência.
+    4. Meça idade do dado, completude, contagem esperada e falhas por estágio.
+    5. Crie reprocessamento seguro para falhas parciais.
+
+    Exemplo de estado:
+
+    ```yaml
+    pipeline: fechamento_diario
+    execucao: "2026-06-12"
+    valid_states: [pending, running, completed, failed, delayed]
+    idempotencia: "chave por data e cliente"
+    alerta:
+      atraso: "idade_dado > 2h"
+      completude: "linhas_processadas < 99% do esperado"
+    ```
+
+    O sinal certo não é apenas falha do processo. Um pipeline pode terminar "com sucesso" e ainda entregar dado atrasado ou incompleto.
+    """,
+    17: """
+    ## Aprofundamento prático
+
+    Integridade de dados exige restauração testada. Backup sem exercício de recuperação é uma promessa não verificada. O livro diferencia backup, arquivamento, replicação e recuperação; a prática madura combina prevenção, detecção precoce e teste periódico.
+
+    Procedimento recomendado:
+
+    1. Classifique dados por criticidade, RPO e RTO.
+    2. Separe backup de arquivamento e de replicação online.
+    3. Ative proteção contra exclusão acidental, como soft delete ou retenção.
+    4. Execute restauração em ambiente isolado e valide consistência.
+    5. Meça tempo real de recuperação e perda real de dados.
+
+    Modelo de exercício:
+
+    | Etapa | Evidência |
+    | --- | --- |
+    | Escolher snapshot | Identificador e horário registrados |
+    | Restaurar em ambiente isolado | Banco sobe sem tocar produção |
+    | Validar dados | Contagens, checksums e consultas críticas |
+    | Medir RTO/RPO | Tempo e perda comparados com meta |
+    | Atualizar runbook | Lacunas corrigidas |
+
+    A técnica essencial é "confiar, mas verificar": a equipe deve provar que consegue recuperar o dado certo no prazo necessário.
+    """,
+    18: """
+    ## Aprofundamento prático
+
+    Lançamento confiável é coordenação de risco antes da exposição ampla. O checklist do livro cobre arquitetura, dependências, capacidade, modos de falha, automação e rollout. Em prática moderna, isso vira revisão de prontidão com critérios objetivos de entrada e saída.
+
+    Procedimento recomendado:
+
+    1. Identifique usuários afetados, dependências e novas cargas esperadas.
+    2. Defina SLIs de lançamento e dashboards antes do rollout.
+    3. Liste modos de falha, abusos de cliente e comportamento sob dependência lenta.
+    4. Planeje fases: dogfood, beta, 1%, 10%, 50%, 100%.
+    5. Defina rollback, kill switch e responsáveis por decisão.
+
+    Exemplo de critérios:
+
+    ```yaml
+    launch: new_checkout
+    fases: ["interno", "1%", "10%", "50%", "100%"]
+    promote_if:
+      error_rate: "< 1%"
+      p95: "< 800ms"
+      support_tickets: "sem aumento relevante"
+    rollback_if:
+      error_rate: ">= 2% por 10m"
+      payment_dependency: "timeouts acima do limite"
+    ```
+
+    O checklist não é burocracia quando reduz surpresa. Ele força a equipe a descobrir lacunas enquanto ainda há tempo para corrigir.
+    """,
+    19: """
+    ## Aprofundamento prático
+
+    Formar SRE para plantão exige exposição gradual. O livro destaca engenharia reversa, raciocínio estatístico, simulações e leitura de postmortems. A prática recomendada é uma trilha com marcos claros, não aprendizado acidental durante crise.
+
+    Procedimento recomendado:
+
+    1. Primeiros 30 dias: arquitetura, dependências, SLIs, dashboards e incidentes históricos.
+    2. Até 60 dias: shadowing de plantão, execução de runbooks e pequenos diagnósticos.
+    3. Até 90 dias: plantão supervisionado, simulado de incidente e contribuição em automação.
+    4. Depois: plantão independente com revisão de decisões e lacunas.
+
+    Artefato de prontidão:
+
+    | Competência | Evidência |
+    | --- | --- |
+    | Explicar arquitetura | Desenho revisado por par |
+    | Investigar alerta comum | Exercício ou shadowing concluído |
+    | Executar rollback | Simulação registrada |
+    | Comunicar incidente | Participação em exercício |
+    | Entender SLO | Explica impacto e orçamento |
+
+    A meta não é decorar comandos. É desenvolver julgamento para decidir com informação incompleta, pressão de tempo e impacto real.
+    """,
+    20: """
+    ## Aprofundamento prático
+
+    Interrupções cognitivas são trabalho invisível. Mensagens soltas, alertas informativos, reuniões sem decisão e pedidos urgentes quebram fluxo e aumentam erro. O capítulo sobre interrupções ajuda a tratar atenção humana como recurso limitado.
+
+    Procedimento recomendado:
+
+    1. Meça fontes de interrupção por uma semana: alertas, chats, tickets, reuniões e pedidos diretos.
+    2. Classifique urgência real: agora, hoje, esta semana ou informativo.
+    3. Crie canais separados para página, suporte, dúvidas e anúncios.
+    4. Defina horário de triagem para trabalho não urgente.
+    5. Revise instruções de alertas para que a primeira ação seja clara.
+
+    Exemplo de política:
+
+    | Tipo | Canal | Resposta esperada |
+    | --- | --- | --- |
+    | Impacto em produção | Pager | Imediata |
+    | Degradação sem urgência | Ticket | Mesmo dia útil |
+    | Dúvida de uso | Canal de suporte | Próxima triagem |
+    | Anúncio | Canal informativo | Sem interrupção |
+
+    A boa gestão de interrupções não isola SRE do resto da empresa. Ela protege foco para que respostas urgentes sejam melhores.
+    """,
+    21: """
+    ## Aprofundamento prático
+
+    Recuperar uma equipe em sobrecarga operacional exige diagnóstico antes de solução. Um SRE que chega em um serviço saturado deve criar contexto compartilhado: alertas frequentes, bugs recorrentes, deploys frágeis, runbooks ausentes, dependências instáveis e pedidos manuais.
+
+    Procedimento recomendado:
+
+    1. Passe uma semana observando plantão, tickets e releases.
+    2. Liste fontes de estresse e impacto: frequência, duração e risco.
+    3. Escolha vitórias básicas: alerta ruim, runbook faltante, rollback quebrado, bug repetido.
+    4. Comunique diagnóstico em linguagem comum para produto, engenharia e gestão.
+    5. Priorize correções que devolvem capacidade de engenharia.
+
+    Plano de 30 dias:
+
+    | Semana | Foco |
+    | --- | --- |
+    | 1 | Entender serviço, donos, SLOs e incidentes recentes |
+    | 2 | Reduzir ruído de alertas e escrever runbooks críticos |
+    | 3 | Corrigir principal fonte de toil ou bug recorrente |
+    | 4 | Revisar deploy, rollback e próximos riscos |
+
+    O risco é tentar resolver tudo. Em sobrecarga, primeiro crie espaço para respirar; depois ataque arquitetura e processos maiores.
+    """,
+    22: """
+    ## Aprofundamento prático
+
+    Comunicação operacional precisa de fóruns previsíveis. Reunião de produção não deve ser uma conversa genérica; deve revisar risco, mudanças recentes, SLOs, incidentes, capacidade, dependências e ações pendentes.
+
+    Procedimento recomendado:
+
+    1. Mantenha pauta fixa e curta.
+    2. Traga dados: SLO, error budget, incidentes, top alertas e mudanças relevantes.
+    3. Registre decisões, donos e prazos.
+    4. Separe discussão técnica profunda para follow-up.
+    5. Revise pendências antigas e remova o que perdeu sentido.
+
+    Modelo de pauta:
+
+    ```markdown
+    # Reunião de produção
+    SLOs em risco:
+    Mudanças relevantes:
+    Incidentes e quase-incidentes:
+    Top fontes de toil:
+    Dependências críticas:
+    Decisões tomadas:
+    Ações com dono e prazo:
+    ```
+
+    A técnica é transformar conversa em memória operacional. Decisão que fica apenas no chat desaparece; decisão registrada pode ser cobrada, revisada e aprendida.
+    """,
+    23: """
+    ## Aprofundamento prático
+
+    O modelo de engajamento de SRE protege foco. Sem critérios de entrada, a equipe vira suporte genérico; sem critérios de saída, serviços permanecem dependentes de SRE indefinidamente. O acordo precisa deixar claro o que produto, desenvolvimento e SRE assumem.
+
+    Procedimento recomendado:
+
+    1. Defina requisitos mínimos: SLO, observabilidade, runbooks, rollback, ownership e suporte.
+    2. Escreva responsabilidades de cada equipe.
+    3. Combine limites de toil e critérios de escalonamento.
+    4. Faça revisão periódica de maturidade operacional.
+    5. Planeje saída ou mudança de modelo quando o serviço amadurecer.
+
+    Exemplo de contrato:
+
+    | Área | Responsabilidade |
+    | --- | --- |
+    | Produto | Definir expectativa de usuário e prioridade de risco |
+    | Desenvolvimento | Corrigir bugs, manter código e participar de incidentes |
+    | SRE | Orientar SLOs, automação, plantão e práticas de produção |
+    | Plataforma | Fornecer caminhos seguros e suporte a infraestrutura |
+
+    Engajamento saudável não é posse do serviço por SRE. É responsabilidade compartilhada com critérios explícitos.
+    """,
+    24: """
+    ## Aprofundamento prático
+
+    Setores como aviação, saúde e energia mostram que sistemas críticos dependem de treinamento, checklists, reporte de quase-incidentes e investigação sem culpa. A adaptação para software precisa respeitar a velocidade de mudança: checklists devem ser leves, versionados e usados no fluxo real.
+
+    Procedimento recomendado:
+
+    1. Escolha uma operação crítica: lançamento, migração, failover, restauração ou resposta a incidente.
+    2. Crie checklist curto com itens que evitam esquecimento perigoso.
+    3. Teste o checklist em simulado ou mudança real pequena.
+    4. Incentive reporte de quase-incidentes sem punição.
+    5. Revise o processo depois de cada uso.
+
+    Exemplo de checklist de failover:
+
+    | Item | Confirmação |
+    | --- | --- |
+    | Critério de failover atingido | Sim / não |
+    | Capacidade do destino validada | Sim / não |
+    | Stakeholders informados | Sim / não |
+    | Plano de retorno definido | Sim / não |
+    | Métricas pós-failover monitoradas | Sim / não |
+
+    O aprendizado intersetorial mais útil é disciplina operacional, não burocracia. O processo deve reduzir erro humano sem impedir resposta rápida.
+    """,
+    25: """
+    ## Aprofundamento prático
+
+    A conclusão prática do curso é transformar princípios em um plano de melhoria. Escolha um serviço real e avalie maturidade em seis frentes: objetivos de serviço, observabilidade, mudança, incidentes, dados/estado e colaboração. Depois selecione poucas ações de alto retorno.
+
+    Procedimento recomendado:
+
+    1. Dê nota de 1 a 5 para cada frente de confiabilidade.
+    2. Use evidências, não sensação: dashboards, incidentes, runbooks, pipelines e postmortems.
+    3. Escolha três lacunas prioritárias.
+    4. Defina ação, dono, prazo e métrica de sucesso.
+    5. Revise mensalmente se o risco diminuiu.
+
+    Modelo de plano:
+
+    | Frente | Lacuna | Ação | Evidência de sucesso |
+    | --- | --- | --- | --- |
+    | SLO | Sem meta de usuário | Definir SLI e SLO de checkout | Dashboard usado em release |
+    | Incidentes | Sem documento vivo | Adotar template e simulado | Incidente com linha do tempo clara |
+    | Toil | Tickets repetidos | Criar self-service seguro | Redução de 50% em 60 dias |
+
+    SRE amadurece quando deixa de ser um conjunto de ideias e vira rotina mensurável: menos surpresa, melhor recuperação, mudanças mais seguras e aprendizado acumulado.
+    """,
+}
+
+
+def practical_depth_for_path(path: Path, text: str) -> str:
+    if path.parent != CHAPTERS_DIR or path.suffix != ".md":
+        return text
+    match = re.fullmatch(r"capitulo-(\d{2})\.md", path.name)
+    if not match:
+        return text
+    display = int(match.group(1))
+    section = PRACTICAL_DEPTH_BY_DISPLAY.get(display)
+    if not section or "## Aprofundamento prático" in text:
+        return text
+    rendered = dedent(section).strip()
+    markers = [
+        "## Diagrama de apoio",
+        "## Visão sistêmica",
+        "## Erros comuns",
+        "## Relação com práticas atuais",
+    ]
+    for marker in markers:
+        position = text.find(f"\n{marker}")
+        if position != -1:
+            return f"{text[:position].rstrip()}\n\n{rendered}\n\n{text[position + 1:]}"
+    return f"{text.rstrip()}\n\n{rendered}\n"
+
+
 def link_lines(links: list[tuple[str, str]]) -> str:
     lines = []
     for label, url in links:
@@ -1442,6 +2135,18 @@ def write(path: Path, content: str) -> None:
     text = dedent(content).strip() + "\n"
     if path.suffix == ".md":
         text = normalize_pt_br(text)
+        text = practical_depth_for_path(path, text)
+        text = normalize_pt_br(text)
+    path.write_text(text, encoding="utf-8")
+
+
+def enrich_existing_chapter(path: Path) -> None:
+    if not path.exists():
+        return
+    text = path.read_text(encoding="utf-8")
+    text = normalize_pt_br(text)
+    text = practical_depth_for_path(path, text)
+    text = normalize_pt_br(text)
     path.write_text(text, encoding="utf-8")
 
 
@@ -3191,9 +3896,9 @@ def chapter_page(chapter: dict) -> str:
     visible_number = display_number(chapter["number"])
     title = display_title(chapter)
     objectives = bullets([
-        "Explicar o problema de confiabilidade tratado pelo tema.",
-        "Reconhecer onde o tema aparece em um serviço real.",
-        "Aplicar o conceito em uma decisão operacional ou de engenharia.",
+        f"Identificar como **{normalize_pt_br(first_concept)}** aparece em produção.",
+        "Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.",
+        "Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.",
     ])
     mistakes = bullets(chapter_specific_mistakes(chapter))
     questions = "\n".join(
@@ -3221,13 +3926,13 @@ Em uma frase: **{chapter["central"]}**
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 {practice}
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
 
 {diagram_block(chapter)}## Erros comuns
 
@@ -3739,6 +4444,7 @@ def build_extra_css() -> str:
 
 
 def main() -> None:
+    enrich_existing_chapter(CHAPTERS_DIR / display_slug(1))
     write(CHAPTERS_DIR / display_slug(3), consolidated_risk_slo_page())
     write(CHAPTERS_DIR / display_slug(5), toil_page())
     write(CHAPTERS_DIR / display_slug(6), monitoring_page())

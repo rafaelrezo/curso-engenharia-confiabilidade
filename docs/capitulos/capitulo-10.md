@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **registro de interrupções** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,39 @@ No dia a dia, isso aparece quando a equipe precisa classificar interrupções po
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Montar catalogo de incidentes dos ultimos meses.
 - Classificar interrupções por causa e impacto.
 - Criar indicador mensal de confiabilidade percebida.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Monitorar interrupções de serviço cria memória quantitativa. Sem um catálogo consistente, a organização lembra do incidente mais recente e esquece padrões recorrentes. O capítulo do livro descreve agregação, rotulagem e análise; em uma prática moderna, isso vira base para revisão mensal de confiabilidade.
+
+Procedimento recomendado:
+
+1. Registre todo incidente com início, fim, duração, impacto e serviços afetados.
+2. Classifique causa inicial, causa contribuinte, detecção, mitigação e recorrência.
+3. Separe indisponibilidade total, degradação parcial, atraso de dados e erro silencioso.
+4. Agregue por produto, dependência, tipo de mudança e horário.
+5. Use tendências para priorizar trabalho, não para culpar equipes.
+
+Campos mínimos:
+
+| Campo | Uso |
+| --- | --- |
+| Impacto ao usuário | Evita medir só sintomas internos |
+| Detecção | Mostra se usuário percebe antes da equipe |
+| Modo de falha | Agrupa problemas repetidos |
+| Tempo para mitigar | Mede capacidade de resposta |
+| Ação preventiva | Conecta interrupção a melhoria |
+
+O resultado esperado é uma lista curta de padrões: por exemplo, incidentes por configuração, por dependência externa, por sobrecarga ou por rollback não exercitado.
 
 ## Diagrama de apoio
 

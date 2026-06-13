@@ -64,6 +64,33 @@ Escolha um incidente recente ou simulado e execute uma revisão curta:
 - Identifique uma lacuna de prontidão que poderia ser treinada antes da próxima crise.
 - Escreva duas ações corretivas com dono e evidência de conclusão.
 
+## Aprofundamento prático
+
+Resposta a incidentes precisa separar coordenação de execução técnica. Quando todos investigam ao mesmo tempo sem comando, a equipe perde linha do tempo, duplica ações e comunica mal. Um processo simples com papéis explícitos costuma ser suficiente para reduzir caos.
+
+Procedimento recomendado:
+
+1. Declare incidente quando houver impacto relevante, incerteza alta ou necessidade de coordenação.
+2. Nomeie comandante do incidente, líder técnico e responsável por comunicação.
+3. Mantenha documento vivo com estado, decisões, hipóteses e próximos passos.
+4. Defina cadência de atualização para stakeholders.
+5. Faça handoff explícito quando trocar responsáveis.
+
+Modelo mínimo de documento vivo:
+
+```markdown
+# Incidente: checkout indisponível
+Status atual: mitigando / monitorando / resolvido
+Impacto: 35% das tentativas de pagamento falham
+Comandante: nome
+Linha do tempo:
+- 14:02 alerta de erro alto
+- 14:08 rollout pausado
+Próxima atualização: 14:30
+```
+
+Depois da mitigação, o postmortem deve explicar condições sistêmicas e gerar ações com dono, prazo e evidência de conclusão.
+
 ## Diagrama de apoio
 
 ```mermaid

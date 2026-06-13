@@ -64,6 +64,35 @@ Escolha um serviço e execute uma análise enxuta:
 - Calcule o **error budget** aproximado.
 - Escreva uma regra simples para quando releases devem desacelerar.
 
+## Aprofundamento prático
+
+**SLO** só muda comportamento quando vira regra de decisão. Um exemplo concreto: uma API de checkout mede requisições elegíveis, considera sucesso qualquer resposta 2xx antes de 800 ms e avalia o resultado em janela móvel de 30 dias. Com SLO de 99,9%, a equipe aceita até 0,1% de falhas elegíveis na janela. Se metade desse orçamento for consumida nos primeiros dias, releases de maior risco devem desacelerar e correções de confiabilidade ganham prioridade.
+
+Procedimento recomendado:
+
+1. Defina a jornada de usuário, como login, busca, pagamento ou geração de relatório.
+2. Escreva quais eventos entram e quais ficam fora do cálculo.
+3. Escolha janela, fonte de dados e forma de agregação.
+4. Combine uma política de ação para orçamento saudável, em alerta e esgotado.
+5. Revise o SLO depois de observar dados reais por algumas semanas.
+
+Exemplo de especificação:
+
+```yaml
+service: checkout-api
+sli: http_success_rate
+eligible_events: "POST /checkout com cliente autenticado"
+good_events: "status < 500 e latency_ms <= 800"
+window: 30d
+slo: 99.9
+policy:
+  healthy_budget: "rollouts normais com canário"
+  high_burn: "pausar mudanças arriscadas e abrir revisão"
+  exhausted: "priorizar correções de confiabilidade"
+```
+
+O erro mais comum é publicar o SLO no dashboard e não mudar nenhuma decisão. A prática só está viva quando release, capacidade, incidentes e roadmap usam o orçamento de erro como entrada.
+
 ## Diagrama de apoio
 
 ```mermaid

@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **onboarding de SRE** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,38 @@ No dia a dia, isso aparece quando a equipe precisa usar postmortems como materia
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Criar trilha de 30/60/90 dias para SRE.
 - Usar postmortems como material de treinamento.
 - Planejar shadowing antes do plantão independente.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Formar SRE para plantão exige exposição gradual. O livro destaca engenharia reversa, raciocínio estatístico, simulações e leitura de postmortems. A prática recomendada é uma trilha com marcos claros, não aprendizado acidental durante crise.
+
+Procedimento recomendado:
+
+1. Primeiros 30 dias: arquitetura, dependências, SLIs, dashboards e incidentes históricos.
+2. Até 60 dias: shadowing de plantão, execução de runbooks e pequenos diagnósticos.
+3. Até 90 dias: plantão supervisionado, simulado de incidente e contribuição em automação.
+4. Depois: plantão independente com revisão de decisões e lacunas.
+
+Artefato de prontidão:
+
+| Competência | Evidência |
+| --- | --- |
+| Explicar arquitetura | Desenho revisado por par |
+| Investigar alerta comum | Exercício ou shadowing concluído |
+| Executar rollback | Simulação registrada |
+| Comunicar incidente | Participação em exercício |
+| Entender SLO | Explica impacto e orçamento |
+
+A meta não é decorar comandos. É desenvolver julgamento para decidir com informação incompleta, pressão de tempo e impacto real.
 
 ## Diagrama de apoio
 

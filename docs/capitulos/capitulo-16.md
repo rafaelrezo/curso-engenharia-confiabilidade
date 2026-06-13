@@ -64,6 +64,32 @@ Escolha um job ou pipeline importante:
 - Defina métricas de atraso, completude e corretude.
 - Adicione jitter ou limites de concorrência se houver picos artificiais.
 
+## Aprofundamento prático
+
+Jobs periódicos e pipelines precisam de estado explícito. "O cron rodou" não prova que o resultado foi entregue. A operação precisa saber se o job estava pendente, em execução, concluído, atrasado, falhou, repetiu ou produziu dado incompleto.
+
+Procedimento recomendado:
+
+1. Modele cada job como workflow com identificador único de execução.
+2. Torne etapas idempotentes ou implemente deduplicação.
+3. Evite horários sincronizados; use jitter e limite de concorrência.
+4. Meça idade do dado, completude, contagem esperada e falhas por estágio.
+5. Crie reprocessamento seguro para falhas parciais.
+
+Exemplo de estado:
+
+```yaml
+pipeline: fechamento_diario
+execução: "2026-06-12"
+valid_states: [pending, running, completed, failed, delayed]
+idempotência: "chave por data e cliente"
+alerta:
+  atraso: "idade_dado > 2h"
+  completude: "linhas_processadas < 99% do esperado"
+```
+
+O sinal certo não é apenas falha do processo. Um pipeline pode terminar "com sucesso" e ainda entregar dado atrasado ou incompleto.
+
 ## Diagrama de apoio
 
 ```mermaid

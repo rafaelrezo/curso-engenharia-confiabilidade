@@ -77,6 +77,38 @@ Escolha um pipeline ou rotina operacional e revise:
 - Há evidência de que a versão implantada é a mesma que foi testada?
 - Uma pessoa nova conseguiria operar o fluxo usando documentação e sinais existentes?
 
+## Aprofundamento prático
+
+**Automação** e **release engineering** precisam formar uma cadeia rastreável. Um incidente comum ocorre quando o pipeline testa uma imagem, mas o deploy usa outra; ou quando rollback volta o código, mas mantém a configuração que causou a falha. A prática correta separa construção, artefato, configuração, rollout e reversão.
+
+Procedimento recomendado:
+
+1. Gere artefato imutável a partir de entradas declaradas.
+2. Associe versão, commit, dependências e configuração a cada promoção.
+3. Implante primeiro em canário ou fatia pequena de tráfego.
+4. Compare sinais de saúde antes de ampliar.
+5. Exercite rollback de código e de configuração.
+
+Exemplo de checklist de promoção:
+
+```yaml
+release:
+  artefato: checkout-api:2026.06.12-391db5a
+  required_tests:
+    - unit
+    - api_contract
+    - reversible_migration
+  rollout:
+    canary: "5% por 30 minutos"
+    promote_if: "erro < 1% e p95 < 800ms"
+    rollback_if: "erro >= 2% por 10 minutos"
+  rollback:
+    code: "versão anterior assinada"
+    config: "último commit aprovado"
+```
+
+O objetivo não é deixar o pipeline burocrático. É garantir que qualquer mudança tenha dono, evidência, limite de exposição e caminho de recuperação.
+
 ## Diagrama de apoio
 
 ```mermaid

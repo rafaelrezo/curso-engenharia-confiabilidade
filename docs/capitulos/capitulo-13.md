@@ -64,6 +64,32 @@ Desenhe o caminho de uma requisição crítica:
 - Avalie se clientes internos falam com todos os backends ou com subconjuntos.
 - Defina o comportamento esperado quando metade dos backends fica lenta.
 
+## Aprofundamento prático
+
+Balanceamento de carga precisa decidir para onde enviar tráfego quando tudo está saudável e, principalmente, quando algo degrada. O livro separa borda e datacenter; em ambientes atuais, pense em DNS ou Anycast, load balancer gerenciado, ingress, gateway, service mesh e cliente interno.
+
+Procedimento recomendado:
+
+1. Desenhe todas as decisões de roteamento da requisição.
+2. Registre health checks, pesos, failover e drenagem de conexão.
+3. Verifique se saúde significa "responde rápido e corretamente", não apenas "processo vivo".
+4. Teste uma região lenta, uma zona indisponível e um subconjunto de backends degradado.
+5. Observe se failover causa sobrecarga no destino restante.
+
+Exemplo de política:
+
+```yaml
+load_balancing:
+  health_check: "/ready"
+  remove_se:
+    erro_5xx: "> 5% por 5m"
+    latencia_p95: "> 1000ms por 10m"
+  drenagem_conexao: 60s
+  failover_regional: "somente se capacidade_destino >= demanda_estimada"
+```
+
+O ponto prático é evitar roteamento cego. Um backend vivo, mas saturado, pode ser pior do que um backend explicitamente removido do pool.
+
 ## Diagrama de apoio
 
 ```mermaid

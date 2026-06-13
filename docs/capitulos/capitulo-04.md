@@ -73,6 +73,36 @@ Revise a monitoração de uma jornada crítica:
 - Remova ou rebaixe alertas que não exigem ação imediata.
 - Garanta que cada página tenha dono, severidade e runbook.
 
+## Aprofundamento prático
+
+Monitoração prática começa por uma pergunta: que sintoma do usuário exige ação agora? Para uma API, a resposta costuma envolver taxa de sucesso, latência de cauda, tráfego e saturação. Para um pipeline, envolve atraso, completude e corretude. Métricas internas ajudam diagnóstico, mas não devem virar página urgente sem impacto claro.
+
+Procedimento recomendado:
+
+1. Separe sinais de página, ticket, dashboard e auditoria.
+2. Use percentis de latência, principalmente p95 e p99, em vez de média.
+3. Anote eventos de deploy e configuração nos painéis principais.
+4. Crie runbook para cada alerta que acorda alguém.
+5. Remova alertas que ninguém sabe responder.
+
+Exemplo de regra Prometheus orientada a SLO:
+
+```yaml
+alert: CheckoutHighErrorRate
+expr: |
+  sum(rate(http_requests_total{service="checkout",status=~"5.."}[5m]))
+  /
+  sum(rate(http_requests_total{service="checkout"}[5m])) > 0.02
+for: 10m
+labels:
+  severity: page
+annotations:
+  summary: "Checkout com erro alto para usuários"
+  runbook: "https://runbooks.example/checkout-erros"
+```
+
+Essa regra ainda precisa ser adaptada ao SLO real, mas mostra a forma correta: taxa, janela, serviço, severidade e runbook. Alertas baseados só em CPU ou memória devem ser justificados por relação clara com impacto ou risco iminente.
+
 ## Diagrama de apoio
 
 ```mermaid

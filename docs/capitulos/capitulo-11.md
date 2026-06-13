@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Explicar o problema de confiabilidade tratado pelo tema.
-- Reconhecer onde o tema aparece em um serviço real.
-- Aplicar o conceito em uma decisão operacional ou de engenharia.
+- Identificar como **testes tradicionais** aparece em produção.
+- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
+- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
 
 ## Síntese
 
@@ -51,15 +51,37 @@ No dia a dia, isso aparece quando a equipe precisa planejar um teste de rollback
 
 ## Aplicação prática
 
-Para evitar burocracia, escolha um serviço concreto e execute uma ação pequena:
+Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Adicionar testes de comportamento sob dependência indisponivel.
 - Planejar um teste de rollback.
 - Criar uma sonda de produção para fluxo crítico.
 
-Depois da ação, procure uma evidência simples de melhoria: menos alertas
-irrelevantes, recuperação mais rápida, dependência mais clara, deploy menos
-arriscado, métrica mais confiável ou decisão mais fácil de explicar.
+Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
+recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
+mais confiável ou decisão mais fácil de explicar.
+
+## Aprofundamento prático
+
+Testes de confiabilidade validam comportamento sob falha, não apenas lógica feliz. Um serviço pode passar em testes unitários e falhar quando a dependência fica lenta, quando a fila atrasa, quando o banco retorna erro transitório ou quando rollback encontra schema incompatível.
+
+Procedimento recomendado:
+
+1. Liste dependências críticas e seus modos de falha: erro, latência, indisponibilidade, dado inválido.
+2. Crie testes para timeout, retry, fallback, degradação e rollback.
+3. Execute sondas de produção controladas para jornadas críticas.
+4. Planeje testes de desastre com escopo pequeno e abort criteria.
+5. Transforme incidentes reais em testes regressivos.
+
+Exemplo de matriz:
+
+| Falha simulada | Comportamento esperado | Sinal de aprovação |
+| --- | --- | --- |
+| Gateway lento | timeout e fallback | p95 limitado e erro controlado |
+| Banco replica indisponível | leitura em rota alternativa | taxa de sucesso preservada |
+| Deploy ruim | canário bloqueia promoção | rollback automático ou manual exercitado |
+
+O teste útil precisa ter hipótese. "Vamos quebrar algo" é espetáculo; "vamos provar que checkout degrada sem derrubar catálogo" é engenharia.
 
 ## Diagrama de apoio
 

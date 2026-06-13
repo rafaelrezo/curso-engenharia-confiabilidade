@@ -67,6 +67,28 @@ Faça uma revisão de simplicidade em um serviço:
 - Defina métrica para provar baixo uso e segurança da remoção.
 - Planeje comunicação, rollback e janela de observação.
 
+## Aprofundamento prático
+
+**Simplicidade** precisa de inventário. Serviços ficam complexos por acúmulo: flags antigas, endpoints quase sem uso, dependências herdadas, exceções regionais, scripts especiais e configurações que ninguém remove. Cada item aumenta o número de estados que a equipe precisa entender durante incidente.
+
+Procedimento recomendado:
+
+1. Liste endpoints, jobs, flags, dependências e modos especiais.
+2. Marque último uso, dono, risco e plano de remoção.
+3. Escolha uma remoção pequena, reversível e mensurável.
+4. Comunique consumidores conhecidos antes de desligar.
+5. Observe sinais de erro e suporte após a remoção.
+
+Exemplo de inventário:
+
+| Item | Evidência de uso | Risco | Ação |
+| --- | --- | --- | --- |
+| Flag `legacy_checkout` | 0,2% do tráfego | Caminho não testado | Desativar por coorte e remover |
+| Endpoint `/v1/export` | Dois clientes internos | Alto custo de suporte | Migrar clientes e aposentar |
+| Job manual de reconciliação | Sem dono claro | Pode duplicar efeitos | Substituir por workflow idempotente |
+
+Remoção segura também é engenharia. Ela deve ter telemetria, rollback e critério de sucesso, como qualquer release.
+
 ## Diagrama de apoio
 
 ```mermaid

@@ -64,6 +64,30 @@ Escolha os dez alertas que mais interromperam a equipe nas últimas semanas:
 - Meça páginas por turno e interrupções fora do horário esperado.
 - Defina uma regra para revisar alertas ruidosos após incidentes ou semanas ruins de plantão.
 
+## Aprofundamento prático
+
+Plantão saudável começa antes do telefone tocar. Um alerta de página precisa conter impacto, serviço, severidade, janela, hipótese inicial e runbook. Se a pessoa precisa descobrir do zero o que significa o alarme, o alerta ainda não está pronto para paginar.
+
+Procedimento recomendado:
+
+1. Revise os dez alertas que mais interromperam a equipe no último mês.
+2. Para cada um, responda: houve ação imediata? havia runbook? havia impacto?
+3. Rebaixe para ticket sinais que não exigem resposta urgente.
+4. Defina critérios de entrada no plantão: treinamento, shadowing e simulado.
+5. Acompanhe páginas por turno, páginas fora do horário e tempo de recuperação.
+
+Modelo de runbook curto:
+
+```markdown
+# CheckoutHighErrorRate
+Impacto: usuários podem falhar ao finalizar compra.
+Primeiro diagnóstico: verificar deploys recentes, erro por dependência e saturação.
+Mitigação rápida: pausar rollout, ativar fallback de pagamento ou reverter config.
+Escalonar para: time de checkout e provedor de pagamento.
+```
+
+A métrica de qualidade do plantão não é "ninguém foi acordado". É receber poucos alertas, bons, acionáveis e ligados a risco real.
+
 ## Diagrama de apoio
 
 ```mermaid
