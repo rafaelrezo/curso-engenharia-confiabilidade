@@ -91,6 +91,25 @@ Próxima atualização: 14:30
 
 Depois da mitigação, o postmortem deve explicar condições sistêmicas e gerar ações com dono, prazo e evidência de conclusão.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** incident.io, FireHydrant, PagerDuty Incident Workflows, Slack/Teams war rooms, Statuspage, Google Docs e templates de postmortem.
+
+**Exemplo avançado:** modele um incidente SEV1 com comandante, líder técnico, comunicação, documento vivo, atualizações a cada 30 minutos, mitigação e postmortem com ações rastreáveis.
+
+**Cuidado de projeto:** ferramenta de incidente não substitui papéis claros nem autoridade para decidir.
+
+## Exemplos e ferramentas do livro
+
+O livro traz exemplos de **emergências induzidas por testes, mudanças e
+processos**, além de artefatos como documento de estado do incidente e
+postmortem. Esses exemplos mostram que incidente não é apenas falha técnica:
+ele envolve coordenação, comunicação e aprendizado.
+
+O equivalente prático no curso é usar template de incidente, canal de
+comunicação, comandante do incidente, linha do tempo e postmortem sem culpa
+com ações rastreáveis.
+
 ## Diagrama de apoio
 
 ```mermaid

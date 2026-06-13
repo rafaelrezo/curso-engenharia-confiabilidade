@@ -88,6 +88,25 @@ Escalonar para: time de checkout e provedor de pagamento.
 
 A métrica de qualidade do plantão não é "ninguém foi acordado". É receber poucos alertas, bons, acionáveis e ligados a risco real.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Alertmanager, PagerDuty, Opsgenie, Grafana OnCall, incident.io, FireHydrant, Statuspage e regras de roteamento por serviço.
+
+**Exemplo avançado:** reescreva os dez alertas mais ruidosos usando impacto, condição, janela, severidade, runbook e destino correto: página, ticket ou dashboard.
+
+**Cuidado de projeto:** plantão não melhora apenas trocando ferramenta. A qualidade depende de sinais acionáveis e carga humana sustentável.
+
+## Exemplos e ferramentas do livro
+
+**Borgmon** aparece como base para instrumentação, coleta, armazenamento de
+séries temporais, avaliação de regras e geração de alertas. O aprendizado prático é que a configuração de
+monitoração é software operacional: precisa de revisão, padronização,
+ownership e limpeza.
+
+A tradução moderna mais direta é Prometheus com Alertmanager, mas a ideia
+vale para qualquer stack: métrica exportada sem regra acionável não melhora
+plantão; regra acionável sem runbook também não.
+
 ## Diagrama de apoio
 
 ```mermaid

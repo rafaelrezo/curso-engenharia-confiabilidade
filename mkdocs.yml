@@ -22,6 +22,7 @@ markdown_extensions:
 nav:
   - Início: index.md
   - Conceitos centrais: conceitos-centrais.md
+  - Trilha de aprendizagem: trilha-aprendizado.md
   - Fonte e escopo: fonte-e-escopo.md
   - Parte I - Fundamentos e princípios:
       - "Capítulo 01 - Introdução à SRE e ao ambiente de produção": capitulos/capitulo-01.md

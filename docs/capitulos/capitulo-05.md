@@ -109,6 +109,32 @@ release:
 
 O objetivo não é deixar o pipeline burocrático. É garantir que qualquer mudança tenha dono, evidência, limite de exposição e caminho de recuperação.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** GitHub Actions, GitLab CI, Argo CD, Flux, Argo Rollouts, Flagger, Spinnaker, SLSA, Sigstore, Cosign, SBOM e Cloud Deploy.
+
+**Exemplo avançado:** projete uma cadeia de entrega com artefato imutável, assinatura, SBOM, deploy canário, análise automática de métricas e rollback de código/configuração.
+
+**Cuidado de projeto:** pipeline verde não prova confiabilidade se não houver validação pós-deploy e critério de reversão.
+
+## Exemplos e ferramentas do livro
+
+O livro cita **Prodtest** no contexto de validação automática de
+inconsistências e **Rapid** no contexto de engenharia de release. Esses
+exemplos mostram duas capacidades complementares: verificar se produção está
+no estado esperado e levar mudanças para produção por uma cadeia controlada.
+
+Tradução prática:
+
+| No livro | Equivalente comum hoje |
+| --- | --- |
+| **Prodtest** | testes de prontidão, políticas de plataforma, validação de drift, checks de produção |
+| **Rapid** | CI/CD, GitHub Actions, GitLab CI, Argo CD, Flux, Spinnaker, Cloud Deploy |
+| **Canary release** | progressive delivery, feature flags, rollout gradual com rollback |
+
+A técnica não é copiar a ferramenta: é projetar automação que valida
+pré-condições, registra mudança, observa resultado e reverte com segurança.
+
 ## Diagrama de apoio
 
 ```mermaid

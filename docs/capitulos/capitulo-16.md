@@ -90,6 +90,26 @@ alerta:
 
 O sinal certo não é apenas falha do processo. Um pipeline pode terminar "com sucesso" e ainda entregar dado atrasado ou incompleto.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Airflow, Dagster, Argo Workflows, Temporal, Step Functions, Cloud Composer, Kubernetes CronJobs, Beam, Spark e pipelines de ML.
+
+**Exemplo avançado:** projete um pipeline financeiro com execução idempotente, chave de deduplicação, estado por etapa, métrica de frescor, completude e reprocessamento seguro.
+
+**Cuidado de projeto:** job que "rodou" não prova que dado correto chegou. Monitore resultado, não apenas execução.
+
+## Exemplos e ferramentas do livro
+
+O livro usa o **cron distribuído do Google** e o **Workflow** para mostrar
+que jobs e pipelines precisam de estado explícito. O cron discute liderança,
+execução duplicada/perdida e uso de consenso. Workflow discute estágios,
+modelo de execução e validação de corretude.
+
+Em ambientes atuais, procure esses padrões em Kubernetes CronJobs, Airflow,
+Dagster, Argo Workflows, Step Functions, Cloud Composer, Beam, Spark e
+pipelines de ML. A ferramenta muda; as propriedades continuam: idempotência,
+reexecução segura, visibilidade de estado, completude e frescor.
+
 ## Diagrama de apoio
 
 ```mermaid

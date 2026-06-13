@@ -88,6 +88,25 @@ Ações com dono e prazo:
 
 A técnica é transformar conversa em memória operacional. Decisão que fica apenas no chat desaparece; decisão registrada pode ser cobrada, revisada e aprendida.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** ADRs, RFCs, reuniões de produção, service review docs, Slack/Teams, Google Docs, Confluence, Linear/Jira e dashboards compartilhados.
+
+**Exemplo avançado:** implemente reunião de produção com pauta fixa: SLOs em risco, mudanças, incidentes, toil, dependências, decisões e ações com dono.
+
+**Cuidado de projeto:** comunicação sem registro não escala. Decisão operacional precisa virar memória consultável.
+
+## Exemplos e ferramentas do livro
+
+O estudo de caso **Viceroy** aparece no livro para discutir colaboração em
+SRE. A lição é que confiabilidade depende de relações de trabalho,
+comunicação estruturada, decisões registradas e entendimento compartilhado
+entre equipes.
+
+No curso, conecte esse exemplo a reuniões de produção, documentos de decisão,
+revisão de SLO, acompanhamento de ações e fóruns de alinhamento entre
+produto, desenvolvimento, plataforma e SRE.
+
 ## Diagrama de apoio
 
 ```mermaid

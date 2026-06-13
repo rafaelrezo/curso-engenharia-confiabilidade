@@ -85,6 +85,14 @@ Exemplo de checklist de failover:
 
 O aprendizado intersetorial mais útil é disciplina operacional, não burocracia. O processo deve reduzir erro humano sem impedir resposta rápida.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** checklists digitais, game days, safety cases leves, premortems, quase-incidentes, revisões sem culpa e auditorias operacionais.
+
+**Exemplo avançado:** adapte prática de aviação para failover: checklist curto, confirmação verbal, critério de abortar, responsável por comunicação e revisão pós-execução.
+
+**Cuidado de projeto:** processo inspirado em setor crítico deve reduzir erro, não criar burocracia incompatível com software.
+
 ## Diagrama de apoio
 
 ```mermaid

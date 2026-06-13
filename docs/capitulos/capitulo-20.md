@@ -63,7 +63,7 @@ mais confiável ou decisão mais fácil de explicar.
 
 ## Aprofundamento prático
 
-Interrupções cognitivas são trabalho invisível. Mensagens soltas, alertas informativos, reuniões sem decisão e pedidos urgentes quebram fluxo e aumentam erro. O capítulo sobre interrupções ajuda a tratar atenção humana como recurso limitado.
+Interrupções cognitivas são trabalho invisível. Mensagens soltas, alertas informativos, reuniões sem decisão e pedidos urgentes quebram fluxo e aumentam erro. Atenção humana precisa ser tratada como recurso limitado.
 
 Procedimento recomendado:
 
@@ -83,6 +83,14 @@ Exemplo de política:
 | Anúncio | Canal informativo | Sem interrupção |
 
 A boa gestão de interrupções não isola SRE do resto da empresa. Ela protege foco para que respostas urgentes sejam melhores.
+
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** PagerDuty event rules, Slack workflows, Jira Service Management, filas de triagem, service desk, status channels e políticas de interrupção.
+
+**Exemplo avançado:** separe canais por urgência: página para impacto imediato, ticket para trabalho assíncrono, canal de dúvidas para suporte e anúncio para informação.
+
+**Cuidado de projeto:** toda interrupção compete com engenharia profunda. Sem política, o trabalho urgente aparente domina o importante.
 
 ## Diagrama de apoio
 

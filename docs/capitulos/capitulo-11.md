@@ -8,7 +8,7 @@
 
 ## Síntese
 
-O capítulo amplia a visão de testes além dos testes tradicionais de software. Em sistemas distribuídos, e necessário validar comportamento sob falhas, rollouts, integração, carga e recuperação. Testar em escala exige ambientes, ferramentas e sondas que aproximem o sistema das condições reais de produção.
+Confiabilidade exige testes além dos testes tradicionais de software. Em sistemas distribuídos, é necessário validar comportamento sob falhas, rollouts, integração, carga e recuperação. Testar em escala exige ambientes, ferramentas e sondas que aproximem o sistema das condições reais de produção.
 
 Em uma frase: **Confiabilidade precisa ser testada em build, integração, produção controlada e cenários de desastre.**
 
@@ -82,6 +82,14 @@ Exemplo de matriz:
 | Deploy ruim | canário bloqueia promoção | rollback automático ou manual exercitado |
 
 O teste útil precisa ter hipótese. "Vamos quebrar algo" é espetáculo; "vamos provar que checkout degrada sem derrubar catálogo" é engenharia.
+
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** k6, Locust, Playwright, Pact, LitmusChaos, Gremlin, Chaos Mesh, fault injection de service mesh e testes de restauração.
+
+**Exemplo avançado:** antes de um lançamento crítico, teste dependência lenta, erro 503, rollback, schema incompatível, perda de zona e restauração de backup em ambiente controlado.
+
+**Cuidado de projeto:** chaos engineering sem hipótese e critério de abortar vira demonstração arriscada, não engenharia.
 
 ## Diagrama de apoio
 

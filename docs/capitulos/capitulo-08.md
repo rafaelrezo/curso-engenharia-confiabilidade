@@ -82,6 +82,14 @@ Exemplo de registro durante investigação:
 
 A disciplina protege contra a pressão de "mexer em alguma coisa". Em incidente, mudança sem hipótese pode piorar o estado e apagar evidências.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** OpenTelemetry traces, Jaeger, Grafana Tempo, Honeycomb, kubectl, cloud audit logs, histórico de feature flags e timelines de incidentes.
+
+**Exemplo avançado:** durante uma degradação intermitente, monte linha do tempo com deploys, flags, p95/p99, traces por rota e erros por dependência antes de alterar produção.
+
+**Cuidado de projeto:** mudança sem hipótese durante troubleshooting pode ocultar evidência e piorar a falha.
+
 ## Diagrama de apoio
 
 ```mermaid

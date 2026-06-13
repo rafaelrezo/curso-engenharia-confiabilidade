@@ -84,6 +84,25 @@ Checklist de desenho:
 
 A técnica mais importante é simplicidade: mantenha o estado crítico pequeno, bem documentado e com poucos caminhos de escrita.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** etcd, ZooKeeper, Consul, CockroachDB, Spanner, PostgreSQL HA, Kubernetes control plane e sistemas de eleição de líder.
+
+**Exemplo avançado:** liste estados que não podem divergir: liderança, locks, configuração global e offsets críticos. Para cada um, documente quorum, latência, perda de zona e recuperação.
+
+**Cuidado de projeto:** consenso é caro. Use para estado crítico, não para cache, telemetria ou dados facilmente recomputáveis.
+
+## Exemplos e ferramentas do livro
+
+**Chubby** e **Paxos** são os exemplos principais para estado crítico.
+Chubby usa consenso para locks e eleição de líder; Paxos aparece como base
+conceitual para decisões distribuídas que não podem divergir.
+
+Em ambientes atuais, a mesma classe de problema aparece em etcd, ZooKeeper,
+Consul, bancos distribuídos, control planes de Kubernetes e sistemas de
+liderança. A boa prática é limitar consenso ao estado que realmente precisa
+dele, porque quorum, latência e recuperação têm custo operacional.
+
 ## Diagrama de apoio
 
 ```mermaid

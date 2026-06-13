@@ -84,6 +84,14 @@ Artefato de prontidão:
 
 A meta não é decorar comandos. É desenvolver julgamento para decidir com informação incompleta, pressão de tempo e impacto real.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Backstage Docs, service catalog, labs internos, game days, simulados de incidente, trilhas de aprendizagem e sessões de revisão de postmortems.
+
+**Exemplo avançado:** crie trilha 30/60/90 dias para novo SRE com arquitetura, shadowing, execução de runbook, simulado, rollback e plantão supervisionado.
+
+**Cuidado de projeto:** treinamento que só lista documentos não forma julgamento operacional.
+
 ## Diagrama de apoio
 
 ```mermaid

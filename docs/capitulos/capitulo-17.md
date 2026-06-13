@@ -8,7 +8,7 @@
 
 ## Síntese
 
-O capítulo diferencia backup, arquivamento, replicação, deteccao precoce e recuperação. A prioridade é preservar disponibilidade por meio de integridade de dados verificável. Estrategias robustas combinam defesa em profundidade, remoção soft, backups recuperáveis, replicação, testes de restauracao e atitude de 'confiar, mas verificar'.
+Integridade de dados exige separar backup, arquivamento, replicação, detecção precoce e recuperação. A prioridade é preservar disponibilidade por meio de integridade de dados verificável. Estratégias robustas combinam defesa em profundidade, remoção soft, backups recuperáveis, replicação, testes de restauração e atitude de "confiar, mas verificar".
 
 Em uma frase: **Backups só têm valor quando a recuperação é confiável, testada e alinhada a integridade percebida pelo usuário.**
 
@@ -22,7 +22,7 @@ Em uma frase: **Backups só têm valor quando a recuperação é confiável, tes
 
 **integridade de dados**: É a garantia de que dados permanecem corretos, completos e recuperáveis. Usuários percebem integridade pelo resultado, não pela arquitetura.
 
-Uma forma simples de aplicar isso é: Testar restauracao de um backup real.
+Uma forma simples de aplicar isso é: Testar restauração de um backup real.
 
 ### **backup versus arquivamento**
 
@@ -34,13 +34,13 @@ No dia a dia, isso aparece quando a equipe precisa definir RPO e RTO para dados 
 
 **recuperação**: É restaurar serviço ou dados após falha. A estratégia só é confiável quando é testada e tem objetivo de tempo e perda aceitável.
 
-Esse conceito fica concreto quando a equipe consegue adicionar deteccao de exclusao ou corrupcao silenciosa.
+Esse conceito fica concreto quando a equipe consegue adicionar detecção de exclusão ou corrupção silenciosa.
 
 ### **replicação**
 
 **replicação**: É manter cópias de dados ou estado. Ela melhora disponibilidade, mas também pode replicar corrupção se não houver detecção e controle.
 
-Uma forma simples de aplicar isso é: Testar restauracao de um backup real.
+Uma forma simples de aplicar isso é: Testar restauração de um backup real.
 
 ### **defesa em profundidade**
 
@@ -53,9 +53,9 @@ No dia a dia, isso aparece quando a equipe precisa definir RPO e RTO para dados 
 
 Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
-- Testar restauracao de um backup real.
+- Testar restauração de um backup real.
 - Definir RPO e RTO para dados críticos.
-- Adicionar deteccao de exclusao ou corrupcao silenciosa.
+- Adicionar detecção de exclusão ou corrupção silenciosa.
 
 Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
 recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
@@ -84,6 +84,25 @@ Modelo de exercício:
 | Atualizar runbook | Lacunas corrigidas |
 
 A técnica essencial é "confiar, mas verificar": a equipe deve provar que consegue recuperar o dado certo no prazo necessário.
+
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** AWS Backup, Velero, pgBackRest, WAL-G, point-in-time recovery, Object Lock, snapshots, replicação multi-zona e checksums.
+
+**Exemplo avançado:** execute game day de restauração: escolha snapshot, restaure em ambiente isolado, valide contagens/checksums, meça RTO/RPO real e atualize runbook.
+
+**Cuidado de projeto:** backup não testado é hipótese. A prática confiável é restauração verificada.
+
+## Exemplos e ferramentas do livro
+
+**Colossus**, **Bigtable** e **Spanner** aparecem como exemplos de camadas
+de dados com requisitos diferentes de escala, consistência e recuperação. A
+lição para integridade de dados é separar replicação, backup, arquivamento e
+restauração testada.
+
+Em ambientes atuais, isso se traduz em snapshots, point-in-time recovery,
+replicação multi-zona, retenção contra exclusão acidental, checksums,
+restaurações periódicas e validações de dados após recuperação.
 
 ## Diagrama de apoio
 

@@ -91,6 +91,14 @@ do_not_retry_on: ["400", "401", "409"]
 
 Uma boa regra: se todos os clientes repetirem ao mesmo tempo, a dependência deve continuar protegida. Se isso não for verdade, a política ainda está perigosa.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Envoy, Istio, Linkerd, Resilience4j, Polly, rate limiters, API gateways, filas com DLQ e circuit breakers.
+
+**Exemplo avançado:** defina política de cliente com deadline total, timeout por tentativa, máximo de retries, backoff exponencial, jitter, circuit breaker e limite por cliente.
+
+**Cuidado de projeto:** retries sem orçamento e sem jitter são uma das formas mais rápidas de transformar falha parcial em cascata.
+
 ## Diagrama de apoio
 
 ```mermaid

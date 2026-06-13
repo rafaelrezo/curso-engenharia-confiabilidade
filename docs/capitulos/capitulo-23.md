@@ -84,6 +84,25 @@ Exemplo de contrato:
 
 Engajamento saudável não é posse do serviço por SRE. É responsabilidade compartilhada com critérios explícitos.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** service maturity scorecards, Backstage scorecards, readiness reviews, contratos de suporte, RACI, SLO reviews e templates de engajamento.
+
+**Exemplo avançado:** defina critérios para SRE aceitar um serviço: SLO, observabilidade, rollback, runbooks, ownership, suporte e backlog de confiabilidade.
+
+**Cuidado de projeto:** SRE sem critério de entrada e saída vira suporte ilimitado.
+
+## Exemplos e ferramentas do livro
+
+A migração do **DFP para F1** aparece como estudo de caso de engajamento e
+evolução operacional. Ela mostra que SRE não entra apenas para "operar" um
+serviço; entra para negociar critérios, maturidade, riscos, responsabilidades
+e modelo de colaboração.
+
+Use esse exemplo para pensar em critérios de entrada e saída: SLOs definidos,
+observabilidade suficiente, runbooks, rollback, ownership claro, capacidade
+de responder incidentes e backlog de confiabilidade priorizado.
+
 ## Diagrama de apoio
 
 ```mermaid

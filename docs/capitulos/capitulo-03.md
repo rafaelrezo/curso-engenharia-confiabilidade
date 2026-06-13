@@ -98,6 +98,25 @@ Matriz útil:
 
 Uma redução real aparece como menos interrupções, menos tickets repetidos e mais tempo reservado para engenharia.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Backstage templates, Terraform, Crossplane, Pulumi, GitOps, policy-as-code, automações de IAM e portais internos de self-service.
+
+**Exemplo avançado:** transforme pedidos repetitivos de criação de recursos em um fluxo self-service com validação, quotas, aprovação automática para casos seguros, trilha de auditoria e rollback.
+
+**Cuidado de projeto:** automatizar toil sem remover causa raiz pode apenas acelerar um processo ruim.
+
+## Exemplos e ferramentas do livro
+
+**Toil** cresce quando trabalho operacional repetitivo acompanha o tamanho do
+serviço. Ferramentas como **Prodtest** aparecem como exemplo de detecção
+automática de inconsistências. A conexão é direta: uma ferramenta desse tipo
+reduz toil quando troca inspeção manual por validação contínua de estado.
+
+Em um ambiente atual, o equivalente pode ser uma suíte de health checks,
+testes de prontidão, políticas de plataforma, validações GitOps ou automações
+que verificam drift entre estado desejado e estado real.
+
 ## Diagrama de apoio
 
 ```mermaid

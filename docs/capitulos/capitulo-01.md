@@ -67,7 +67,7 @@ Nem todo trabalho operacional é ruim. O problema aparece quando a operação co
 
 **Ambiente de produção** é o conjunto de componentes que permite entregar valor ao usuário real. Ele inclui aplicação, runtime, infraestrutura, orquestração, armazenamento, rede, identidade, configuração, pipelines, observabilidade, backups, runbooks, plantão, processos de incidente e fornecedores externos.
 
-O capítulo 02 do livro descreve o ambiente do Google com detalhes próprios da empresa. A leitura útil para outras organizações é abstrair o padrão: uma requisição cruza várias camadas, e cada camada tem seus próprios limites, garantias e modos de falha.
+O ambiente do Google tem detalhes próprios da empresa, mas a leitura útil para outras organizações é abstrair o padrão: uma requisição cruza várias camadas, e cada camada tem seus próprios limites, garantias e modos de falha.
 
 ### **Orquestração e plataforma**
 
@@ -140,6 +140,35 @@ Artefato mínimo:
 | Ação operacional | Rollback, degradação, troca de rota ou abertura de incidente |
 
 A evidência de aprendizado é simples: uma pessoa nova deve conseguir explicar como o serviço atende o usuário, onde ele falha e qual sinal justificaria acordar o plantão.
+
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Kubernetes, ECS, Nomad, Backstage, OpenTelemetry, Prometheus, Grafana, cloud load balancers, filas gerenciadas e bancos gerenciados.
+
+**Exemplo avançado:** modele uma API crítica como mapa de produção: usuário, edge, gateway, serviço, banco, fila, cache, dependência externa, telemetria, deploy e plantão. Para cada camada, registre dono, SLI, modo de falha e ação de recuperação.
+
+**Cuidado de projeto:** a ferramenta não cria confiabilidade sozinha. Kubernetes, cloud e observabilidade só ajudam quando limites, ownership, alertas, rollback e resposta estão desenhados.
+
+## Exemplos e ferramentas do livro
+
+O livro usa o ambiente de produção do Google para mostrar que **SRE** opera
+um ecossistema, não uma aplicação isolada. Os nomes são específicos do
+Google, mas os padrões são transportáveis:
+
+| Exemplo ou ferramenta | Papel didático |
+| --- | --- |
+| **Borg** | Orquestração de jobs, alocação de recursos e isolamento de workloads. |
+| **Colossus** | Armazenamento distribuído usado como base para serviços de dados. |
+| **Bigtable** | Banco distribuído usado para discutir latência, disponibilidade e escala. |
+| **Spanner** | Banco SQL distribuído globalmente, útil para discutir consistência e estado crítico. |
+| **Chubby** | Serviço de lock usado para liderança, coordenação e dependências críticas. |
+| **GSLB** | Balanceamento global de tráfego e roteamento por capacidade/região. |
+| **Shakespeare** | Serviço didático que conecta batch, índice, frontend, backend, Bigtable e GSLB. |
+
+Ao estudar este capítulo, traduza esses nomes para equivalentes atuais:
+Kubernetes ou ECS para orquestração, bancos gerenciados para armazenamento,
+gateways globais para roteamento, Prometheus/OpenTelemetry para telemetria e
+catálogos internos para descoberta de serviços.
 
 ## Diagrama de apoio
 

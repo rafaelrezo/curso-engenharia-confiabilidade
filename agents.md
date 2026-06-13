@@ -194,6 +194,104 @@ When consolidating chapters:
 
 ---
 
+## P8 - Progressive Learning Path
+
+The course must guide students from **basic** to **advanced** SRE practice.
+
+The learning path must make progression explicit:
+
+* Basic: vocabulary, production environment, SLIs, SLOs, error budgets, toil,
+  monitoring and simplicity.
+* Intermediate: alerting, on-call, troubleshooting, incident response,
+  postmortems, outage tracking, testing and internal SRE tooling.
+* Advanced: load balancing, overload, cascading failures, consensus, distributed
+  scheduling, data integrity, launch coordination and resilience design.
+* Organizational: onboarding, interrupts, operational overload, communication,
+  engagement models, cross-industry lessons and continuous improvement.
+
+Student-facing material should help the learner move from "what is this?" to:
+
+* what risk this reduces;
+* what decision it improves;
+* what artifact should exist;
+* what evidence proves it works;
+* how it behaves during change, failure and recovery.
+
+---
+
+## P9 - SRE Development Cycle
+
+The course must teach SRE as a complete development and operations cycle, not as
+isolated concepts.
+
+When relevant, chapters should connect their topic to this cycle:
+
+1. Understand the service and critical user journey.
+2. Define SLIs, SLOs and accepted risk.
+3. Design architecture, dependencies and failure modes.
+4. Implement tests, automation, instrumentation and runbooks.
+5. Release with canaries, rollback and objective criteria.
+6. Operate with actionable alerts, dashboards and on-call.
+7. Respond to incidents and mitigate impact.
+8. Learn through postmortems and historical outage data.
+9. Reduce toil, simplify and evolve the service.
+
+Each major chapter should help the student produce or improve at least one
+practical artifact: service map, SLO document, alert rule, runbook, release
+policy, incident template, postmortem action plan, reliability backlog or
+maturity roadmap.
+
+---
+
+## P10 - Book Examples and Tools in Context
+
+Examples and tools from the book must be placed inside the chapters where they
+support the concept being taught. Do not isolate them in a detached catalog
+unless the user explicitly asks for an index.
+
+Required approach:
+
+* Explain whether the item is a Google-internal tool, an example service, an
+  operational technique, an algorithm or a process artifact.
+* Explain the engineering problem it solves.
+* Translate the pattern to modern environments when useful.
+* Avoid suggesting that Google-internal tools are generally available products.
+* Avoid copying extended examples from the book; synthesize and contextualize.
+
+Examples of placement:
+
+* Borg, BNS, Colossus, Bigtable, Spanner, Chubby, GSLB and Shakespeare belong
+  with production environment and service architecture.
+* Borgmon belongs with monitoring, time series and alerting.
+* Prodtest and Rapid belong with automation and release engineering.
+* Escalator and Outalator belong with outage tracking.
+* Paxos, Chubby and quorum belong with critical state and consensus.
+* Distributed cron and Workflow belong with scheduling and pipelines.
+* Incident state documents, postmortems and launch checklists belong with
+  incident response, learning and launch coordination.
+
+---
+
+## P11 - Direct Editorial Source
+
+Rich editorial revisions must be made directly in the Markdown content under
+`docs/`. Do not use `scripts/generate_docs.py` to rewrite chapters during
+manual course authoring.
+
+`scripts/generate_docs.py` may exist as legacy automation, but student-facing
+chapter improvements, examples, tool mappings and learning-path refinements
+must treat the Markdown files as the source of truth.
+
+When updating course content:
+
+* edit `docs/capitulos/*.md`, `docs/index.md`, `docs/conceitos-centrais.md` or
+  other student-facing pages directly;
+* update `mkdocs.yml` only when navigation changes;
+* avoid regenerating chapters unless the user explicitly requests it;
+* keep direct chapter edits coherent with the progression basic to advanced.
+
+---
+
 # Authoring Skill System
 
 All content generation must be guided by the following skill framework.

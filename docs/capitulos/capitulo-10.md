@@ -63,7 +63,7 @@ mais confiável ou decisão mais fácil de explicar.
 
 ## Aprofundamento prático
 
-Monitorar interrupções de serviço cria memória quantitativa. Sem um catálogo consistente, a organização lembra do incidente mais recente e esquece padrões recorrentes. O capítulo do livro descreve agregação, rotulagem e análise; em uma prática moderna, isso vira base para revisão mensal de confiabilidade.
+Monitorar interrupções de serviço cria memória quantitativa. Sem um catálogo consistente, a organização lembra do incidente mais recente e esquece padrões recorrentes. A prática combina agregação, rotulagem e análise; em um ambiente moderno, isso vira base para revisão mensal de confiabilidade.
 
 Procedimento recomendado:
 
@@ -84,6 +84,25 @@ Campos mínimos:
 | Ação preventiva | Conecta interrupção a melhoria |
 
 O resultado esperado é uma lista curta de padrões: por exemplo, incidentes por configuração, por dependência externa, por sobrecarga ou por rollback não exercitado.
+
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** bases de incidentes, BigQuery, Looker, Grafana, Jira, ServiceNow, exports de incident.io, PagerDuty analytics e scorecards de confiabilidade.
+
+**Exemplo avançado:** crie um relatório mensal de interrupções por serviço, causa, tempo de detecção, tempo de mitigação, reincidência e ação corretiva pendente.
+
+**Cuidado de projeto:** métrica de incidente deve orientar investimento; se vira ranking punitivo, as equipes param de reportar bem.
+
+## Exemplos e ferramentas do livro
+
+**Escalator** e **Outalator** aparecem como ferramentas para registrar,
+agregar, rotular e analisar interrupções. Elas mostram que incidentes devem
+virar base histórica, não apenas memória informal.
+
+Fora do Google, essa função pode ser implementada com incident.io, PagerDuty,
+Opsgenie, ServiceNow, Jira, GitHub Issues, planilhas controladas ou uma base
+interna. O requisito técnico é manter campos consistentes: impacto, duração,
+serviço, causa, detecção, mitigação e ações preventivas.
 
 ## Diagrama de apoio
 

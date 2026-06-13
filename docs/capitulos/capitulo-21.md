@@ -84,6 +84,14 @@ Plano de 30 dias:
 
 O risco é tentar resolver tudo. Em sobrecarga, primeiro crie espaço para respirar; depois ataque arquitetura e processos maiores.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** SLO dashboards, incident analytics, service scorecards, backlog de confiabilidade, error budget reports e revisões operacionais semanais.
+
+**Exemplo avançado:** ao entrar em serviço sobrecarregado, faça diagnóstico de 30 dias: top alertas, top tickets, incidentes, deploys falhos, runbooks ausentes e bugs recorrentes.
+
+**Cuidado de projeto:** comece criando espaço para respirar; grandes redesenhos falham quando a equipe ainda está afogada em operação reativa.
+
 ## Diagrama de apoio
 
 ```mermaid

@@ -103,6 +103,27 @@ annotations:
 
 Essa regra ainda precisa ser adaptada ao SLO real, mas mostra a forma correta: taxa, janela, serviço, severidade e runbook. Alertas baseados só em CPU ou memória devem ser justificados por relação clara com impacto ou risco iminente.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** OpenTelemetry, Prometheus, Grafana, Jaeger, Tempo, Loki, Datadog, New Relic, Cloud Monitoring e sintéticos externos.
+
+**Exemplo avançado:** instrumente uma jornada de pagamento com métricas RED, traces distribuídos, logs estruturados, eventos de deploy e alerta por SLO. Use trace exemplar para investigar p99 alto.
+
+**Cuidado de projeto:** não transforme toda métrica em alerta. Separe página, ticket, dashboard e investigação histórica.
+
+## Exemplos e ferramentas do livro
+
+**Borgmon** é o exemplo central do livro para monitoração baseada em séries
+temporais. Aplicações exportam métricas, o sistema coleta dados, avalia
+regras e gera alertas. O livro também aproxima essa discussão de serviços
+como **Bigtable** e **Shakespeare**, mostrando que métricas internas só são
+úteis quando ajudam a entender sintomas percebidos pelo usuário.
+
+Em ambientes atuais, **Prometheus**, **OpenTelemetry**, Cloud Monitoring,
+Datadog ou Grafana cumprem papéis semelhantes. A prática importante é
+modelar métricas, rótulos, janelas e regras de alerta com intenção
+operacional clara.
+
 ## Diagrama de apoio
 
 ```mermaid

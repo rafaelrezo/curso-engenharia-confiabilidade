@@ -90,6 +90,27 @@ expected_output:
 
 A técnica de desenvolvimento importante é tratar a ferramenta como produto: documentação, testes, telemetria, suporte e backlog. Caso contrário, ela vira mais um sistema interno abandonado.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Backstage, Port, Humanitec, internal developer platforms, catálogos de serviço, capacity planners, policy engines e workflow automation.
+
+**Exemplo avançado:** construa uma ferramenta interna que receba intenção de crescimento, criticidade e regiões, calcule capacidade recomendada e abra mudanças controladas para revisão.
+
+**Cuidado de projeto:** produto interno sem adoção, suporte e métricas vira mais um sistema a operar.
+
+## Exemplos e ferramentas do livro
+
+O estudo de caso de **planejamento de capacidade baseado em intenção** mostra
+uma ferramenta interna nascida de uma decisão operacional recorrente. A
+ferramenta não é o ponto principal; o ponto é transformar essa decisão em
+produto de engenharia, com usuários, requisitos, validações, adoção e métricas
+de resultado.
+
+Em ambientes atuais, esse padrão aparece em portais internos de
+desenvolvedores, plataformas de capacidade, catálogos de serviço,
+autoscaling guiado por política, ferramentas de previsão de demanda e
+workflows de aprovação automatizada.
+
 ## Diagrama de apoio
 
 ```mermaid

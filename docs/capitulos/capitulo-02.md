@@ -93,6 +93,27 @@ policy:
 
 O erro mais comum é publicar o SLO no dashboard e não mudar nenhuma decisão. A prática só está viva quando release, capacidade, incidentes e roadmap usam o orçamento de erro como entrada.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Grafana SLO, Sloth, Pyrra, Nobl9, Prometheus burn-rate alerts, Datadog SLOs, Google Cloud Monitoring SLOs e OpenSLO.
+
+**Exemplo avançado:** crie um SLO de checkout com eventos elegíveis, eventos bons, janela de 30 dias, alertas de burn rate rápido/lento e política de release quando o orçamento for consumido.
+
+**Cuidado de projeto:** evite SLOs baseados em métricas fáceis, como CPU. O SLO deve representar experiência ou resultado do usuário.
+
+## Exemplos e ferramentas do livro
+
+O livro usa exemplos como **Bigtable**, **Chubby**, serviços de busca e o
+serviço didático **Shakespeare** para mostrar que SLO não é uma meta abstrata.
+Um mesmo backend pode ter expectativas diferentes dependendo do consumidor:
+uma jornada online sensível à latência não aceita o mesmo risco de um job
+batch que pode atrasar e reprocessar.
+
+Use esses exemplos para praticar uma decisão: escolha uma jornada crítica,
+defina o que conta como evento bom e calcule qual falha é aceitável antes de
+prometer disponibilidade. O foco não é a ferramenta usada pelo Google, mas a
+forma de transformar expectativa de usuário em **SLI**, **SLO** e **error budget**.
+
 ## Diagrama de apoio
 
 ```mermaid

@@ -83,12 +83,32 @@ load_balancing:
   health_check: "/ready"
   remove_se:
     erro_5xx: "> 5% por 5m"
-    latencia_p95: "> 1000ms por 10m"
+        latency_p95: "> 1000ms por 10m"
   drenagem_conexao: 60s
   failover_regional: "somente se capacidade_destino >= demanda_estimada"
 ```
 
 O ponto prático é evitar roteamento cego. Um backend vivo, mas saturado, pode ser pior do que um backend explicitamente removido do pool.
+
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** Cloud Load Balancing, Route 53, Cloud DNS, Envoy, NGINX Ingress, HAProxy, Istio, Linkerd, Gateway API e health checks ativos.
+
+**Exemplo avançado:** projete failover regional com health check por sintoma, drenagem de conexões, pesos por capacidade e teste de região lenta sem queda total.
+
+**Cuidado de projeto:** health check que só verifica processo vivo mantém tráfego em instâncias degradadas.
+
+## Exemplos e ferramentas do livro
+
+**GSLB** é o exemplo do livro para balanceamento global. Ele aparece
+direcionando tráfego por localidade, capacidade e saúde. O exemplo
+**Shakespeare** ajuda a visualizar isso: a requisição passa por DNS,
+roteamento global, frontend, backend e Bigtable.
+
+Em ambientes atuais, pense em global load balancers, DNS gerenciado, ingress
+controllers, gateways, service mesh e políticas de health check. A pergunta
+continua a mesma: cada camada sabe reduzir ou desviar tráfego quando uma
+região, zona ou backend degrada?
 
 ## Diagrama de apoio
 

@@ -89,6 +89,14 @@ Exemplo de inventário:
 
 Remoção segura também é engenharia. Ela deve ter telemetria, rollback e critério de sucesso, como qualquer release.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** catálogos de serviço, mapas de dependência, OpenRewrite, feature flag management, static analysis, fitness functions de arquitetura e scorecards.
+
+**Exemplo avançado:** faça uma campanha de remoção de flags antigas: medir uso, avisar donos, desativar por coorte, observar erro e remover código morto.
+
+**Cuidado de projeto:** simplicidade sem telemetria vira aposta. Remoção segura precisa de evidência de uso e plano de retorno.
+
 ## Diagrama de apoio
 
 ```mermaid

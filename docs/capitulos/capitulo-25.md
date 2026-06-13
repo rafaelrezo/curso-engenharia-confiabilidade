@@ -83,6 +83,14 @@ Modelo de plano:
 
 SRE amadurece quando deixa de ser um conjunto de ideias e vira rotina mensurável: menos surpresa, melhor recuperação, mudanças mais seguras e aprendizado acumulado.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** DORA metrics, SLO dashboards, reliability scorecards, OKRs, roadmap de plataforma, FinOps, incident analytics e revisões executivas.
+
+**Exemplo avançado:** monte roadmap trimestral de confiabilidade com três lacunas prioritárias, métrica de sucesso, dono, prazo e impacto esperado no serviço.
+
+**Cuidado de projeto:** maturidade SRE não é quantidade de ferramentas; é redução verificável de risco, toil e tempo de recuperação.
+
 ## Diagrama de apoio
 
 ```mermaid

@@ -89,6 +89,25 @@ rollback_if:
 
 O checklist não é burocracia quando reduz surpresa. Ele força a equipe a descobrir lacunas enquanto ainda há tempo para corrigir.
 
+## Tradução para ferramentas modernas
+
+**Ferramentas típicas:** LaunchDarkly, Unleash, Argo Rollouts, Flagger, Spinnaker, Cloud Deploy, feature flags, kill switches e scorecards de prontidão.
+
+**Exemplo avançado:** planeje lançamento em fases: interno, 1%, 10%, 50%, 100%; cada fase com SLI, limite de erro, p95, tickets de suporte e critério de rollback.
+
+**Cuidado de projeto:** feature flag sem ciclo de remoção vira complexidade permanente.
+
+## Exemplos e ferramentas do livro
+
+O livro apresenta **Launch Coordination Engineering** e um **checklist de
+coordenação de lançamento**. O checklist cobre riscos de arquitetura,
+dependências, integração, capacidade, automação, rollout, comportamento de
+clientes e modos de falha.
+
+Em ambientes atuais, isso aparece em PRR, scorecards de prontidão, feature
+flags, canários, progressive delivery, kill switches, testes de carga e
+critérios objetivos de rollback.
+
 ## Diagrama de apoio
 
 ```mermaid

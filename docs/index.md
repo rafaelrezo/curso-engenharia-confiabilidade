@@ -7,8 +7,9 @@ autoral para estudo: não substitui o livro e não reproduz capítulos.
 ## Como estudar
 
 1. Comece por [Conceitos centrais](conceitos-centrais.md).
-2. Leia os capítulos em ordem, observando a seção **Aplicação prática**.
-3. Use as perguntas práticas para relacionar o livro a serviços reais.
+2. Leia [Trilha de aprendizagem e ciclo SRE](trilha-aprendizado.md) para entender a progressão do curso.
+3. Leia os capítulos em ordem, observando **Aplicação prática**, **Aprofundamento prático** e os exemplos do livro.
+4. Use as perguntas práticas para relacionar o livro a serviços reais.
 
 ## Parte I - Fundamentos e princípios
 
