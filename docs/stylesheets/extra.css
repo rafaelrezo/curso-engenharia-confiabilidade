@@ -38,16 +38,38 @@
 }
 
 @media screen and (min-width: 769px) {
+  .wy-grid-for-nav {
+    background:
+      linear-gradient(
+        to right,
+        #343131 0,
+        #343131 300px,
+        #fcfcfc 300px,
+        #fcfcfc 100%
+      );
+  }
+
   .wy-nav-side {
     position: absolute;
+    top: 0;
+    bottom: auto;
+    min-height: 100%;
+    height: auto;
     overflow: visible;
+    background: #343131;
   }
 
   .wy-side-scroll {
     position: static;
     width: auto;
     height: auto;
+    max-height: none;
     overflow: visible;
+  }
+
+  .wy-nav-content-wrap {
+    min-height: 100vh;
+    background: #fcfcfc;
   }
 
   .wy-menu-vertical {
