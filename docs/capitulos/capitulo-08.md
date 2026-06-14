@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Identificar como **triagem** aparece em produção.
-- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
-- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
+- Conduzir troubleshooting com triagem, hipóteses, evidências e linha do tempo.
+- Separar mitigação imediata, diagnóstico de causa provável e correção definitiva.
+- Registrar uma investigação de forma que outra pessoa consiga auditar o raciocínio.
 
 ## Síntese
 
@@ -14,7 +14,15 @@ Em uma frase: **Troubleshooting eficaz combina método, hipóteses testáveis e 
 
 ## Por que isso importa
 
-**triagem** importa porque serviços reais falham sob mudança, carga, dependências lentas, estado distribuído e comportamento humano. A equipe reduz surpresa quando transforma esse risco em rotina operacional clara, sinais confiáveis e decisões treinadas antes da crise.
+**Triagem** importa porque incidentes pressionam a equipe a agir rápido, mesmo
+quando as evidências ainda são incompletas. Sem método, a resposta vira tentativa
+aleatória: alguém reinicia serviço, altera configuração, aumenta capacidade ou
+desfaz deploy sem saber qual hipótese está testando. Isso pode piorar a falha e
+apagar sinais úteis.
+
+Troubleshooting profissional reduz incerteza de forma controlada. A equipe
+observa o sintoma, preserva evidências, cria hipóteses concorrentes, testa a
+mudança de menor risco e registra o resultado.
 
 ## Conceitos essenciais
 
@@ -22,13 +30,15 @@ Em uma frase: **Troubleshooting eficaz combina método, hipóteses testáveis e 
 
 **triagem**: É separar o que é urgente, importante e incerto. Uma boa triagem evita investigar detalhes enquanto usuários continuam impactados.
 
-Uma forma simples de aplicar isso é: Registrar hipóteses antes de executar correções.
+Na primeira triagem, pergunte: há impacto de usuário agora? O impacto está
+aumentando? Existe mitigação segura? Quais mudanças recentes podem ter relação?
+Essa etapa decide se o foco imediato é mitigar ou investigar.
 
 ### **hipóteses**
 
 **hipóteses**: É uma explicação testável para o problema. Hipóteses boas podem ser confirmadas ou descartadas rapidamente.
 
-No dia a dia, isso aparece quando a equipe precisa separar mitigacao imediata de correção definitiva.
+No dia a dia, isso aparece quando a equipe precisa separar mitigação imediata de correção definitiva.
 
 ### **diagnóstico**
 
@@ -38,24 +48,27 @@ Esse conceito fica concreto quando a equipe consegue manter linha do tempo duran
 
 ### **experimentos controlados**
 
-**experimentos controlados**: É uma prática que transforma uma preocupação operacional em decisão concreta. Ela aparece quando a equipe precisa escolher entre aceitar risco, automatizar, simplificar, melhorar observabilidade, mudar o processo de release ou corrigir a causa raiz de um problema recorrente.
+**experimentos controlados**: São testes pequenos e deliberados para reduzir incerteza sem piorar o estado de produção. Um bom experimento tem hipótese, sinal esperado, limite de risco e critério para parar.
 
 Uma forma simples de aplicar isso é: Registrar hipóteses antes de executar correções.
 
 ### **resultados negativos**
 
-**resultados negativos**: É uma prática que transforma uma preocupação operacional em decisão concreta. Ela aparece quando a equipe precisa escolher entre aceitar risco, automatizar, simplificar, melhorar observabilidade, mudar o processo de release ou corrigir a causa raiz de um problema recorrente.
+**resultados negativos**: São testes que descartam uma hipótese. Eles são úteis porque reduzem o espaço de busca e impedem que a equipe insista em uma explicação errada.
 
-No dia a dia, isso aparece quando a equipe precisa separar mitigacao imediata de correção definitiva.
+No dia a dia, isso aparece quando a equipe precisa separar mitigação imediata de correção definitiva.
 
 
 ## Aplicação prática
 
-Escolha um serviço concreto e transforme o tema em uma ação verificável:
+Use o `checkout-api` ou um serviço real e faça uma investigação estruturada:
 
-- Registrar hipóteses antes de executar correções.
-- Separar mitigacao imediata de correção definitiva.
-- Manter linha do tempo durante uma investigação.
+- Descreva o sintoma em termos observáveis: quem, quando, onde e qual impacto.
+- Monte uma linha do tempo com deploys, flags, mudanças de configuração e eventos externos.
+- Liste pelo menos três hipóteses concorrentes.
+- Para cada hipótese, defina evidência esperada e teste de menor risco.
+- Registre mitigação, resultado do teste e decisão seguinte.
+- Separe ações definitivas que devem entrar no postmortem ou backlog.
 
 Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
 recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
@@ -75,10 +88,11 @@ Procedimento recomendado:
 
 Exemplo de registro durante investigação:
 
-| Hora | Observação | Hipótese | Teste | Resultado |
-| --- | --- | --- | --- | --- |
-| 10:05 | p99 subiu só em checkout | dependência lenta | trace por operação | confirmado em gateway |
-| 10:12 | erros aumentam após retry | amplificação | reduzir tentativas no cliente | erro estabilizou |
+| Hora | Observação | Hipótese | Evidência esperada | Teste seguro | Resultado |
+| --- | --- | --- | --- | --- | --- |
+| 10:05 | p99 subiu só em checkout | dependência de pagamento lenta | traces concentrados no provedor | filtrar traces por rota e dependência | confirmado em gateway |
+| 10:12 | erros aumentam após retry | retry storm amplificando falha | mais tentativas por requisição e fila crescendo | reduzir tentativas no cliente canário | erro estabilizou |
+| 10:20 | erro cai após pausar rollout | regressão de versão | erro maior na versão nova | manter pausa e comparar versões | provável regressão no deploy |
 
 A disciplina protege contra a pressão de "mexer em alguma coisa". Em incidente, mudança sem hipótese pode piorar o estado e apagar evidências.
 
@@ -93,44 +107,58 @@ A disciplina protege contra a pressão de "mexer em alguma coisa". Em incidente,
 ## Diagrama de apoio
 
 ```mermaid
-flowchart LR
-    Tema["Resolvendo problemas de modo eficiente"] --> C1["triagem"]
-    C1 --> C2["hipóteses"]
-    C2 --> C3["diagnóstico"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+flowchart TD
+    Sintoma["Sintoma observado"] --> Triagem{"Impacto ativo?"}
+    Triagem -->|Sim| Mitigar["Mitigar com menor risco"]
+    Triagem -->|Não| Investigar["Investigar sem mudar produção"]
+    Mitigar --> Linha["Registrar linha do tempo"]
+    Investigar --> Linha
+    Linha --> Hipoteses["Listar hipóteses concorrentes"]
+    Hipoteses --> Teste["Testar evidência de menor risco"]
+    Teste --> Resultado{"Hipótese confirmada?"}
+    Resultado -->|Sim| Correcao["Correção definitiva e postmortem"]
+    Resultado -->|Não| Hipoteses
 ```
 
 ## Erros comuns
 
-- Aplicar a prática como checklist sem conectar a risco real do serviço.
-- Criar documentação ou automação sem validar durante incidentes ou mudanças reais.
-- Medir apenas sinais internos e esquecer o impacto percebido pelo usuário.
+- Executar comandos em produção sem hipótese explícita.
+- Confundir mitigação que reduz impacto com correção definitiva.
+- Ignorar mudanças recentes, flags e eventos externos na linha do tempo.
+- Procurar uma única causa raiz quando o incidente tem várias condições contribuintes.
+- Apagar evidências ao reiniciar, limpar fila ou substituir instâncias sem registro.
 
 ## Perguntas para revisão
 
-1. Qual risco operacional **triagem** ajuda a reduzir?
-2. Que evidência mostraria que a prática foi aplicada com sucesso?
-3. Como esse conceito mudaria uma decisão de release, plantão, arquitetura ou priorização?
+1. Qual sintoma prova que usuários estão impactados?
+2. Que hipóteses concorrentes explicam o mesmo sintoma?
+3. Qual teste reduz mais incerteza com menor risco?
+4. Que mudança recente precisa entrar na linha do tempo?
+5. O que foi mitigação e o que ainda exige correção definitiva?
 
 ## Exercícios
 
 ### Compreensão
 
-Explique a ideia central em até cinco linhas, usando um serviço real como exemplo.
+Explique por que resultado negativo é útil durante troubleshooting.
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Monte uma linha do tempo para uma degradação do `checkout-api` com deploy,
+feature flag, aumento de p99, retries e mitigação.
 
 ### Análise
 
-Liste duas formas de aplicar esse conceito de maneira superficial e explique o
-risco de cada uma.
+Receba este sintoma: "checkout com p99 alto e aumento de erro após deploy".
+Liste três hipóteses, a evidência esperada para cada uma e o teste de menor
+risco.
 
 ## Relação com práticas atuais
 
-Em ambientes atuais, este tema aparece em revisões de serviço, plataformas internas, pipelines, dashboards, políticas de rollout e práticas de cloud native. A tecnologia muda; o princípio continua sendo tornar risco, responsabilidade e evidência visíveis.
+Em ambientes atuais, troubleshooting usa traces distribuídos, logs estruturados,
+métricas de SLO, eventos de deploy, histórico de feature flags, audit logs e
+timelines de incidente. A prática madura não é abrir todas as ferramentas ao
+mesmo tempo; é formular hipóteses e buscar o sinal que mais reduz incerteza.
 
 ## Recursos complementares
 

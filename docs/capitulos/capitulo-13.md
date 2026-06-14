@@ -80,23 +80,33 @@ Exemplo de política:
 
 ```yaml
 load_balancing:
-  health_check: "/ready"
+  health_check:
+    endpoint: "/ready"
+    success_criteria:
+      http_status: "200"
+      latency_p95: "< 500ms"
+      dependency_mode: "degraded_ok"
   remove_se:
     erro_5xx: "> 5% por 5m"
-        latency_p95: "> 1000ms por 10m"
+    latency_p95: "> 1000ms por 10m"
   drenagem_conexao: 60s
   failover_regional: "somente se capacidade_destino >= demanda_estimada"
 ```
 
 O ponto prático é evitar roteamento cego. Um backend vivo, mas saturado, pode ser pior do que um backend explicitamente removido do pool.
 
+Um desenho de failover regional precisa responder antes da crise: qual sinal
+remove a região, qual capacidade existe no destino, como conexões são drenadas,
+como cache e filas reagem e como o tráfego volta depois da recuperação. Failover
+sem capacidade no destino apenas muda o lugar da falha.
+
 ## Tradução para ferramentas modernas
 
-**Ferramentas típicas:** Cloud Load Balancing, Route 53, Cloud DNS, Envoy, NGINX Ingress, HAProxy, Istio, Linkerd, Gateway API e health checks ativos.
+**Ferramentas típicas:** Cloud Load Balancing, Route 53, Cloud DNS, Envoy, NGINX Ingress, HAProxy, Istio, Linkerd, Kubernetes Gateway API e health checks ativos.
 
 **Exemplo avançado:** projete failover regional com health check por sintoma, drenagem de conexões, pesos por capacidade e teste de região lenta sem queda total.
 
-**Cuidado de projeto:** health check que só verifica processo vivo mantém tráfego em instâncias degradadas.
+**Cuidado de projeto:** health check que só verifica processo vivo mantém tráfego em instâncias degradadas. Service mesh e Gateway API ajudam a expressar políticas, mas também adicionam camadas que precisam ser observadas e testadas.
 
 ## Exemplos e ferramentas do livro
 
@@ -106,7 +116,7 @@ direcionando tráfego por localidade, capacidade e saúde. O exemplo
 roteamento global, frontend, backend e Bigtable.
 
 Em ambientes atuais, pense em global load balancers, DNS gerenciado, ingress
-controllers, gateways, service mesh e políticas de health check. A pergunta
+controllers, Kubernetes Gateway API, service mesh e políticas de health check. A pergunta
 continua a mesma: cada camada sabe reduzir ou desviar tráfego quando uma
 região, zona ou backend degrada?
 
@@ -156,12 +166,18 @@ Descreva o que aconteceria se uma região ficasse com latência alta, mas sem fa
 
 Em ambientes cloud native, essas decisões aparecem em load balancers gerenciados, service mesh, ingress controllers, gateways globais, health checks, circuit breakers e políticas de roteamento por região. A tecnologia varia, mas a pergunta central permanece: cada camada sabe para onde enviar tráfego quando parte do sistema degrada?
 
+Gateway API é uma evolução importante para padronizar entrada e roteamento em
+Kubernetes, mas não elimina a necessidade de SRE: ainda é preciso definir sinais
+de saúde, limites, drenagem, fallback e teste de falha parcial.
+
 ## Recursos complementares
 
 - **Google SRE Book - Load Balancing at the Frontend:** <https://sre.google/sre-book/load-balancing-frontend/>
 - **Google SRE Book - Load Balancing in the Datacenter:** <https://sre.google/sre-book/load-balancing-datacenter/>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
 - **Google Cloud Architecture Framework:** <https://docs.cloud.google.com/architecture/framework>
+- **Kubernetes Gateway API:** <https://gateway-api.sigs.k8s.io/>
+- **Envoy Documentation:** <https://www.envoyproxy.io/docs/>
 
 ## Fechamento
 
@@ -175,4 +191,6 @@ Próximo: [Capítulo 14 - Sobrecarga, retentativas e falhas em cascata](capitulo
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - Google SRE. **Load Balancing at the Frontend**. <https://sre.google/sre-book/load-balancing-frontend/>
 - Google SRE. **Load Balancing in the Datacenter**. <https://sre.google/sre-book/load-balancing-datacenter/>
+- Kubernetes SIG Network. **Gateway API**. <https://gateway-api.sigs.k8s.io/>
+- Envoy. **Documentation**. <https://www.envoyproxy.io/docs/>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

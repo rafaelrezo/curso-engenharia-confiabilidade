@@ -54,6 +54,23 @@ O objetivo é falhar cedo quando continuar esperando piora a saúde geral.
 
 Degradação deve ser planejada antes do incidente. Improvisar o que desligar durante a crise aumenta risco.
 
+### **Circuit breakers e bulkheads**
+
+**Circuit breakers** interrompem chamadas para uma dependência quando sinais de
+erro ou latência indicam que insistir só aumentaria a falha. **Bulkheads**
+isolam recursos por cliente, operação ou dependência para que uma parte
+degradada não consuma toda a capacidade compartilhada.
+
+Esses padrões não substituem SLO, timeout ou retry bem configurado. Eles são
+defesas adicionais para limitar raio de impacto.
+
+### **Load shedding**
+
+**Load shedding** é descartar ou rejeitar trabalho deliberadamente quando aceitar
+mais requisições colocaria o serviço em estado pior. Ele deve preservar tráfego
+crítico e rejeitar primeiro trabalho de menor valor, como recomputações,
+consultas caras ou tarefas em lote.
+
 ## Aplicação prática
 
 Revise uma dependência crítica do serviço:
@@ -63,6 +80,7 @@ Revise uma dependência crítica do serviço:
 - Verifique se retries têm deadline, backoff e jitter.
 - Identifique filas sem limite ou sem métrica de idade.
 - Escolha um modo de degradação que preserve a jornada principal do usuário.
+- Defina circuit breaker, bulkhead ou load shedding onde uma dependência compartilhada pode derrubar o serviço.
 
 ## Aprofundamento prático
 
@@ -91,6 +109,15 @@ do_not_retry_on: ["400", "401", "409"]
 
 Uma boa regra: se todos os clientes repetirem ao mesmo tempo, a dependência deve continuar protegida. Se isso não for verdade, a política ainda está perigosa.
 
+Teste de retry storm:
+
+| Cenário | O que medir |
+| --- | --- |
+| Retries sem jitter | Pico de tráfego, erro, p99 e saturação da dependência. |
+| Retries com jitter | Distribuição das tentativas e tempo de recuperação. |
+| Circuit breaker aberto | Redução de chamadas à dependência e qualidade da resposta degradada. |
+| Load shedding ativo | Taxa de rejeição explícita e preservação da jornada principal. |
+
 ## Tradução para ferramentas modernas
 
 **Ferramentas típicas:** Envoy, Istio, Linkerd, Resilience4j, Polly, rate limiters, API gateways, filas com DLQ e circuit breakers.
@@ -107,8 +134,10 @@ flowchart LR
     Limit -->|Aceita| Service["Serviço"]
     Limit -->|Rejeita| FailFast["Falha explícita"]
     Service --> Dependency["Dependência"]
-    Dependency -->|Erro/lentidão| Retry["Retry com backoff e jitter"]
+    Dependency -->|Erro/lentidão| Breaker["Circuit breaker"]
+    Breaker --> Retry["Retry com backoff e jitter"]
     Retry --> Limit
+    Limit --> Shed["Load shedding"]
     Service --> Degrade["Degradação elegante"]
 ```
 
@@ -118,6 +147,8 @@ flowchart LR
 - Fazer retry sem deadline, limite ou jitter.
 - Usar filas ilimitadas para esconder saturação.
 - Tratar todo tráfego como igualmente crítico.
+- Compartilhar o mesmo pool de recursos entre tráfego crítico e tarefas baratas de derrubar.
+- Manter circuit breaker que abre, mas não tem resposta degradada planejada.
 - Preferir falha lenta e global a rejeição rápida e explícita.
 
 ## Perguntas para revisão
@@ -140,9 +171,20 @@ Desenhe uma política de retry com timeout, deadline, backoff, jitter e limite d
 
 Escolha um fluxo crítico e defina uma estratégia de degradação que mantenha o serviço parcialmente útil.
 
+### Teste
+
+Compare duas políticas para o `checkout-api`: retries sem jitter e retries com
+jitter. Descreva o impacto esperado em erro, latência, fila e saturação da
+dependência de pagamento.
+
 ## Relação com práticas atuais
 
 Esses controles aparecem em API gateways, service mesh, SDKs de clientes, filas, circuit breakers, políticas de rate limit e mecanismos de autoscaling. Autoscaling ajuda, mas não substitui limites: capacidade nova pode chegar tarde, depender de recursos compartilhados ou amplificar custo durante um evento de carga.
+
+Em serviços com custo variável alto, como inferência de IA ou chamadas a APIs
+externas pagas, load shedding e rate limits também protegem orçamento. FinOps e
+SRE se encontram quando uma política evita que uma degradação vire tanto
+incidente quanto explosão de custo.
 
 ## Recursos complementares
 
@@ -150,6 +192,8 @@ Esses controles aparecem em API gateways, service mesh, SDKs de clientes, filas,
 - **Google SRE Book - Addressing Cascading Failures:** <https://sre.google/sre-book/addressing-cascading-failures/>
 - **Google Cloud Architecture Framework:** <https://docs.cloud.google.com/architecture/framework>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
+- **Envoy - Outlier Detection:** <https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/outlier>
+- **FinOps Framework:** <https://www.finops.org/framework/>
 
 ## Fechamento
 
@@ -163,4 +207,6 @@ Próximo: [Capítulo 15 - Administrando estados críticos: consenso distribuído
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - Google SRE. **Handling Overload**. <https://sre.google/sre-book/handling-overload/>
 - Google SRE. **Addressing Cascading Failures**. <https://sre.google/sre-book/addressing-cascading-failures/>
+- Envoy. **Outlier detection**. <https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/outlier>
+- FinOps Foundation. **FinOps Framework**. <https://www.finops.org/framework/>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

@@ -6,6 +6,18 @@ projetar um ciclo completo de desenvolvimento e operação confiável: entender
 o serviço, definir objetivos, construir mudanças seguras, operar produção,
 responder incidentes e transformar aprendizado em engenharia.
 
+Use o [Projeto prático - Checkout API](projeto-pratico.md) como contexto
+acumulativo. Cada capítulo melhora um artefato do mesmo serviço, para que a
+formação termine em um dossiê SRE completo.
+
+As entregas devem ser avaliadas pelas [Rubricas de avaliação SRE](rubricas.md),
+que definem o padrão mínimo para SLO, alerta, runbook, postmortem, release,
+teste de confiabilidade, restauração, PRR e roadmap.
+
+A página [SRE em 2026](sre-2026.md) orienta como conectar os fundamentos do
+livro a OpenTelemetry, Kubernetes, workloads de IA, platform engineering,
+supply chain security e FinOps.
+
 ## Resultado esperado
 
 Ao concluir o curso, o estudante deve conseguir:
@@ -126,7 +138,8 @@ flowchart LR
 
 ## Projeto final sugerido
 
-Escolha um serviço real ou fictício e produza um dossiê SRE:
+Use o `checkout-api` descrito em [Projeto prático - Checkout API](projeto-pratico.md)
+ou escolha um serviço real equivalente e produza um dossiê SRE:
 
 1. mapa da jornada crítica;
 2. dependências e modos de falha;

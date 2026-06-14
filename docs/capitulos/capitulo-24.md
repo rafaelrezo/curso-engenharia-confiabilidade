@@ -65,6 +65,10 @@ mais confiável ou decisão mais fácil de explicar.
 
 Setores como aviação, saúde e energia mostram que sistemas críticos dependem de treinamento, checklists, reporte de quase-incidentes e investigação sem culpa. A adaptação para software precisa respeitar a velocidade de mudança: checklists devem ser leves, versionados e usados no fluxo real.
 
+Safety-I e Safety-II ajudam a ampliar a análise. Safety-I pergunta "o que deu errado e como evitar repetição?". Safety-II pergunta também "o que normalmente dá certo, apesar de pressão, improviso e variação?". Em software, isso muda a conversa: além de investigar incidentes, a equipe aprende com deploys difíceis que terminaram bem, plantões que evitaram impacto e mitigação feita cedo.
+
+**Cultura justa** não significa ausência de responsabilidade. Significa separar erro humano razoável, decisão sob contexto incompleto, violação deliberada e desenho de sistema que induz falha. Sem essa distinção, pessoas escondem sinais fracos; com ela, a organização aprende mais cedo.
+
 Procedimento recomendado:
 
 1. Escolha uma operação crítica: lançamento, migração, failover, restauração ou resposta a incidente.
@@ -72,6 +76,7 @@ Procedimento recomendado:
 3. Teste o checklist em simulado ou mudança real pequena.
 4. Incentive reporte de quase-incidentes sem punição.
 5. Revise o processo depois de cada uso.
+6. Faça premortem antes de mudanças de alto risco.
 
 Exemplo de checklist de failover:
 
@@ -83,25 +88,66 @@ Exemplo de checklist de failover:
 | Plano de retorno definido | Sim / não |
 | Métricas pós-failover monitoradas | Sim / não |
 
+Relatório de quase-incidente:
+
+```markdown
+# Quase-incidente: fila de pagamentos chegou a 85% do limite
+
+## O que quase aconteceu?
+A fila de pagamentos se aproximou do limite que causaria atraso para usuários.
+
+## Como percebemos?
+Alerta de saturação e observação do on-call durante rollout.
+
+## O que funcionou?
+Canário pausado rapidamente, dashboard tinha métrica correta e suporte foi avisado.
+
+## O que foi adaptação humana?
+On-call correlacionou aumento de fila com deploy antes de violar SLO.
+
+## O que precisa melhorar?
+Adicionar critério automático de pausa e documentar limite seguro da fila.
+
+## Ações
+- Ajustar regra de canário até sexta.
+- Atualizar runbook de saturação.
+- Incluir cenário no próximo game day.
+```
+
+Premortem de mudança crítica:
+
+| Pergunta | Resposta esperada |
+| --- | --- |
+| Se isso falhar em 24h, qual foi a causa provável? | Hipóteses de falha antes do deploy |
+| Que sinal apareceria primeiro? | Métrica, log, alerta ou reclamação |
+| Qual decisão seria difícil sob pressão? | Critério de rollback, comunicação ou aceitação de risco |
+| Quem pode abortar? | Nome ou papel com autoridade |
+| Que parte do plano depende de memória humana? | Item que precisa virar checklist ou automação |
+
 O aprendizado intersetorial mais útil é disciplina operacional, não burocracia. O processo deve reduzir erro humano sem impedir resposta rápida.
 
 ## Tradução para ferramentas modernas
 
 **Ferramentas típicas:** checklists digitais, game days, safety cases leves, premortems, quase-incidentes, revisões sem culpa e auditorias operacionais.
 
-**Exemplo avançado:** adapte prática de aviação para failover: checklist curto, confirmação verbal, critério de abortar, responsável por comunicação e revisão pós-execução.
+**Exemplo avançado:** adapte prática de aviação para failover: checklist curto, confirmação verbal, critério de abortar, responsável por comunicação e revisão pós-execução. Use quase-incidentes como fonte de aprendizado antes que o usuário seja afetado.
 
 **Cuidado de projeto:** processo inspirado em setor crítico deve reduzir erro, não criar burocracia incompatível com software.
 
 ## Diagrama de apoio
 
 ```mermaid
-flowchart LR
-    Tema["Lições aprendidas com outros mercados"] --> C1["aprendizado intersetorial"]
-    C1 --> C2["segurança operacional"]
-    C2 --> C3["checklists"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+flowchart TD
+    Operacao["Operação crítica"] --> Premortem["Premortem"]
+    Premortem --> Checklist["Checklist leve"]
+    Checklist --> Execucao["Execução ou simulado"]
+    Execucao --> Resultado{"Houve impacto?"}
+    Resultado -->|Sim| Postmortem["Postmortem sem culpa"]
+    Resultado -->|Não, mas quase| NearMiss["Relatório de quase-incidente"]
+    Resultado -->|Não| SafetyII["Aprender com o que deu certo"]
+    Postmortem --> Melhoria["Ações de melhoria"]
+    NearMiss --> Melhoria
+    SafetyII --> Melhoria
 ```
 
 ## Erros comuns
@@ -124,7 +170,7 @@ Explique a ideia central em até cinco linhas, usando um serviço real como exem
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Escolha uma operação crítica e produza dois artefatos: um checklist de failover e um relatório de quase-incidente.
 
 ### Análise
 
@@ -140,6 +186,9 @@ Gestão moderna de SRE aparece em onboarding estruturado, catálogos de serviço
 - **Livro oficial online do Google SRE:** <https://sre.google/sre-book/>
 - **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - Lessons Learned from Other Industries:** <https://sre.google/sre-book/lessons-learned/>
+- **NIST Cybersecurity Framework:** <https://www.nist.gov/cyberframework>
+- **Safety-II overview - SKYbrary:** <https://www.skybrary.aero/articles/safety-ii>
+- **PSNet - Safety-I, Safety-II and New Views of Safety:** <https://psnet.ahrq.gov/primer/safety-i-safety-ii-and-new-views-safety>
 - **Google SRE Resources:** <https://sre.google/resources/>
 
 ## Fechamento
@@ -153,6 +202,9 @@ Próximo: [Capítulo 25 - Conclusão](capitulo-25.md).
 - Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - **Google SRE Book - Lessons Learned from Other Industries:** <https://sre.google/sre-book/lessons-learned/>
+- **NIST Cybersecurity Framework:** <https://www.nist.gov/cyberframework>
+- **Safety-II overview - SKYbrary:** <https://www.skybrary.aero/articles/safety-ii>
+- **PSNet - Safety-I, Safety-II and New Views of Safety:** <https://psnet.ahrq.gov/primer/safety-i-safety-ii-and-new-views-safety>
 - **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

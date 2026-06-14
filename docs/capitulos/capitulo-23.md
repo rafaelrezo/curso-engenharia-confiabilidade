@@ -28,13 +28,13 @@ Uma forma simples de aplicar isso é: Definir critérios para SRE aceitar um ser
 
 **critérios de entrada**: São requisitos mínimos para um serviço receber apoio de SRE, como SLOs, observabilidade, runbooks, rollback, ownership e capacidade de responder incidentes.
 
-No dia a dia, isso aparece quando a equipe precisa criar checklist de prontidao operacional.
+No dia a dia, isso aparece quando a equipe precisa criar checklist de prontidão operacional.
 
 ### **responsabilidade compartilhada**
 
 **responsabilidade compartilhada**: É a divisão explícita de obrigações entre SRE, produto, plataforma e desenvolvimento. Confiabilidade melhora quando todos sabem quais decisões continuam sob seu controle.
 
-Esse conceito fica concreto quando a equipe consegue estabelecer revisoes periodicas de engajamento.
+Esse conceito fica concreto quando a equipe consegue estabelecer revisões periódicas de engajamento.
 
 ### **maturidade operacional**
 
@@ -46,7 +46,7 @@ Uma forma simples de aplicar isso é: Definir critérios para SRE aceitar um ser
 
 **revisão de serviço**: É uma avaliação periódica da saúde operacional do serviço. Ela verifica SLOs, incidentes, toil, dependências, capacidade, riscos e ações pendentes.
 
-No dia a dia, isso aparece quando a equipe precisa criar checklist de prontidao operacional.
+No dia a dia, isso aparece quando a equipe precisa criar checklist de prontidão operacional.
 
 
 ## Aplicação prática
@@ -54,8 +54,8 @@ No dia a dia, isso aparece quando a equipe precisa criar checklist de prontidao 
 Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
 - Definir critérios para SRE aceitar um serviço.
-- Criar checklist de prontidao operacional.
-- Estabelecer revisoes periodicas de engajamento.
+- Criar checklist de prontidão operacional.
+- Estabelecer revisões periódicas de engajamento.
 
 Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
 recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
@@ -65,6 +65,15 @@ mais confiável ou decisão mais fácil de explicar.
 
 O modelo de engajamento de SRE protege foco. Sem critérios de entrada, a equipe vira suporte genérico; sem critérios de saída, serviços permanecem dependentes de SRE indefinidamente. O acordo precisa deixar claro o que produto, desenvolvimento e SRE assumem.
 
+Modelos comuns de engajamento:
+
+| Modelo | Quando usar | Limite saudável | Risco se mal usado |
+| --- | --- | --- | --- |
+| Embedded | Serviço crítico precisa de ajuda temporária intensa | Prazo, objetivo e plano de saída explícitos | SRE vira membro permanente sem autonomia do time |
+| Consultivo | Time já opera o serviço, mas precisa de revisão técnica | SRE recomenda e acompanha evidências, não assume fila | Recomendações viram opinião sem adoção |
+| Platform | Problemas repetidos devem virar caminho self-service | Plataforma trata usuários internos como clientes | Plataforma vira fila de tickets de infraestrutura |
+| Enabling | Times precisam aprender prática nova, como SLO ou incident response | Foco em capacitar e sair gradualmente | Enabling vira treinamento sem mudança real |
+
 Procedimento recomendado:
 
 1. Defina requisitos mínimos: SLO, observabilidade, runbooks, rollback, ownership e suporte.
@@ -73,14 +82,42 @@ Procedimento recomendado:
 4. Faça revisão periódica de maturidade operacional.
 5. Planeje saída ou mudança de modelo quando o serviço amadurecer.
 
-Exemplo de contrato:
+Contrato de engajamento:
 
-| Área | Responsabilidade |
-| --- | --- |
-| Produto | Definir expectativa de usuário e prioridade de risco |
-| Desenvolvimento | Corrigir bugs, manter código e participar de incidentes |
-| SRE | Orientar SLOs, automação, plantão e práticas de produção |
-| Plataforma | Fornecer caminhos seguros e suporte a infraestrutura |
+```yaml
+engajamento_sre:
+  servico: "checkout"
+  modelo: "embedded por 90 dias"
+  objetivo: "reduzir incidentes recorrentes e preparar plantao compartilhado"
+  entrada:
+    slo_definido: true
+    dashboard_existente: true
+    rollback_testado: false
+    runbooks_criticos: "2 de 5"
+  limites:
+    suporte_ad_hoc: "somente via fila de triagem"
+    toil_budget_sre: "max 20% do tempo do engajamento"
+    escalacao: "impacto em usuario ou risco de dados"
+  saida:
+    - "rollback testado"
+    - "5 runbooks criticos revisados"
+    - "time de desenvolvimento participa do plantao"
+    - "erro recorrente do pagamento reduzido por 60 dias"
+  revisao: "trimestral"
+```
+
+RACI mínimo:
+
+| Atividade | Produto | Desenvolvimento | SRE | Plataforma |
+| --- | --- | --- | --- | --- |
+| Definir SLO de usuário | A | C | R | C |
+| Corrigir bug de produção | C | R | C | C |
+| Manter runbook | C | R | R | C |
+| Operar plataforma comum | I | C | C | R |
+| Aceitar risco de prazo versus SLO | A | C | R | I |
+| Revisar maturidade trimestral | C | R | R | C |
+
+Legenda: R executa, A responde pela decisão, C é consultado, I é informado.
 
 Engajamento saudável não é posse do serviço por SRE. É responsabilidade compartilhada com critérios explícitos.
 
@@ -88,7 +125,7 @@ Engajamento saudável não é posse do serviço por SRE. É responsabilidade com
 
 **Ferramentas típicas:** service maturity scorecards, Backstage scorecards, readiness reviews, contratos de suporte, RACI, SLO reviews e templates de engajamento.
 
-**Exemplo avançado:** defina critérios para SRE aceitar um serviço: SLO, observabilidade, rollback, runbooks, ownership, suporte e backlog de confiabilidade.
+**Exemplo avançado:** defina critérios para SRE aceitar um serviço: SLO, observabilidade, rollback, runbooks, ownership, suporte e backlog de confiabilidade. Em organizações com plataforma interna, trate a plataforma como produto: caminhos seguros, feedback claro, adoção medida e redução de carga cognitiva.
 
 **Cuidado de projeto:** SRE sem critério de entrada e saída vira suporte ilimitado.
 
@@ -106,12 +143,20 @@ de responder incidentes e backlog de confiabilidade priorizado.
 ## Diagrama de apoio
 
 ```mermaid
-flowchart LR
-    Tema["O modelo de engajamento da SRE em evolução"] --> C1["modelo de engajamento"]
-    C1 --> C2["critérios de entrada"]
-    C2 --> C3["responsabilidade compartilhada"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+flowchart TD
+    Servico["Serviço candidato"] --> Entrada{"Atende entrada mínima?"}
+    Entrada -->|Não| Enabling["Enabling ou consultoria curta"]
+    Entrada -->|Sim| Modelo{"Modelo adequado"}
+    Modelo --> Embedded["Embedded"]
+    Modelo --> Consultivo["Consultivo"]
+    Modelo --> Platform["Platform"]
+    Embedded --> Revisao["Revisão trimestral"]
+    Consultivo --> Revisao
+    Platform --> Revisao
+    Enabling --> Revisao
+    Revisao --> Saida{"Critérios de saída atingidos?"}
+    Saida -->|Sim| Autonomia["Autonomia do time"]
+    Saida -->|Não| Ajuste["Ajustar contrato"]
 ```
 
 ## Erros comuns
@@ -134,7 +179,7 @@ Explique a ideia central em até cinco linhas, usando um serviço real como exem
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Escolha um serviço real e escreva um contrato de engajamento com modelo, critérios de entrada, critérios de saída, RACI, SLOs, ownership, toil budget e revisão trimestral.
 
 ### Análise
 
@@ -151,6 +196,8 @@ Gestão moderna de SRE aparece em onboarding estruturado, catálogos de serviço
 - **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - The Evolving SRE Engagement Model:** <https://sre.google/sre-book/evolving-sre-engagement-model/>
 - **Site Reliability Workbook - SRE Engagement Model:** <https://sre.google/workbook/engagement-model/>
+- **DORA - Platform Engineering:** <https://dora.dev/capabilities/platform-engineering/>
+- **Team Topologies - Key Concepts:** <https://teamtopologies.com/key-concepts>
 - **Google SRE Resources:** <https://sre.google/resources/>
 
 ## Fechamento
@@ -165,6 +212,8 @@ Próximo: [Capítulo 24 - Lições aprendidas com outros mercados](capitulo-24.m
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - **Google SRE Book - The Evolving SRE Engagement Model:** <https://sre.google/sre-book/evolving-sre-engagement-model/>
 - **Site Reliability Workbook - SRE Engagement Model:** <https://sre.google/workbook/engagement-model/>
+- **DORA - Platform Engineering:** <https://dora.dev/capabilities/platform-engineering/>
+- **Team Topologies - Key Concepts:** <https://teamtopologies.com/key-concepts>
 - **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

@@ -20,13 +20,13 @@ Em uma frase: **Interrupções cognitivas reduzem qualidade; processos devem pro
 
 ### **carga operacional**
 
-**carga operacional**: É uma prática que transforma uma preocupação operacional em decisão concreta. Ela aparece quando a equipe precisa escolher entre aceitar risco, automatizar, simplificar, melhorar observabilidade, mudar o processo de release ou corrigir a causa raiz de um problema recorrente.
+**carga operacional**: É o volume de interrupções, decisões, tarefas reativas e suporte que compete com trabalho profundo de engenharia. Ela precisa ser medida porque a sensação de urgência costuma esconder padrões repetitivos.
 
-Uma forma simples de aplicar isso é: Medir fontes de interrupcao da equipe.
+Uma forma simples de aplicar isso é medir fontes de interrupção da equipe.
 
 ### **interrupções**
 
-**interrupções**: É perda ou degradação relevante de serviço. Registrar interrupções permite medir tendência, impacto e causas recorrentes.
+**Interrupções cognitivas** são quebras de atenção humana: mensagens urgentes, pedidos diretos, reuniões sem decisão, tickets aleatórios e alertas sem ação clara. Elas são diferentes de **interrupções de serviço**, que são perda ou degradação real para usuários. Confundir as duas coisas cria dois problemas: tudo vira urgente e a equipe perde capacidade de fazer engenharia preventiva.
 
 No dia a dia, isso aparece quando a equipe precisa separar canais urgentes de canais informativos.
 
@@ -38,13 +38,13 @@ Esse conceito fica concreto quando a equipe consegue criar instruções claras p
 
 ### **instrução acionável**
 
-**instrução acionável**: É uma prática que transforma uma preocupação operacional em decisão concreta. Ela aparece quando a equipe precisa escolher entre aceitar risco, automatizar, simplificar, melhorar observabilidade, mudar o processo de release ou corrigir a causa raiz de um problema recorrente.
+**instrução acionável**: É orientação curta e específica sobre o que fazer diante de um sinal. Um alerta crítico deve indicar impacto, primeiro diagnóstico, caminho de mitigação e quando escalar.
 
-Uma forma simples de aplicar isso é: Medir fontes de interrupcao da equipe.
+Uma forma simples de aplicar isso é medir fontes de interrupção da equipe.
 
 ### **redução de ruído**
 
-**redução de ruído**: É uma prática que transforma uma preocupação operacional em decisão concreta. Ela aparece quando a equipe precisa escolher entre aceitar risco, automatizar, simplificar, melhorar observabilidade, mudar o processo de release ou corrigir a causa raiz de um problema recorrente.
+**redução de ruído**: É remover, rebaixar ou redirecionar interrupções que não exigem ação imediata. O objetivo não é silenciar produção, mas proteger atenção humana para os eventos que realmente precisam dela.
 
 No dia a dia, isso aparece quando a equipe precisa separar canais urgentes de canais informativos.
 
@@ -53,7 +53,7 @@ No dia a dia, isso aparece quando a equipe precisa separar canais urgentes de ca
 
 Escolha um serviço concreto e transforme o tema em uma ação verificável:
 
-- Medir fontes de interrupcao da equipe.
+- Medir fontes de interrupção da equipe.
 - Separar canais urgentes de canais informativos.
 - Criar instruções claras para alertas críticos.
 
@@ -65,6 +65,8 @@ mais confiável ou decisão mais fácil de explicar.
 
 Interrupções cognitivas são trabalho invisível. Mensagens soltas, alertas informativos, reuniões sem decisão e pedidos urgentes quebram fluxo e aumentam erro. Atenção humana precisa ser tratada como recurso limitado.
 
+O capítulo do livro separa carga operacional em páginas, tickets e atividades operacionais contínuas. Essa separação ajuda porque cada tipo de interrupção precisa de rota diferente. Página exige resposta imediata. Ticket precisa de fila, prioridade e SLO interno. Atividade contínua, como rollout de flag ou dúvida recorrente, precisa de dono e janela planejada.
+
 Procedimento recomendado:
 
 1. Meça fontes de interrupção por uma semana: alertas, chats, tickets, reuniões e pedidos diretos.
@@ -72,15 +74,39 @@ Procedimento recomendado:
 3. Crie canais separados para página, suporte, dúvidas e anúncios.
 4. Defina horário de triagem para trabalho não urgente.
 5. Revise instruções de alertas para que a primeira ação seja clara.
+6. Limite WIP operacional: quem está em projeto não deve ser destino padrão de interrupções.
 
-Exemplo de política:
+Política de interrupções:
 
-| Tipo | Canal | Resposta esperada |
-| --- | --- | --- |
-| Impacto em produção | Pager | Imediata |
-| Degradação sem urgência | Ticket | Mesmo dia útil |
-| Dúvida de uso | Canal de suporte | Próxima triagem |
-| Anúncio | Canal informativo | Sem interrupção |
+| Tipo | Exemplo | Canal | Resposta esperada | Dono |
+| --- | --- | --- | --- | --- |
+| Impacto em produção | SLO queimando, erro massivo, perda de dados | Pager | Imediata | On-call primário |
+| Degradação sem urgência | Latência piorando sem violar SLO | Ticket | Mesmo dia útil | Triagem operacional |
+| Suporte assíncrono | Dúvida de integração, pedido de capacidade | Fila de suporte | Próxima janela de triagem | Responsável da semana |
+| Trabalho planejado | Rollout, revisão de alerta, limpeza de flag | Backlog | Planejamento semanal | Dono do serviço |
+| Informação | Aviso, relatório, mudança sem ação | Canal informativo | Sem resposta obrigatória | Autor do anúncio |
+
+Métrica semanal mínima:
+
+```yaml
+interrupcoes_semanais:
+  pages: 12
+  tickets_recebidos: 31
+  tickets_repetidos: 9
+  pedidos_diretos_fora_canal: 14
+  reunioes_sem_decisao: 3
+  horas_em_trabalho_reativo: 28
+  wip_operacional_aberto: 7
+  meta_proxima_semana: "reduzir pedidos diretos fora de canal em 50%"
+```
+
+Rota de triagem:
+
+1. A pessoa identifica se há impacto imediato em usuário ou risco de perda de dados.
+2. Se houver impacto imediato, aciona pager e registra incidente.
+3. Se não houver impacto imediato, abre ticket com serviço, urgência, evidência e prazo desejado.
+4. A triagem diária classifica o pedido por impacto, esforço, recorrência e dono.
+5. Pedidos repetidos viram automação, documentação ou mudança de produto.
 
 A boa gestão de interrupções não isola SRE do resto da empresa. Ela protege foco para que respostas urgentes sejam melhores.
 
@@ -88,19 +114,24 @@ A boa gestão de interrupções não isola SRE do resto da empresa. Ela protege 
 
 **Ferramentas típicas:** PagerDuty event rules, Slack workflows, Jira Service Management, filas de triagem, service desk, status channels e políticas de interrupção.
 
-**Exemplo avançado:** separe canais por urgência: página para impacto imediato, ticket para trabalho assíncrono, canal de dúvidas para suporte e anúncio para informação.
+**Exemplo avançado:** separe canais por urgência: página para impacto imediato, ticket para trabalho assíncrono, canal de dúvidas para suporte e anúncio para informação. Use relatórios semanais para mostrar se a política reduziu WIP, pedidos diretos e alertas sem ação.
 
 **Cuidado de projeto:** toda interrupção compete com engenharia profunda. Sem política, o trabalho urgente aparente domina o importante.
 
 ## Diagrama de apoio
 
 ```mermaid
-flowchart LR
-    Tema["Lidando com interrupções"] --> C1["carga operacional"]
-    C1 --> C2["interrupções"]
-    C2 --> C3["fluxo cognitivo"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+flowchart TD
+    Entrada["Pedido, alerta ou mensagem"] --> Impacto{"Impacto imediato?"}
+    Impacto -->|Sim| Pager["Pager e incidente"]
+    Impacto -->|Não| Fila["Fila assíncrona"]
+    Fila --> Triagem["Triagem diária"]
+    Triagem --> WIP{"Cabe no WIP?"}
+    WIP -->|Sim| Dono["Dono e prazo"]
+    WIP -->|Não| Backlog["Backlog priorizado"]
+    Pager --> Revisao["Revisão de carga semanal"]
+    Dono --> Revisao
+    Backlog --> Revisao
 ```
 
 ## Erros comuns
@@ -123,7 +154,7 @@ Explique a ideia central em até cinco linhas, usando um serviço real como exem
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Crie uma política de interrupções para um time real ou fictício. Inclua canais, SLO interno de resposta, limite de WIP, rota de triagem e métrica semanal.
 
 ### Análise
 
@@ -139,6 +170,7 @@ A prática moderna usa métricas, logs e traces com contexto compartilhado. Aler
 - **Livro oficial online do Google SRE:** <https://sre.google/sre-book/>
 - **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - Dealing with Interrupts:** <https://sre.google/sre-book/dealing-with-interrupts/>
+- **DORA - Capabilities:** <https://dora.dev/capabilities/>
 - **Google SRE Resources:** <https://sre.google/resources/>
 
 ## Fechamento
@@ -152,6 +184,7 @@ Próximo: [Capítulo 21 - Incluindo um SRE para se recuperar de uma sobrecarga o
 - Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - **Google SRE Book - Dealing with Interrupts:** <https://sre.google/sre-book/dealing-with-interrupts/>
+- **DORA - Capabilities:** <https://dora.dev/capabilities/>
 - **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

@@ -29,6 +29,12 @@ Por isso, a introdução à SRE deve unir duas ideias:
 
 Essa visão também evita uma leitura estreita do material do Google. O Google fornece uma base forte, mas práticas atuais de AWS, Azure, Google Cloud, DORA, OpenTelemetry e engenharia de resiliência reforçam o mesmo ponto: serviços confiáveis combinam **metas claras**, **arquitetura resiliente**, **automação**, **telemetria útil**, **recuperação testada** e **aprendizado operacional**.
 
+Para formação profissional, este capítulo também inaugura o portfólio do
+estudante. Use o [Projeto prático - Checkout API](../projeto-pratico.md) ou um
+serviço real equivalente para produzir o primeiro artefato: um mapa operacional
+que explique jornada crítica, dependências, donos, sinais e primeiros modos de
+falha. Esse mapa será reutilizado nos capítulos seguintes.
+
 ## Conceitos essenciais
 
 ### **SRE**
@@ -107,7 +113,8 @@ Confiabilidade olha para o serviço cumprindo sua função; resiliência olha ta
 
 ## Aplicação prática
 
-Escolha um serviço real e execute uma análise inicial em cinco passos:
+Escolha um serviço real ou o `checkout-api` do projeto prático e execute uma
+análise inicial em cinco passos:
 
 1. Desenhe o **caminho de uma requisição crítica**, do usuário até as dependências de dados e volta.
 2. Liste **dependências críticas** e marque quais são internas, externas, síncronas, assíncronas, stateful ou stateless.
@@ -140,6 +147,10 @@ Artefato mínimo:
 | Ação operacional | Rollback, degradação, troca de rota ou abertura de incidente |
 
 A evidência de aprendizado é simples: uma pessoa nova deve conseguir explicar como o serviço atende o usuário, onde ele falha e qual sinal justificaria acordar o plantão.
+
+Como item de portfólio, salve esse mapa em uma página curta. Ele deve ser bom o
+suficiente para orientar uma conversa de onboarding, uma revisão de arquitetura
+ou uma investigação inicial de incidente.
 
 ## Tradução para ferramentas modernas
 

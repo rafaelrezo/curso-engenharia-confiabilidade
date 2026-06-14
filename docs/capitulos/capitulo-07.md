@@ -48,6 +48,11 @@ Alertas devem ser revisados como código operacional. Se um alerta dispara muito
 
 Um rodízio saudável tem carga previsível, handoff claro, apoio de escalonamento e critérios para tirar uma pessoa da linha de frente quando a pressão acumulada fica alta.
 
+Métricas úteis incluem páginas por turno, páginas fora do horário esperado,
+tempo até reconhecimento, tempo até mitigação, alertas repetidos, noites
+interrompidas, tempo de descanso após incidente e quantidade de handoffs com
+contexto incompleto.
+
 ### **Runbooks e escalonamento**
 
 **Runbooks** reduzem incerteza inicial: o que verificar, onde olhar, como mitigar, quando escalar e quais riscos evitar. **Escalonamento** define quando envolver especialistas, liderança, suporte ou times dependentes.
@@ -74,7 +79,8 @@ Procedimento recomendado:
 2. Para cada um, responda: houve ação imediata? havia runbook? havia impacto?
 3. Rebaixe para ticket sinais que não exigem resposta urgente.
 4. Defina critérios de entrada no plantão: treinamento, shadowing e simulado.
-5. Acompanhe páginas por turno, páginas fora do horário e tempo de recuperação.
+5. Defina handoff mínimo: incidentes ativos, mudanças recentes, riscos abertos e alertas ruidosos.
+6. Acompanhe páginas por turno, páginas fora do horário e tempo de recuperação.
 
 Modelo de runbook curto:
 
@@ -87,6 +93,10 @@ Escalonar para: time de checkout e provedor de pagamento.
 ```
 
 A métrica de qualidade do plantão não é "ninguém foi acordado". É receber poucos alertas, bons, acionáveis e ligados a risco real.
+
+Um limite simples ajuda a proteger a escala: se a mesma pessoa recebe páginas
+ruidosas em turnos seguidos ou se o volume impede recuperação, a equipe deve
+abrir uma revisão de plantão, não normalizar a exaustão.
 
 ## Tradução para ferramentas modernas
 

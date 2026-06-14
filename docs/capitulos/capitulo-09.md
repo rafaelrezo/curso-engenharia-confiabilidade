@@ -58,9 +58,11 @@ A saída concreta deve incluir ações corretivas com dono, prazo e critério de
 
 Escolha um incidente recente ou simulado e execute uma revisão curta:
 
+- Classifique severidade, por exemplo SEV1, SEV2 ou SEV3, com base em impacto e urgência.
 - Defina quando o incidente deveria ter sido declarado.
 - Liste os papéis mínimos: comando, investigação, comunicação e registro.
 - Recrie uma linha do tempo com eventos, decisões e mudanças.
+- Escreva uma atualização interna e uma atualização externa para status page.
 - Identifique uma lacuna de prontidão que poderia ser treinada antes da próxima crise.
 - Escreva duas ações corretivas com dono e evidência de conclusão.
 
@@ -72,9 +74,18 @@ Procedimento recomendado:
 
 1. Declare incidente quando houver impacto relevante, incerteza alta ou necessidade de coordenação.
 2. Nomeie comandante do incidente, líder técnico e responsável por comunicação.
-3. Mantenha documento vivo com estado, decisões, hipóteses e próximos passos.
-4. Defina cadência de atualização para stakeholders.
-5. Faça handoff explícito quando trocar responsáveis.
+3. Defina severidade e revise se ela ainda está correta durante a resposta.
+4. Mantenha documento vivo com estado, decisões, hipóteses e próximos passos.
+5. Defina cadência de atualização para stakeholders e status page.
+6. Faça handoff explícito quando trocar responsáveis.
+
+Taxonomia simples de severidade:
+
+| Severidade | Quando usar | Comunicação |
+| --- | --- | --- |
+| SEV1 | Impacto amplo, perda crítica de função ou risco alto ao negócio. | Atualizações frequentes, liderança e status externo quando aplicável. |
+| SEV2 | Degradação relevante, workaround parcial ou impacto limitado. | Atualizações internas regulares e comunicação externa se o usuário perceber. |
+| SEV3 | Problema localizado, baixo impacto ou risco controlado. | Registro, dono e acompanhamento assíncrono. |
 
 Modelo mínimo de documento vivo:
 
@@ -91,11 +102,21 @@ Próxima atualização: 14:30
 
 Depois da mitigação, o postmortem deve explicar condições sistêmicas e gerar ações com dono, prazo e evidência de conclusão.
 
+Modelo de action item:
+
+| Campo | Exemplo |
+| --- | --- |
+| Ação | Adicionar alerta de burn rate para checkout |
+| Dono | Equipe de checkout |
+| Prazo | 14 dias |
+| Critério de conclusão | Alerta revisado em simulado e linkado ao runbook |
+| Risco reduzido | Detecção tardia de aumento de erro |
+
 ## Tradução para ferramentas modernas
 
 **Ferramentas típicas:** incident.io, FireHydrant, PagerDuty Incident Workflows, Slack/Teams war rooms, Statuspage, Google Docs e templates de postmortem.
 
-**Exemplo avançado:** modele um incidente SEV1 com comandante, líder técnico, comunicação, documento vivo, atualizações a cada 30 minutos, mitigação e postmortem com ações rastreáveis.
+**Exemplo avançado:** modele um incidente SEV1 com comandante, líder técnico, comunicação interna, status page, documento vivo, atualizações a cada 30 minutos, mitigação e postmortem com ações rastreáveis.
 
 **Cuidado de projeto:** ferramenta de incidente não substitui papéis claros nem autoridade para decidir.
 
@@ -116,7 +137,8 @@ com ações rastreáveis.
 flowchart LR
     Prep["Prontidão"] --> Detect["Detecção"]
     Detect --> Declare["Declaração do incidente"]
-    Declare --> Command["Comando e papéis"]
+    Declare --> Severity["Severidade"]
+    Severity --> Command["Comando e papéis"]
     Command --> Mitigate["Mitigação"]
     Mitigate --> Learn["Postmortem sem culpa"]
     Learn --> Actions["Ações corretivas"]
@@ -127,15 +149,20 @@ flowchart LR
 
 - Declarar incidente tarde demais por medo de "exagerar".
 - Fazer todos investigarem tecnicamente sem alguém coordenando.
+- Não definir severidade ou manter severidade errada por conveniência.
 - Comunicar certeza quando ainda há hipótese.
+- Atualizar stakeholders sem próxima atualização definida.
 - Escrever postmortem sem ações rastreáveis.
+- Fechar action items sem evidência de que o risco foi reduzido.
 - Tratar culpa individual como substituto de correção sistêmica.
 
 ## Perguntas para revisão
 
 1. Quais sinais indicam que um problema deve virar incidente formal?
 2. Quem coordena, quem investiga e quem comunica durante uma crise severa?
-3. Como a equipe prova que um postmortem reduziu risco real?
+3. Qual severidade seria aplicada a uma falha parcial do checkout?
+4. O que precisa aparecer em uma atualização de status page?
+5. Como a equipe prova que um postmortem reduziu risco real?
 
 ## Exercícios
 
@@ -151,9 +178,14 @@ Crie um template mínimo de documento vivo para incidentes com linha do tempo, p
 
 Escolha um incidente conhecido e identifique qual parte do ciclo falhou: prontidão, detecção, coordenação, mitigação ou aprendizado.
 
+### Simulação
+
+Conduza um SEV1 fictício do `checkout-api`: defina papéis, severidade, mensagem
+interna, status externo, mitigação, encerramento e três action items.
+
 ## Relação com práticas atuais
 
-Ferramentas modernas de incident management, status pages, chatops e automação de escalonamento ajudam, mas a confiabilidade continua dependendo de papéis claros, comunicação disciplinada e aprendizado rastreável. Em organizações maduras, postmortems alimentam backlog de confiabilidade, testes de falha, ajustes de SLO e treinamento de plantão.
+Ferramentas modernas de incident management, status pages, chatops e automação de escalonamento ajudam, mas a confiabilidade continua dependendo de papéis claros, comunicação disciplinada e aprendizado rastreável. Em organizações maduras, postmortems alimentam backlog de confiabilidade, testes de falha, ajustes de SLO, treinamento de plantão e revisão periódica de action items.
 
 ## Recursos complementares
 

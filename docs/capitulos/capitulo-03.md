@@ -51,6 +51,11 @@ Toil invisível não entra em prioridade. A equipe precisa medir volume, tempo g
 
 Uma métrica útil não é apenas "horas de toil". Também importa saber quais fontes geram mais repetição e qual redução teria maior retorno.
 
+Uma auditoria prática deve registrar também **dono atual**, **dono correto**,
+risco de erro humano, dependência de pessoa específica e evidência esperada de
+redução. Sem ownership, a equipe pode apenas mover toil de SRE para
+desenvolvimento, suporte ou plataforma.
+
 ### **Automação versus eliminação**
 
 Nem todo toil deve ser automatizado. Às vezes a resposta correta é remover uma feature, simplificar um fluxo, mudar ownership, corrigir um bug, alterar arquitetura ou deixar de oferecer uma operação manual.
@@ -63,6 +68,10 @@ Plataformas internas podem reduzir toil quando oferecem caminhos seguros de self
 
 Self-service sem guardrails pode apenas distribuir risco. Um bom caminho automatizado precisa de validação, limites, auditoria e documentação.
 
+O portal interno também precisa de suporte e métricas. Se ninguém consegue usar
+o fluxo sem ajuda informal, a plataforma virou uma interface nova para o mesmo
+trabalho manual.
+
 ## Aplicação prática
 
 Faça uma auditoria de toil em uma equipe ou serviço:
@@ -70,6 +79,7 @@ Faça uma auditoria de toil em uma equipe ou serviço:
 - Colete tickets, páginas de plantão, solicitações manuais e tarefas recorrentes dos últimos 30 dias.
 - Classifique cada item como operação saudável, toil, incidente, melhoria ou suporte pontual.
 - Estime tempo gasto, frequência e equipe solicitante.
+- Identifique dono atual, dono correto e risco de transferir toil sem removê-lo.
 - Escolha as três maiores fontes por custo mensal.
 - Para cada fonte, decida entre eliminar, automatizar, transferir ownership, simplificar ou aceitar conscientemente.
 - Defina uma métrica de acompanhamento para provar redução.
@@ -95,6 +105,15 @@ Matriz útil:
 | Reiniciar worker travado | Semanal | Bug ou timeout ruim | Corrigir causa e adicionar recuperação segura |
 | Criar recurso padrão | Diária | Falta de self-service | Plataforma interna com guardrails |
 | Aprovar deploy trivial | Diária | Processo excessivo | Política automática baseada em risco |
+
+Campos adicionais para a planilha:
+
+| Campo | Pergunta |
+| --- | --- |
+| Dono atual | Quem recebe a interrupção hoje? |
+| Dono correto | Quem tem contexto e autonomia para resolver a causa? |
+| Risco | O que pode dar errado quando a tarefa é feita manualmente? |
+| Evidência | Qual número deve cair depois da melhoria? |
 
 Uma redução real aparece como menos interrupções, menos tickets repetidos e mais tempo reservado para engenharia.
 

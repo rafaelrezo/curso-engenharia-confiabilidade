@@ -8,8 +8,11 @@ autoral para estudo: não substitui o livro e não reproduz capítulos.
 
 1. Comece por [Conceitos centrais](conceitos-centrais.md).
 2. Leia [Trilha de aprendizagem e ciclo SRE](trilha-aprendizado.md) para entender a progressão do curso.
-3. Leia os capítulos em ordem, observando **Aplicação prática**, **Aprofundamento prático** e os exemplos do livro.
-4. Use as perguntas práticas para relacionar o livro a serviços reais.
+3. Use o [Projeto prático - Checkout API](projeto-pratico.md) como fio condutor dos artefatos.
+4. Consulte [Rubricas de avaliação SRE](rubricas.md) para saber quando cada artefato está pronto.
+5. Leia [SRE em 2026](sre-2026.md) para entender as atualizações modernas usadas no curso.
+6. Leia os capítulos em ordem, observando **Aplicação prática**, **Aprofundamento prático** e os exemplos do livro.
+7. Use as perguntas práticas para relacionar o livro a serviços reais.
 
 ## Parte I - Fundamentos e princípios
 

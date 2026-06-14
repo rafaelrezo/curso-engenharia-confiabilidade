@@ -61,6 +61,11 @@ Esse critério reduz fadiga de alerta e melhora confiança no sistema de monitor
 
 Métricas são fortes para alertas e tendências; logs ajudam a explicar eventos discretos; traces mostram caminho distribuído; eventos de deploy e configuração conectam mudança com comportamento.
 
+Observabilidade também tem custo e limites. Cardinalidade alta em métricas,
+logs sem estrutura e traces sem amostragem podem tornar a plataforma cara e
+difícil de usar. O desenho correto captura contexto suficiente para decisão sem
+transformar cada atributo em dimensão de consulta.
+
 ## Aplicação prática
 
 Revise a monitoração de uma jornada crítica:
@@ -82,8 +87,9 @@ Procedimento recomendado:
 1. Separe sinais de página, ticket, dashboard e auditoria.
 2. Use percentis de latência, principalmente p95 e p99, em vez de média.
 3. Anote eventos de deploy e configuração nos painéis principais.
-4. Crie runbook para cada alerta que acorda alguém.
-5. Remova alertas que ninguém sabe responder.
+4. Controle cardinalidade de labels e atributos antes de publicar métricas.
+5. Crie runbook para cada alerta que acorda alguém.
+6. Remova alertas que ninguém sabe responder.
 
 Exemplo de regra Prometheus orientada a SLO:
 
@@ -103,11 +109,16 @@ annotations:
 
 Essa regra ainda precisa ser adaptada ao SLO real, mas mostra a forma correta: taxa, janela, serviço, severidade e runbook. Alertas baseados só em CPU ou memória devem ser justificados por relação clara com impacto ou risco iminente.
 
+Para investigação, logs estruturados devem carregar identificadores úteis, como
+`service`, `route`, `region`, `request_id` e `deployment_id`. Exemplars ajudam a
+ligar uma métrica agregada, como p99 alto, a um trace específico que mostra onde
+a requisição gastou tempo.
+
 ## Tradução para ferramentas modernas
 
 **Ferramentas típicas:** OpenTelemetry, Prometheus, Grafana, Jaeger, Tempo, Loki, Datadog, New Relic, Cloud Monitoring e sintéticos externos.
 
-**Exemplo avançado:** instrumente uma jornada de pagamento com métricas RED, traces distribuídos, logs estruturados, eventos de deploy e alerta por SLO. Use trace exemplar para investigar p99 alto.
+**Exemplo avançado:** instrumente uma jornada de pagamento com métricas RED, traces distribuídos, logs estruturados, eventos de deploy e alerta por SLO. Use trace exemplar para investigar p99 alto e revise cardinalidade antes de publicar novos atributos.
 
 **Cuidado de projeto:** não transforme toda métrica em alerta. Separe página, ticket, dashboard e investigação histórica.
 
@@ -169,7 +180,7 @@ Escolha três alertas existentes e decida se cada um deve ser página, ticket, d
 
 ## Relação com práticas atuais
 
-Plataformas modernas combinam monitoração baseada em SLO, OpenTelemetry, traces distribuídos, logs estruturados, eventos de deploy, sintéticos externos e análise de burn rate. O risco atual não é falta de ferramenta; é excesso de sinais sem uma pergunta operacional. A prática madura começa pelo usuário, define SLIs e usa telemetria para sustentar decisões.
+Plataformas modernas combinam monitoração baseada em SLO, OpenTelemetry, traces distribuídos, logs estruturados, eventos de deploy, sintéticos externos e análise de burn rate. O risco atual não é falta de ferramenta; é excesso de sinais sem uma pergunta operacional. A prática madura começa pelo usuário, define SLIs e usa telemetria para sustentar decisões. Em 2026, OpenTelemetry deve ser tratado como padrão de instrumentação e portabilidade, com governança de custo, cardinalidade e retenção.
 
 ## Recursos complementares
 
@@ -177,6 +188,7 @@ Plataformas modernas combinam monitoração baseada em SLO, OpenTelemetry, trace
 - **Site Reliability Workbook - Monitoring:** <https://sre.google/workbook/monitoring/>
 - **Site Reliability Workbook - Alerting on SLOs:** <https://sre.google/workbook/alerting-on-slos/>
 - **OpenTelemetry - Signals:** <https://opentelemetry.io/docs/concepts/signals/>
+- **OpenTelemetry is a CNCF Graduated Project:** <https://opentelemetry.io/blog/2026/otel-graduates/>
 - **Google Cloud Architecture Framework - Operational excellence:** <https://docs.cloud.google.com/architecture/framework/operational-excellence>
 - **AWS Well-Architected Reliability - Monitoring:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/monitor-workload-resources.html>
 
@@ -194,6 +206,7 @@ Próximo: [Capítulo 05 - Automação operacional e engenharia de release](capit
 - Google SRE. **Monitoring - Workbook**. <https://sre.google/workbook/monitoring/>
 - Google SRE. **Alerting on SLOs**. <https://sre.google/workbook/alerting-on-slos/>
 - OpenTelemetry. **Signals**. <https://opentelemetry.io/docs/concepts/signals/>
+- OpenTelemetry. **OpenTelemetry is a CNCF Graduated Project**. <https://opentelemetry.io/blog/2026/otel-graduates/>
 - Google Cloud. **Architecture Framework - Operational excellence**. <https://docs.cloud.google.com/architecture/framework/operational-excellence>
 - AWS. **Monitor workload resources**. <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/monitor-workload-resources.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

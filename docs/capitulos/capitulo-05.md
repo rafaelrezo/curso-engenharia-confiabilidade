@@ -64,6 +64,11 @@ Plataformas internas, controladores Kubernetes, GitOps e infraestrutura como có
 
 Práticas como artefatos imutáveis, assinaturas, SBOMs, segregação de permissões e revisão de configuração não pertencem apenas à segurança; elas também sustentam confiabilidade.
 
+Em uma cadeia madura, provenance e attestation registram como o artefato foi
+construído, por qual workflow, com quais entradas e sob quais controles. Esse
+rastro reduz dúvida durante incidentes de release: a equipe consegue verificar
+se o que está em produção corresponde ao que foi revisado, testado e aprovado.
+
 ## Aplicação prática
 
 Escolha um pipeline ou rotina operacional e revise:
@@ -94,6 +99,8 @@ Exemplo de checklist de promoção:
 ```yaml
 release:
   artefato: checkout-api:2026.06.12-391db5a
+  provenance: "assinada pelo workflow de build"
+  sbom: "publicado junto ao artefato"
   required_tests:
     - unit
     - api_contract
@@ -111,7 +118,7 @@ O objetivo não é deixar o pipeline burocrático. É garantir que qualquer muda
 
 ## Tradução para ferramentas modernas
 
-**Ferramentas típicas:** GitHub Actions, GitLab CI, Argo CD, Flux, Argo Rollouts, Flagger, Spinnaker, SLSA, Sigstore, Cosign, SBOM e Cloud Deploy.
+**Ferramentas típicas:** GitHub Actions, GitLab CI, Argo CD, Flux, Argo Rollouts, Flagger, Spinnaker, SLSA v1.2, Sigstore, Cosign, SBOM, provenance, attestation e Cloud Deploy.
 
 **Exemplo avançado:** projete uma cadeia de entrega com artefato imutável, assinatura, SBOM, deploy canário, análise automática de métricas e rollback de código/configuração.
 
@@ -182,7 +189,7 @@ Escolha um incidente causado por mudança e identifique qual etapa da cadeia dev
 
 ## Relação com práticas atuais
 
-Em ambientes modernos, essa cadeia aparece em CI/CD, GitOps, Kubernetes, infraestrutura como código, feature flags, canários, progressive delivery, SBOMs e assinatura de artefatos. A tecnologia muda, mas o princípio permanece: mudanças confiáveis precisam ser pequenas, rastreáveis, observáveis e reversíveis. DORA descreve **continuous delivery** como a capacidade de liberar mudanças sob demanda de forma rápida, segura e sustentável; os capítulos de SRE sobre automação e release engineering dão a base operacional para isso.
+Em ambientes modernos, essa cadeia aparece em CI/CD, GitOps, Kubernetes, infraestrutura como código, feature flags, canários, progressive delivery, SBOMs, assinatura de artefatos e SLSA v1.2. A tecnologia muda, mas o princípio permanece: mudanças confiáveis precisam ser pequenas, rastreáveis, observáveis e reversíveis. DORA descreve **continuous delivery** como a capacidade de liberar mudanças sob demanda de forma rápida, segura e sustentável; os capítulos de SRE sobre automação e release engineering dão a base operacional para isso.
 
 ## Recursos complementares
 
@@ -190,6 +197,8 @@ Em ambientes modernos, essa cadeia aparece em CI/CD, GitOps, Kubernetes, infraes
 - **Google SRE Book - Release Engineering:** <https://sre.google/sre-book/release-engineering/>
 - **Site Reliability Workbook - Canarying Releases:** <https://sre.google/workbook/canarying-releases/>
 - **DORA - Continuous Delivery:** <https://dora.dev/capabilities/continuous-delivery/>
+- **SLSA v1.2:** <https://slsa.dev/spec/v1.2/>
+- **Sigstore:** <https://www.sigstore.dev/>
 - **AWS Well-Architected Reliability - Change Management:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/change-management.html>
 - **Google Cloud Deploy - Canary deployment strategy:** <https://docs.cloud.google.com/deploy/docs/deployment-strategies/canary>
 
@@ -207,6 +216,8 @@ Próximo: [Capítulo 06 - Simplicidade](capitulo-06.md).
 - Google SRE. **Release Engineering**. <https://sre.google/sre-book/release-engineering/>
 - Google SRE. **Canarying Releases**. <https://sre.google/workbook/canarying-releases/>
 - DORA. **Continuous Delivery**. <https://dora.dev/capabilities/continuous-delivery/>
+- SLSA. **Specification v1.2**. <https://slsa.dev/spec/v1.2/>
+- Sigstore. **Sigstore**. <https://www.sigstore.dev/>
 - AWS. **Reliability Pillar - Change Management**. <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/change-management.html>
 - Google Cloud. **Use a canary deployment strategy**. <https://docs.cloud.google.com/deploy/docs/deployment-strategies/canary>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

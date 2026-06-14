@@ -54,6 +54,14 @@ Janelas curtas mostram incidentes rápidos; janelas longas mostram tendência. A
 
 Na prática, a equipe precisa combinar sinais rápidos para resposta e sinais longos para governança. Um alerta deve acordar alguém quando a queima do orçamento indica impacto real ou risco iminente.
 
+Um alerta multi-janela combina duas perguntas: "o serviço está queimando o
+orçamento rápido demais agora?" e "o serviço está mantendo uma tendência ruim?".
+Por exemplo, para um SLO mensal de 99,9%, uma queima muito alta por poucos
+minutos indica incidente agudo; uma queima moderada por várias horas indica
+degradação persistente. A regra exata depende do SLO, mas a decisão é sempre a
+mesma: alertar cedo o suficiente para proteger o orçamento sem acordar pessoas
+por ruído.
+
 ## Aplicação prática
 
 Escolha um serviço e execute uma análise enxuta:
@@ -89,9 +97,16 @@ policy:
   healthy_budget: "rollouts normais com canário"
   high_burn: "pausar mudanças arriscadas e abrir revisão"
   exhausted: "priorizar correções de confiabilidade"
+alerts:
+  fast_burn: "erro acima do aceitável em janela curta e longa"
+  slow_burn: "tendência de consumo excessivo por várias horas"
 ```
 
 O erro mais comum é publicar o SLO no dashboard e não mudar nenhuma decisão. A prática só está viva quando release, capacidade, incidentes e roadmap usam o orçamento de erro como entrada.
+
+Ferramentas como OpenSLO, Sloth e Pyrra ajudam a padronizar essa especificação,
+mas não escolhem a jornada certa. A decisão mais importante continua sendo
+definir quais eventos representam sucesso real para o usuário.
 
 ## Tradução para ferramentas modernas
 
@@ -165,6 +180,8 @@ Hoje, SLOs aparecem em plataformas internas, revisões de arquitetura, alertas p
 - **Google SRE Book - Service Level Objectives:** <https://sre.google/sre-book/service-level-objectives/>
 - **Site Reliability Workbook - Implementing SLOs:** <https://sre.google/workbook/implementing-slos/>
 - **Site Reliability Workbook - Alerting on SLOs:** <https://sre.google/workbook/alerting-on-slos/>
+- **OpenSLO:** <https://openslo.com/>
+- **Sloth:** <https://sloth.dev/>
 
 ## Fechamento
 
@@ -180,4 +197,6 @@ Próximo: [Capítulo 03 - Eliminando tarefas penosas](capitulo-03.md).
 - Google SRE. **Service Level Objectives**. <https://sre.google/sre-book/service-level-objectives/>
 - Google SRE. **Implementing SLOs**. <https://sre.google/workbook/implementing-slos/>
 - Google SRE. **Alerting on SLOs**. <https://sre.google/workbook/alerting-on-slos/>
+- OpenSLO. **OpenSLO Specification**. <https://openslo.com/>
+- Sloth. **Sloth SLO Generator**. <https://sloth.dev/>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

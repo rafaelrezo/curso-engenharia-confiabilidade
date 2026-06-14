@@ -81,25 +81,60 @@ Modelo de plano:
 | Incidentes | Sem documento vivo | Adotar template e simulado | Incidente com linha do tempo clara |
 | Toil | Tickets repetidos | Criar self-service seguro | Redução de 50% em 60 dias |
 
+Capstone obrigatório:
+
+O trabalho final deve provar que a pessoa consegue aplicar SRE em um serviço, mesmo que fictício. O objetivo não é entregar um texto longo; é montar evidências operacionais que um time real conseguiria usar.
+
+Entregáveis mínimos:
+
+| Entregável | O que precisa conter | Evidência de qualidade |
+| --- | --- | --- |
+| Serviço escolhido | Jornada crítica, usuários, dependências e riscos | Escopo claro e compreensível para pessoa leiga |
+| SLO | SLI, objetivo, janela, fonte de dados e consequência | SLO conectado à experiência do usuário |
+| Dashboard | Métricas de sucesso, erro, latência e saturação | Ajuda a decidir, não apenas decorar |
+| Alerta | Condição acionável, severidade e primeira ação | Evita alerta sem ação |
+| Runbook | Diagnóstico inicial, mitigação, rollback e escalonamento | Uma pessoa nova consegue seguir |
+| Incidente simulado | Linha do tempo, papéis, comunicação e decisão | Mostra julgamento sob pressão |
+| Postmortem | Impacto, causas contribuintes, aprendizados e ações | Sem culpa e com ações verificáveis |
+| Roadmap | 3 melhorias priorizadas com dono, prazo e métrica | Conecta aprendizado a melhoria contínua |
+
+Rubrica de maturidade SRE:
+
+| Critério | 1 - Inicial | 3 - Operável | 5 - Maduro |
+| --- | --- | --- | --- |
+| SLO e risco | Não há objetivo de usuário | SLO existe e orienta algumas decisões | SLO, error budget e risco orientam roadmap |
+| Observabilidade | Métricas soltas e pouco acionáveis | Dashboard cobre jornada crítica | Telemetria apoia diagnóstico, custo e decisão |
+| Alertas e plantão | Alertas ruidosos e dependência de especialistas | Alertas principais têm runbook | Plantão saudável, mensurado e continuamente ajustado |
+| Mudança e release | Rollback incerto e flags sem limpeza | Rollout gradual e rollback definidos | Progressive delivery com critérios e limpeza governada |
+| Incidentes | Resposta improvisada | Processo de incidente e postmortem existem | Incidentes, quase-incidentes e simulados geram melhoria |
+| Toil e automação | Trabalho manual recorrente é normalizado | Toil é medido e alguns fluxos são automatizados | Self-service seguro reduz carga e preserva ownership |
+| Dados e continuidade | Backup existe, restore não é provado | Restore testado para cenários principais | RPO/RTO, PITR e game days validam recuperação |
+| Colaboração | Decisões ficam em chat | Reuniões, ADRs e ownership existem | Trade-offs são explícitos e revisados com stakeholders |
+
+Para aprovação do capstone, nenhuma frente crítica pode ficar em nível 1 sem plano de correção. A pessoa deve escolher três lacunas, justificar prioridade e mostrar como mediria melhoria em 30, 60 e 90 dias.
+
 SRE amadurece quando deixa de ser um conjunto de ideias e vira rotina mensurável: menos surpresa, melhor recuperação, mudanças mais seguras e aprendizado acumulado.
 
 ## Tradução para ferramentas modernas
 
 **Ferramentas típicas:** DORA metrics, SLO dashboards, reliability scorecards, OKRs, roadmap de plataforma, FinOps, incident analytics e revisões executivas.
 
-**Exemplo avançado:** monte roadmap trimestral de confiabilidade com três lacunas prioritárias, métrica de sucesso, dono, prazo e impacto esperado no serviço.
+**Exemplo avançado:** monte roadmap trimestral de confiabilidade com três lacunas prioritárias, métrica de sucesso, dono, prazo e impacto esperado no serviço. Inclua custo quando a decisão envolver capacidade, retenção de telemetria, redundância ou plataforma.
 
 **Cuidado de projeto:** maturidade SRE não é quantidade de ferramentas; é redução verificável de risco, toil e tempo de recuperação.
 
 ## Diagrama de apoio
 
 ```mermaid
-flowchart LR
-    Tema["Conclusão"] --> C1["SRE como disciplina"]
-    C1 --> C2["confiabilidade como responsabilidade compartilhada"]
-    C2 --> C3["aprendizado contínuo"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+flowchart TD
+    Curso["Curso SRE"] --> Capstone["Capstone"]
+    Capstone --> SLO["SLO"]
+    Capstone --> Obs["Dashboard e alerta"]
+    Capstone --> Runbook["Runbook"]
+    Capstone --> Simulado["Incidente simulado"]
+    Simulado --> Postmortem["Postmortem"]
+    Postmortem --> Rubrica["Rubrica de maturidade"]
+    Rubrica --> Roadmap["Roadmap 30/60/90"]
 ```
 
 ## Erros comuns
@@ -122,12 +157,11 @@ Explique a ideia central em até cinco linhas, usando um serviço real como exem
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Execute o capstone obrigatório: escolha um serviço, defina SLO, dashboard, alerta, runbook, incidente simulado, postmortem e roadmap 30/60/90.
 
 ### Análise
 
-Liste duas formas de aplicar esse conceito de maneira superficial e explique o
-risco de cada uma.
+Use a rubrica de maturidade para avaliar o serviço. Escolha três lacunas prioritárias e explique por que elas reduzem risco de forma mais relevante do que outras melhorias possíveis.
 
 ## Relação com práticas atuais
 
@@ -139,6 +173,8 @@ Gestão moderna de SRE aparece em onboarding estruturado, catálogos de serviço
 - **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - Part V Conclusions:** <https://sre.google/sre-book/part-V-conclusions/>
 - **Google SRE Book - Service Best Practices:** <https://sre.google/sre-book/service-best-practices/>
+- **DORA 2025:** <https://dora.dev/dora-report-2025/>
+- **FinOps Framework:** <https://www.finops.org/framework/>
 - **Google SRE Resources:** <https://sre.google/resources/>
 
 ## Fechamento
@@ -153,6 +189,8 @@ Este é o capítulo final. Revise os conceitos centrais e transforme os exercíc
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - **Google SRE Book - Part V Conclusions:** <https://sre.google/sre-book/part-V-conclusions/>
 - **Google SRE Book - Service Best Practices:** <https://sre.google/sre-book/service-best-practices/>
+- **DORA 2025:** <https://dora.dev/dora-report-2025/>
+- **FinOps Framework:** <https://www.finops.org/framework/>
 - **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

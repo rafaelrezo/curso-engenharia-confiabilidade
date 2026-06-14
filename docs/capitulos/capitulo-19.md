@@ -72,7 +72,25 @@ Procedimento recomendado:
 3. Até 90 dias: plantão supervisionado, simulado de incidente e contribuição em automação.
 4. Depois: plantão independente com revisão de decisões e lacunas.
 
-Artefato de prontidão:
+Matriz 30/60/90:
+
+| Período | Foco | Evidências esperadas | Critério para avançar |
+| --- | --- | --- | --- |
+| 0-30 dias | Entender o serviço | Mapa de arquitetura, lista de dependências, leitura de 3 postmortems, explicação dos SLOs | Consegue explicar fluxo crítico e impacto de uma falha simples |
+| 31-60 dias | Operar com acompanhamento | Shadowing de plantão, execução de 2 runbooks, análise de alerta real, participação em revisão semanal | Consegue investigar alerta comum sem assumir decisão final sozinho |
+| 61-90 dias | Decidir com supervisão | Plantão supervisionado, simulado de incidente, rollback em ambiente seguro, melhoria pequena de automação | Consegue liderar incidente de baixo risco com supervisor disponível |
+| Pós-90 dias | Autonomia e melhoria | Plantão independente, atualização de runbook, proposta de redução de toil ou alerta ruim | Mantém serviço operável e melhora o sistema de trabalho |
+
+Checklist de shadowing:
+
+- O novo SRE acompanhou troca de turno e entendeu pendências abertas.
+- O mentor explicou quais alertas são acionáveis e quais são ruído conhecido.
+- Pelo menos um alerta real ou simulado foi investigado com linha do tempo.
+- O novo SRE praticou comunicação de incidente em canal público.
+- O mentor revisou decisões tomadas, dúvidas e lacunas de documentação.
+- Próxima exposição ficou registrada: observar, executar com supervisão ou liderar com supervisão.
+
+Artefato de prontidão para plantão:
 
 | Competência | Evidência |
 | --- | --- |
@@ -81,8 +99,28 @@ Artefato de prontidão:
 | Executar rollback | Simulação registrada |
 | Comunicar incidente | Participação em exercício |
 | Entender SLO | Explica impacto e orçamento |
+| Passar turno | Handoff com riscos, pendências e próximos passos |
+| Escalar corretamente | Aciona especialistas com contexto e hipótese |
 
-A meta não é decorar comandos. É desenvolver julgamento para decidir com informação incompleta, pressão de tempo e impacto real.
+A meta não é decorar comandos. É desenvolver julgamento para decidir com informação incompleta, pressão de tempo e impacto real. Por isso, a avaliação precisa misturar conhecimento técnico, comportamento sob pressão e qualidade de comunicação.
+
+Exemplo de avaliação prática:
+
+```yaml
+avaliacao_oncall:
+  cenario: "latencia alta no checkout"
+  tempo_maximo: "45m"
+  evidencias:
+    - "identifica SLI afetado"
+    - "consulta dashboard correto"
+    - "formula hipotese antes de agir"
+    - "executa runbook sem pular validacao"
+    - "comunica impacto, acao e proximo update"
+  aprovado_se:
+    - "nao piora o incidente"
+    - "sabe quando escalar"
+    - "registra lacuna para melhoria"
+```
 
 ## Tradução para ferramentas modernas
 
@@ -90,17 +128,20 @@ A meta não é decorar comandos. É desenvolver julgamento para decidir com info
 
 **Exemplo avançado:** crie trilha 30/60/90 dias para novo SRE com arquitetura, shadowing, execução de runbook, simulado, rollback e plantão supervisionado.
 
-**Cuidado de projeto:** treinamento que só lista documentos não forma julgamento operacional.
+**Cuidado de projeto:** treinamento que só lista documentos não forma julgamento operacional. Plantão independente deve depender de evidência observável, não de tempo de casa.
 
 ## Diagrama de apoio
 
 ```mermaid
 flowchart LR
-    Tema["Acelerando os SREs para chegar ao plantão e além"] --> C1["onboarding de SRE"]
-    C1 --> C2["engenharia reversa"]
-    C2 --> C3["raciocínio estatístico"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+    Inicio["Novo SRE"] --> D30["0-30: contexto"]
+    D30 --> D60["31-60: shadowing"]
+    D60 --> D90["61-90: plantão supervisionado"]
+    D90 --> Gate{"Pronto?"}
+    Gate -->|Sim| Indep["Plantão independente"]
+    Gate -->|Não| Plano["Plano de lacunas"]
+    Plano --> D60
+    Indep --> Melhoria["Melhoria contínua"]
 ```
 
 ## Erros comuns
@@ -123,7 +164,7 @@ Explique a ideia central em até cinco linhas, usando um serviço real como exem
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Monte uma matriz 30/60/90 para um serviço real. Inclua pelo menos cinco evidências de prontidão e um simulado antes do plantão independente.
 
 ### Análise
 
@@ -139,6 +180,9 @@ Gestão moderna de SRE aparece em onboarding estruturado, catálogos de serviço
 - **Livro oficial online do Google SRE:** <https://sre.google/sre-book/>
 - **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - Accelerating SREs to On-Call and Beyond:** <https://sre.google/sre-book/accelerating-sre-on-call/>
+- **Google SRE Book - Being On-Call:** <https://sre.google/sre-book/being-on-call/>
+- **Site Reliability Workbook - On-Call:** <https://sre.google/workbook/on-call/>
+- **Google SRE Book - Postmortem Culture:** <https://sre.google/sre-book/postmortem-culture/>
 - **Google SRE Resources:** <https://sre.google/resources/>
 
 ## Fechamento
@@ -152,6 +196,9 @@ Próximo: [Capítulo 20 - Lidando com interrupções](capitulo-20.md).
 - Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - **Google SRE Book - Accelerating SREs to On-Call and Beyond:** <https://sre.google/sre-book/accelerating-sre-on-call/>
+- **Google SRE Book - Being On-Call:** <https://sre.google/sre-book/being-on-call/>
+- **Site Reliability Workbook - On-Call:** <https://sre.google/workbook/on-call/>
+- **Google SRE Book - Postmortem Culture:** <https://sre.google/sre-book/postmortem-culture/>
 - **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

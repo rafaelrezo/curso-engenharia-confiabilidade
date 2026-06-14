@@ -89,9 +89,13 @@ Exemplo de inventário:
 
 Remoção segura também é engenharia. Ela deve ter telemetria, rollback e critério de sucesso, como qualquer release.
 
+Para flags, adicione uma regra de ciclo de vida: toda flag deve ter dono, data
+de criação, condição de remoção e data de revisão. Flags permanentes precisam
+ser tratadas como configuração de produto, não como experimento esquecido.
+
 ## Tradução para ferramentas modernas
 
-**Ferramentas típicas:** catálogos de serviço, mapas de dependência, OpenRewrite, feature flag management, static analysis, fitness functions de arquitetura e scorecards.
+**Ferramentas típicas:** catálogos de serviço, mapas de dependência, OpenRewrite, feature flag management, OpenFeature, static analysis, fitness functions de arquitetura e scorecards.
 
 **Exemplo avançado:** faça uma campanha de remoção de flags antigas: medir uso, avisar donos, desativar por coorte, observar erro e remover código morto.
 
@@ -149,6 +153,7 @@ Microsserviços, Kubernetes, service mesh, múltiplas clouds, feature flags e ob
 - **Site Reliability Workbook - Simplicity:** <https://sre.google/workbook/simplicity/>
 - **DORA - Loosely Coupled Architecture:** <https://dora.dev/capabilities/loosely-coupled-architecture/>
 - **DORA - Continuous Delivery:** <https://dora.dev/capabilities/continuous-delivery/>
+- **OpenFeature:** <https://openfeature.dev/docs/reference/intro/>
 - **Google Cloud Architecture Framework - Operational excellence:** <https://docs.cloud.google.com/architecture/framework/operational-excellence>
 - **AWS Well-Architected Operational Excellence Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
 
@@ -166,6 +171,7 @@ Próximo: [Capítulo 07 - Alertas acionáveis e plantão saudável](capitulo-07.
 - Google SRE. **Simplicity - Workbook**. <https://sre.google/workbook/simplicity/>
 - DORA. **Loosely Coupled Architecture**. <https://dora.dev/capabilities/loosely-coupled-architecture/>
 - DORA. **Continuous Delivery**. <https://dora.dev/capabilities/continuous-delivery/>
+- OpenFeature. **Introduction**. <https://openfeature.dev/docs/reference/intro/>
 - Google Cloud. **Architecture Framework - Operational excellence**. <https://docs.cloud.google.com/architecture/framework/operational-excellence>
 - AWS. **Operational Excellence Pillar**. <https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.

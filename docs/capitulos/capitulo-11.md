@@ -2,9 +2,9 @@
 
 ## Objetivos de aprendizagem
 
-- Identificar como **testes tradicionais** aparece em produção.
-- Aplicar o procedimento do tema em uma jornada, mudança, incidente ou dependência real.
-- Produzir um artefato prático: métrica, política, checklist, runbook ou plano de melhoria.
+- Diferenciar testes funcionais, contrato, carga, rollback, desastre, sondas e chaos engineering.
+- Planejar testes de confiabilidade com hipótese, escopo, métrica de sucesso e critério de abortar.
+- Transformar incidentes reais em testes regressivos e validações de produção.
 
 ## Síntese
 
@@ -14,25 +14,37 @@ Em uma frase: **Confiabilidade precisa ser testada em build, integração, produ
 
 ## Por que isso importa
 
-**testes tradicionais** importa porque serviços reais falham sob mudança, carga, dependências lentas, estado distribuído e comportamento humano. A equipe reduz surpresa quando transforma esse risco em rotina operacional clara, sinais confiáveis e decisões treinadas antes da crise.
+Testes tradicionais verificam lógica esperada, mas confiabilidade falha nas
+bordas: dependência lenta, fila acumulada, retry excessivo, rollback quebrado,
+schema incompatível, backup que não restaura, região indisponível ou sonda que
+não representa o usuário. SRE testa essas condições antes que elas apareçam em
+incidente real.
 
 ## Conceitos essenciais
 
 ### **testes tradicionais**
 
-**testes tradicionais**: É uma forma controlada de descobrir se o sistema se comporta como esperado. Para confiabilidade, testes precisam incluir falhas, carga e recuperação.
+**Testes tradicionais** validam comportamento funcional: unidade, integração,
+contrato e fluxo principal. Eles continuam necessários, mas não bastam para
+provar confiabilidade sob falha.
 
-Uma forma simples de aplicar isso é: Adicionar testes de comportamento sob dependência indisponivel.
+Uma forma simples de aplicar isso é adicionar testes de comportamento sob
+dependência indisponível, timeout e resposta inválida.
 
 ### **testes em produção**
 
-**testes em produção**: É uma forma controlada de descobrir se o sistema se comporta como esperado. Para confiabilidade, testes precisam incluir falhas, carga e recuperação.
+**Testes em produção** validam o sistema real com escopo controlado. Podem usar
+canários, sintéticos, shadow traffic, feature flags ou sondas. Eles exigem
+limite de impacto, observabilidade e rollback.
 
 No dia a dia, isso aparece quando a equipe precisa planejar um teste de rollback.
 
 ### **testes de desastre**
 
-**testes de desastre**: É uma forma controlada de descobrir se o sistema se comporta como esperado. Para confiabilidade, testes precisam incluir falhas, carga e recuperação.
+**Testes de desastre** verificam recuperação sob falhas graves: perda de zona,
+restauração de backup, indisponibilidade de dependência crítica, perda de quorum
+ou falha de pipeline. O objetivo é medir capacidade de resposta, não provar
+coragem.
 
 Esse conceito fica concreto quando a equipe consegue criar uma sonda de produção para fluxo crítico.
 
@@ -44,18 +56,22 @@ Uma forma simples de aplicar isso é: Adicionar testes de comportamento sob depe
 
 ### **falha esperada em testes**
 
-**falha esperada em testes**: É uma forma controlada de descobrir se o sistema se comporta como esperado. Para confiabilidade, testes precisam incluir falhas, carga e recuperação.
+**Falha esperada em testes** é o comportamento aceitável quando algo quebra de
+forma planejada. Um bom teste define antes o que deve acontecer: fallback,
+degradação, erro claro, rollback, bloqueio de promoção ou abertura de alerta.
 
 No dia a dia, isso aparece quando a equipe precisa planejar um teste de rollback.
 
 
 ## Aplicação prática
 
-Escolha um serviço concreto e transforme o tema em uma ação verificável:
+Use o `checkout-api` ou um serviço real e monte um plano de teste:
 
-- Adicionar testes de comportamento sob dependência indisponivel.
+- Adicionar testes de comportamento sob dependência indisponível.
 - Planejar um teste de rollback.
 - Criar uma sonda de produção para fluxo crítico.
+- Escrever hipótese, escopo, métrica de sucesso e critério de abortar.
+- Definir quem pode iniciar, pausar e encerrar o teste.
 
 Depois da ação, registre a evidência de melhoria: menos alertas irrelevantes,
 recuperação mais rápida, dependência mais clara, deploy menos arriscado, métrica
@@ -83,6 +99,22 @@ Exemplo de matriz:
 
 O teste útil precisa ter hipótese. "Vamos quebrar algo" é espetáculo; "vamos provar que checkout degrada sem derrubar catálogo" é engenharia.
 
+Modelo de experimento:
+
+```yaml
+experiment: payment-provider-latency
+hypothesis: "checkout mantém erro abaixo de 2% quando provedor de pagamento fica lento"
+scope: "5% do tráfego canário por 20 minutos"
+steady_state:
+  - "checkout_success_rate >= 98%"
+  - "p95 <= 1200ms"
+abort_if:
+  - "erro >= 5% por 5 minutos"
+  - "fila de pagamentos cresce acima de 10000 mensagens"
+rollback: "desativar flag payment_provider_fault"
+owner: "SRE de plantão e time de checkout"
+```
+
 ## Tradução para ferramentas modernas
 
 **Ferramentas típicas:** k6, Locust, Playwright, Pact, LitmusChaos, Gremlin, Chaos Mesh, fault injection de service mesh e testes de restauração.
@@ -94,44 +126,55 @@ O teste útil precisa ter hipótese. "Vamos quebrar algo" é espetáculo; "vamos
 ## Diagrama de apoio
 
 ```mermaid
-flowchart LR
-    Tema["Testes voltados a confiabilidade"] --> C1["testes tradicionais"]
-    C1 --> C2["testes em produção"]
-    C2 --> C3["testes de desastre"]
-    C3 --> Decisao["Decisão operacional"]
-    Decisao --> Acao["Melhoria no serviço"]
+flowchart TD
+    Risco["Risco ou incidente recorrente"] --> Hipotese["Hipótese testável"]
+    Hipotese --> Escopo["Escopo e limite de impacto"]
+    Escopo --> Sinais["Métricas de sucesso e abort criteria"]
+    Sinais --> Execucao["Execução controlada"]
+    Execucao --> Resultado{"Comportamento esperado?"}
+    Resultado -->|Sim| Evidencia["Evidência de resiliência"]
+    Resultado -->|Não| Backlog["Correção, runbook ou novo alerta"]
 ```
 
 ## Erros comuns
 
-- Aplicar a prática como checklist sem conectar a risco real do serviço.
-- Criar documentação ou automação sem validar durante incidentes ou mudanças reais.
-- Medir apenas sinais internos e esquecer o impacto percebido pelo usuário.
+- Fazer chaos engineering sem hipótese e sem critério de abortar.
+- Testar só caminho feliz e assumir que rollback funcionará.
+- Executar teste de desastre sem comunicação e dono de decisão.
+- Medir apenas CPU ou memória e ignorar experiência do usuário.
+- Não transformar incidentes reais em testes regressivos.
 
 ## Perguntas para revisão
 
-1. Qual risco operacional **testes tradicionais** ajuda a reduzir?
-2. Que evidência mostraria que a prática foi aplicada com sucesso?
-3. Como esse conceito mudaria uma decisão de release, plantão, arquitetura ou priorização?
+1. Que falha real do serviço ainda não tem teste?
+2. Qual hipótese o experimento quer provar?
+3. Qual sinal define sucesso e qual sinal manda abortar?
+4. O rollback do teste já foi exercitado?
+5. Que incidente passado deveria virar teste regressivo?
 
 ## Exercícios
 
 ### Compreensão
 
-Explique a ideia central em até cinco linhas, usando um serviço real como exemplo.
+Explique a diferença entre teste funcional, teste de carga, teste de rollback,
+teste de desastre e chaos engineering.
 
 ### Aplicação
 
-Escolha um serviço real e execute uma das ações práticas.
+Escreva um experimento para o `checkout-api` simulando dependência de pagamento
+lenta, com hipótese, escopo, steady state, abort criteria e rollback.
 
 ### Análise
 
-Liste duas formas de aplicar esse conceito de maneira superficial e explique o
-risco de cada uma.
+Avalie se um teste em produção é aceitável. Liste risco ao usuário, limite de
+impacto, sinais de parada e comunicação necessária.
 
 ## Relação com práticas atuais
 
-Rollouts graduais, canários, feature flags e validações automatizadas reduzem o raio de impacto de mudanças. A prática só funciona quando há métricas de saúde, critérios de promoção e rollback exercitado.
+Rollouts graduais, canários, feature flags, testes de contrato, sintéticos,
+fault injection e validações automatizadas reduzem o raio de impacto de
+mudanças. A prática só funciona quando há métricas de saúde, critérios de
+promoção, rollback exercitado e responsabilidade clara sobre o teste.
 
 ## Recursos complementares
 
@@ -139,6 +182,8 @@ Rollouts graduais, canários, feature flags e validações automatizadas reduzem
 - **The Site Reliability Workbook:** <https://sre.google/workbook/>
 - **Google SRE Book - Testing for Reliability:** <https://sre.google/sre-book/testing-reliability/>
 - **Site Reliability Workbook - Canarying Releases:** <https://sre.google/workbook/canarying-releases/>
+- **Kubernetes Probes:** <https://kubernetes.io/docs/concepts/workloads/pods/probes/>
+- **LitmusChaos:** <https://litmuschaos.io/docs/>
 
 ## Fechamento
 
@@ -151,6 +196,8 @@ Próximo: [Capítulo 12 - Engenharia de software em SRE](capitulo-12.md).
 - Beyer, B.; Jones, C.; Petoff, J.; Murphy, N. R. (eds.). **Site Reliability Engineering: How Google Runs Production Systems**. O'Reilly Media / Google, 2016. <https://sre.google/sre-book/>
 - Beyer, B.; Murphy, N. R.; Rensin, D.; Kawahara, K.; Thorne, S. (eds.). **The Site Reliability Workbook**. O'Reilly Media / Google, 2018. <https://sre.google/workbook/>
 - **Google SRE Book - Testing for Reliability:** <https://sre.google/sre-book/testing-reliability/>
+- Kubernetes. **Liveness, Readiness, and Startup Probes**. <https://kubernetes.io/docs/concepts/workloads/pods/probes/>
+- LitmusChaos. **Documentation**. <https://litmuschaos.io/docs/>
 - **Google Cloud Well-Architected Framework:** <https://docs.cloud.google.com/architecture/framework>
 - **AWS Well-Architected Reliability Pillar:** <https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html>
 - PDF local usado como fonte primária em português: `../Engenharia de Confiabilidade do Google ( etc.).pdf`.
