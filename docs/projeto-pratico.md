@@ -5,18 +5,67 @@ artefatos profissionais. O objetivo não é construir uma aplicação completa
 primeiro, mas usar o mesmo contexto operacional ao longo dos capítulos para que
 cada prática tenha continuidade.
 
+## Como usar este projeto
+
+Este projeto deve ser usado em três camadas. A primeira é obrigatória para todo
+estudante; as demais aumentam a profundidade sem bloquear quem ainda está
+aprendendo os fundamentos.
+
+| Camada | Uso | Resultado esperado |
+| --- | --- | --- |
+| Modelo mental | Entender a jornada crítica, dependências, riscos e decisões de confiabilidade. | O estudante consegue explicar o serviço e onde ele pode falhar. |
+| Laboratório de artefatos | Produzir SLO, alerta, runbook, postmortem, plano de rollback, restore e roadmap usando o mesmo contexto. | O estudante monta um dossiê SRE revisável, mesmo sem executar código. |
+| Laboratório executável opcional | Rodar uma versão simplificada do serviço, injetar falhas e observar métricas, logs e traces. | O estudante valida hipóteses com evidência operacional real ou simulada. |
+
+A camada principal deste curso é o **laboratório de artefatos**. Isso mantém a
+formação rápida e acessível para público leigo, mas sem reduzir a profundidade:
+cada entrega precisa orientar uma decisão operacional concreta.
+
 ## Serviço base
 
 O serviço didático é uma plataforma simples de checkout:
 
-```text
-usuário -> gateway -> checkout-api -> banco de pedidos
-                         |
-                         +-> fila de pagamentos -> payment-worker -> provedor externo
-                         |
-                         +-> estoque-api
-                         |
-                         +-> observabilidade
+```mermaid
+flowchart LR
+    User([Usuário])
+    Gateway[Gateway]
+
+    subgraph Checkout["Domínio do checkout"]
+        Api["checkout-api<br/>valida carrinho<br/>cria pedido"]
+        Orders[(orders-db<br/>pedidos e pagamentos)]
+    end
+
+    subgraph Payments["Pagamento assíncrono"]
+        Queue{{payment-queue}}
+        Worker["payment-worker"]
+        Provider[/"payment-provider<br/>dependência externa"/]
+    end
+
+    Inventory["inventory-api<br/>reserva de estoque"]
+    Telemetry[("Telemetria<br/>métricas | logs | traces")]
+
+    User --> Gateway --> Api
+    Api --> Orders
+    Api --> Queue --> Worker --> Provider
+    Api --> Inventory
+
+    Gateway -. sinais .-> Telemetry
+    Api -. sinais .-> Telemetry
+    Queue -. sinais .-> Telemetry
+    Worker -. sinais .-> Telemetry
+    Provider -. sintomas externos .-> Telemetry
+
+    classDef entry fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1;
+    classDef core fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
+    classDef async fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#7f3b00;
+    classDef external fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f;
+    classDef telemetry fill:#ede7f6,stroke:#5e35b1,stroke-width:2px,color:#311b92;
+
+    class User,Gateway entry;
+    class Api,Orders core;
+    class Queue,Worker async;
+    class Provider,Inventory external;
+    class Telemetry telemetry;
 ```
 
 ## Componentes
