@@ -4,16 +4,6 @@ site_url: https://rafaelrezo.github.io/curso-engenharia-confiabilidade/
 theme:
   name: readthedocs
   locale: pt_BR
-  navigation_depth: 4
-  collapse_navigation: false
-  sticky_navigation: false
-  include_homepage_in_sidebar: true
-  prev_next_buttons_location: bottom
-extra_css:
-  - stylesheets/extra.css
-extra_javascript:
-  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - javascripts/mermaid-init.js
 markdown_extensions:
   - admonition
   - pymdownx.superfences:
