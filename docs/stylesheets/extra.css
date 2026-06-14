@@ -1,0 +1,26 @@
+/* Keep ReadTheDocs native navigation while using the available content width. */
+.wy-nav-content {
+  max-width: none;
+}
+
+.rst-content table.docutils {
+  width: 100%;
+}
+
+.rst-content table.docutils td,
+.rst-content table.docutils th {
+  white-space: normal;
+  vertical-align: top;
+}
+
+.rst-content .mermaid {
+  width: 100%;
+  margin: 1.25rem 0 2rem;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.rst-content .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
