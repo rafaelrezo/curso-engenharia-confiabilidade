@@ -4,6 +4,8 @@ Este repositório MkDocs organiza um material de estudo baseado no livro
 **Engenharia de Confiabilidade do Google**. O conteúdo aqui é um resumo
 autoral para estudo: não substitui o livro e não reproduz capítulos.
 
+**Autor e organizador do curso:** Rafael Emerick.
+
 ## Como estudar
 
 1. Comece por [Conceitos centrais](conceitos-centrais.md).

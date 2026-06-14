@@ -1,6 +1,7 @@
 site_name: Curso Engenharia de Confiabilidade
 site_description: Conceitos centrais e resumos de Engenharia de Confiabilidade do Google
 site_url: https://rafaelrezo.github.io/curso-engenharia-confiabilidade/
+site_author: Rafael Emerick
 theme:
   name: readthedocs
   locale: pt_BR

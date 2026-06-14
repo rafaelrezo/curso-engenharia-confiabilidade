@@ -13,6 +13,13 @@ obra original.
 
 Materiais suplementares mencionados no PDF: <https://g.co/SREBook>.
 
+## Autoria deste curso
+
+Este curso, sua estrutura didática, os resumos, os exercícios, os artefatos
+práticos e a organização da trilha foram produzidos por **Rafael Emerick**.
+As referências ao Google SRE Book e ao Workbook indicam a base teórica usada,
+não autoria do conteúdo original dessas obras.
+
 ## Referências
 
 - Beyer, Betsy; Jones, Chris; Petoff, Jennifer; Murphy, Niall Richard, eds. **Engenharia de Confiabilidade do Google**. Novatec, 2016.
