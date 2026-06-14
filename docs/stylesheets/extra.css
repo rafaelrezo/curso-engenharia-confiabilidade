@@ -1,165 +1,44 @@
-/* Use the available viewport for course content and diagrams. */
-:root {
-  --course-sidebar-top: #2687bf;
-  --course-sidebar-dark: #302d2f;
-  --course-sidebar-mid: #c9c9c9;
-  --course-sidebar-light: #eeeeee;
-  --course-sidebar-link: #5f666d;
-  --course-sidebar-active: #202428;
+/* Keep the ReadTheDocs theme close to its native layout. */
+.wy-nav-content {
+  max-width: 72rem;
 }
 
-.md-grid {
-  max-width: 96rem;
+.rst-content {
+  font-size: 0.95rem;
 }
 
-.md-sidebar--secondary {
-  display: none;
+.rst-content h1,
+.rst-content h2,
+.rst-content h3 {
+  letter-spacing: 0;
 }
 
-.md-content {
-  max-width: none;
-}
-
-.md-content__inner {
-  margin: 0 1.6rem 2rem;
-}
-
-.md-typeset {
-  font-size: 0.82rem;
-}
-
-.md-typeset h1 {
-  margin-bottom: 1.2rem;
-}
-
-.md-typeset h2 {
-  margin-top: 2.2rem;
-}
-
-.md-typeset table:not([class]) {
-  display: table;
+.rst-content table.docutils,
+.rst-content table.field-list {
   width: 100%;
 }
 
-.md-typeset .mermaid {
+.rst-content table.docutils td,
+.rst-content table.docutils th {
+  white-space: normal;
+  vertical-align: top;
+}
+
+.rst-content .mermaid {
   width: 100%;
   margin: 1.25rem 0 2rem;
   overflow-x: auto;
   text-align: center;
 }
 
-.md-typeset .mermaid svg {
+.rst-content .mermaid svg {
   min-width: 760px;
   max-width: 100%;
   height: auto;
 }
 
-@media screen and (min-width: 76.25em) {
-  .md-sidebar--primary {
-    width: 16rem;
-  }
-
-  .md-sidebar--primary .md-sidebar__scrollwrap {
-    background: var(--course-sidebar-light);
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
-  }
-
-  .md-sidebar--primary .md-nav--primary {
-    font-size: 0.72rem;
-  }
-
-  .md-sidebar--primary .md-nav--primary > .md-nav__title {
-    height: auto;
-    min-height: 6.8rem;
-    padding: 1rem 0.9rem 0.9rem;
-    background: var(--course-sidebar-top);
-    color: #fff;
-    font-size: 0.82rem;
-    font-weight: 700;
-    text-align: center;
-    white-space: normal;
-  }
-
-  .md-search {
-    padding: 0.7rem 0.75rem 0.85rem;
-    background: var(--course-sidebar-top);
-  }
-
-  .md-search__form {
-    height: 1.85rem;
-    border-radius: 999px;
-    background: #fff;
-    box-shadow: none;
-  }
-
-  .md-search__input {
-    color: #1f2933;
-    font-size: 0.72rem;
-  }
-
-  .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item {
-    background: var(--course-sidebar-dark);
-  }
-
-  .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
-    margin: 0;
-    padding: 0.72rem 0.95rem;
-    color: #d7dce0;
-    font-weight: 700;
-  }
-
-  .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link:hover {
-    color: #fff;
-  }
-
-  .md-sidebar--primary .md-nav__item--section > .md-nav > .md-nav__title,
-  .md-sidebar--primary .md-nav__item--nested > .md-nav__link {
-    color: #4aa5d8;
-    font-size: 0.64rem;
-    font-weight: 800;
-    letter-spacing: 0;
-    text-transform: uppercase;
-  }
-
-  .md-sidebar--primary .md-nav__item--active > .md-nav__link,
-  .md-sidebar--primary .md-nav__link--active {
-    color: var(--course-sidebar-active);
-    font-weight: 800;
-  }
-
-  .md-sidebar--primary .md-nav .md-nav {
-    background: var(--course-sidebar-mid);
-  }
-
-  .md-sidebar--primary .md-nav .md-nav .md-nav__link {
-    margin: 0;
-    padding: 0.28rem 0.85rem 0.28rem 1.35rem;
-    color: var(--course-sidebar-link);
-    line-height: 1.28;
-  }
-
-  .md-sidebar--primary .md-nav .md-nav .md-nav .md-nav__link {
-    padding-left: 2rem;
-    font-size: 0.68rem;
-  }
-
-  .md-sidebar--primary .md-nav .md-nav .md-nav__link:hover,
-  .md-sidebar--primary .md-nav .md-nav .md-nav__link--active {
-    background: rgba(255, 255, 255, 0.38);
-    color: var(--course-sidebar-active);
-  }
-
-  .md-main__inner {
-    margin-top: 0;
-  }
-}
-
-@media screen and (max-width: 76.1875em) {
-  .md-content__inner {
-    margin: 0 1rem 2rem;
-  }
-
-  .md-typeset .mermaid svg {
+@media screen and (max-width: 768px) {
+  .rst-content .mermaid svg {
     min-width: 640px;
   }
 }
