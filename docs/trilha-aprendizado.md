@@ -110,16 +110,22 @@ O ciclo abaixo conecta desenvolvimento e operação. Ele deve ser repetido
 para cada serviço crítico.
 
 ```mermaid
-flowchart LR
-    Discovery["1. Entender serviço e jornada crítica"] --> Objectives["2. Definir SLIs, SLOs e risco"]
-    Objectives --> Design["3. Projetar arquitetura e dependências"]
-    Design --> Build["4. Implementar com testes, automação e observabilidade"]
-    Build --> Release["5. Lançar com canário, rollback e critérios"]
-    Release --> Operate["6. Operar com alertas, runbooks e plantão"]
-    Operate --> Incident["7. Responder incidentes e mitigar impacto"]
-    Incident --> Learn["8. Aprender com postmortem e dados históricos"]
-    Learn --> Improve["9. Reduzir toil, simplificar e evoluir"]
-    Improve --> Discovery
+flowchart TB
+    Discovery["1. Entender serviço<br/>jornada e dependências"]
+    Objectives["2. Definir objetivos<br/>SLI, SLO e risco"]
+    Design["3. Projetar resiliência<br/>arquitetura e falhas"]
+    Build["4. Implementar<br/>testes e observabilidade"]
+    Release["5. Lançar<br/>canário e rollback"]
+    Operate["6. Operar<br/>alertas e runbooks"]
+    Incident["7. Responder<br/>incidentes e mitigação"]
+    Learn["8. Aprender<br/>postmortem e dados"]
+    Improve["9. Evoluir<br/>toil e simplicidade"]
+
+    Discovery --> Objectives --> Design
+    Design --> Build --> Release
+    Release --> Operate --> Incident
+    Incident --> Learn --> Improve
+    Improve -. novo ciclo .-> Discovery
 ```
 
 ## Artefatos do ciclo
