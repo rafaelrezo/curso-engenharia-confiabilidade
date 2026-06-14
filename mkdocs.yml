@@ -6,7 +6,7 @@ theme:
   locale: pt_BR
   navigation_depth: 4
   collapse_navigation: false
-  sticky_navigation: true
+  sticky_navigation: false
   include_homepage_in_sidebar: true
   prev_next_buttons_location: bottom
 extra_css:
