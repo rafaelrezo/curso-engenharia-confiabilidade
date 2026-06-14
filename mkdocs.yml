@@ -4,11 +4,16 @@ site_url: https://rafaelrezo.github.io/curso-engenharia-confiabilidade/
 theme:
   name: material
   language: pt-BR
+  palette:
+    scheme: default
+    primary: blue
+    accent: light blue
   features:
     - navigation.sections
     - navigation.expand
     - navigation.instant
     - navigation.top
+    - toc.integrate
     - search.highlight
 extra_css:
   - stylesheets/extra.css
